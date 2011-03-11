@@ -1,0 +1,130 @@
+@cindex Airy functions
+@cindex Ai(x)
+@cindex Bi(x)
+
+The Airy functions @math{Ai(x)} and @math{Bi(x)} are defined by the
+integral representations,
+@tex
+\beforedisplay
+$$
+\eqalign{
+Ai(x) & = {1\over\pi} \int_0^\infty \cos(t^3/3 + xt ) \,dt, \cr
+Bi(x) & = {1\over\pi} \int_0^\infty (e^{-t^3/3} + \sin(t^3/3 + xt)) \,dt.
+}
+$$
+\afterdisplay
+@end tex
+@ifinfo
+
+@example
+Ai(x) = (1/\pi) \int_0^\infty \cos((1/3) t^3 + xt) dt
+Bi(x) = (1/\pi) \int_0^\infty (e^(-(1/3) t^3) + \sin((1/3) t^3 + xt)) dt
+@end example
+
+@end ifinfo
+@noindent
+For further information see Abramowitz & Stegun, Section 10.4. The Airy
+functions are defined in the header file @file{gsl_sf_airy.h}.
+
+@menu
+* Airy Functions::              
+* Derivatives of Airy Functions::  
+* Zeros of Airy Functions::     
+* Zeros of Derivatives of Airy Functions::  
+@end menu
+
+@node Airy Functions
+@subsection Airy Functions
+
+@deftypefun double gsl_sf_airy_Ai (double @var{x}, gsl_mode_t @var{mode})
+@deftypefunx int gsl_sf_airy_Ai_e (double @var{x}, gsl_mode_t @var{mode}, gsl_sf_result * @var{result})
+These routines compute the Airy function @math{Ai(x)} with an accuracy
+specified by @var{mode}.
+@end deftypefun
+
+@deftypefun double gsl_sf_airy_Bi (double @var{x}, gsl_mode_t @var{mode})
+@deftypefunx int gsl_sf_airy_Bi_e (double @var{x}, gsl_mode_t @var{mode}, gsl_sf_result * @var{result})
+These routines compute the Airy function @math{Bi(x)} with an accuracy
+specified by @var{mode}.
+@end deftypefun
+
+@deftypefun double gsl_sf_airy_Ai_scaled (double @var{x}, gsl_mode_t @var{mode})
+@deftypefunx int gsl_sf_airy_Ai_scaled_e (double @var{x}, gsl_mode_t @var{mode}, gsl_sf_result * @var{result})
+These routines compute a scaled version of the Airy function
+@math{S_A(x) Ai(x)}.  For @math{x>0} the scaling factor @math{S_A(x)} is @c{$\exp(+(2/3) x^{3/2})$}
+@math{\exp(+(2/3) x^(3/2))}, 
+and is 1
+for @math{x<0}.
+@end deftypefun
+
+@deftypefun double gsl_sf_airy_Bi_scaled (double @var{x}, gsl_mode_t @var{mode})
+@deftypefunx int gsl_sf_airy_Bi_scaled_e (double @var{x}, gsl_mode_t @var{mode}, gsl_sf_result * @var{result})
+These routines compute a scaled version of the Airy function
+@math{S_B(x) Bi(x)}.  For @math{x>0} the scaling factor @math{S_B(x)} is @c{$\exp(-(2/3) x^{3/2})$}
+@math{exp(-(2/3) x^(3/2))}, and is 1 for @math{x<0}.
+@end deftypefun
+
+
+@node Derivatives of Airy Functions
+@subsection Derivatives of Airy Functions
+
+@deftypefun double gsl_sf_airy_Ai_deriv (double @var{x}, gsl_mode_t @var{mode})
+@deftypefunx int gsl_sf_airy_Ai_deriv_e (double @var{x}, gsl_mode_t @var{mode}, gsl_sf_result * @var{result})
+These routines compute the Airy function derivative @math{Ai'(x)} with
+an accuracy specified by @var{mode}.
+@end deftypefun
+
+@deftypefun double gsl_sf_airy_Bi_deriv (double @var{x}, gsl_mode_t @var{mode})
+@deftypefunx int gsl_sf_airy_Bi_deriv_e (double @var{x}, gsl_mode_t @var{mode}, gsl_sf_result * @var{result})
+These routines compute the Airy function derivative @math{Bi'(x)} with
+an accuracy specified by @var{mode}.
+@end deftypefun
+
+@deftypefun double gsl_sf_airy_Ai_deriv_scaled (double @var{x}, gsl_mode_t @var{mode})
+@deftypefunx int gsl_sf_airy_Ai_deriv_scaled_e (double @var{x}, gsl_mode_t @var{mode}, gsl_sf_result * @var{result})
+These routines compute the scaled Airy function derivative 
+@math{S_A(x) Ai'(x)}.  
+For @math{x>0} the scaling factor @math{S_A(x)} is @c{$\exp(+(2/3) x^{3/2})$}
+@math{\exp(+(2/3) x^(3/2))}, and is 1 for @math{x<0}.
+@end deftypefun
+
+@deftypefun double gsl_sf_airy_Bi_deriv_scaled (double @var{x}, gsl_mode_t @var{mode})
+@deftypefunx int gsl_sf_airy_Bi_deriv_scaled_e (double @var{x}, gsl_mode_t @var{mode}, gsl_sf_result * @var{result})
+These routines compute the scaled Airy function derivative 
+@math{S_B(x) Bi'(x)}.
+For @math{x>0} the scaling factor @math{S_B(x)} is @c{$\exp(-(2/3) x^{3/2})$}
+@math{exp(-(2/3) x^(3/2))}, and is 1 for @math{x<0}.
+@end deftypefun
+
+
+@node Zeros of Airy Functions
+@subsection Zeros of Airy Functions
+
+@deftypefun double gsl_sf_airy_zero_Ai (unsigned int @var{s})
+@deftypefunx int gsl_sf_airy_zero_Ai_e (unsigned int @var{s}, gsl_sf_result * @var{result})
+These routines compute the location of the @var{s}-th zero of the Airy
+function @math{Ai(x)}.
+@end deftypefun
+
+@deftypefun double gsl_sf_airy_zero_Bi (unsigned int @var{s})
+@deftypefunx int gsl_sf_airy_zero_Bi_e (unsigned int @var{s}, gsl_sf_result * @var{result})
+These routines compute the location of the @var{s}-th zero of the Airy
+function @math{Bi(x)}.
+@end deftypefun
+
+
+@node Zeros of Derivatives of Airy Functions
+@subsection Zeros of Derivatives of Airy Functions
+
+@deftypefun double gsl_sf_airy_zero_Ai_deriv (unsigned int @var{s})
+@deftypefunx int gsl_sf_airy_zero_Ai_deriv_e (unsigned int @var{s}, gsl_sf_result * @var{result})
+These routines compute the location of the @var{s}-th zero of the Airy
+function derivative @math{Ai'(x)}.
+@end deftypefun
+
+@deftypefun double gsl_sf_airy_zero_Bi_deriv (unsigned int @var{s})
+@deftypefunx int gsl_sf_airy_zero_Bi_deriv_e (unsigned int @var{s}, gsl_sf_result * @var{result})
+These routines compute the location of the @var{s}-th zero of the Airy
+function derivative @math{Bi'(x)}.
+@end deftypefun
+

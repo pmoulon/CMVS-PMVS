@@ -1,0 +1,67 @@
+2009-07-10  Brian Gough  <bjg@network-theory.co.uk>
+
+	* gsl-ref.texi: use the dircategory "Software libraries" as used
+	in the Free Software Directory
+
+2006-02-09  Brian Gough  <bjg@network-theory.co.uk>
+
+	* Makefile.am: disable pdf, as it would require maintaining a
+	separate set of figure files.
+
+Mon Apr  7 12:54:30 MDT 2003  G. Jungman
+
+    * specfunc-gamma.texi: added entry for gsl_sf_gamma_inc_(),
+    gsl_sf_gamma_inc()
+
+
+2000-10-26  Mark Galassi  <rosalia@lanl.gov>
+
+	* gsl-ref.texi: small changes to update the author list.
+
+Mon Oct 23 21:49:25 2000  Brian Gough  <bjg@network-theory.co.uk>
+
+	* usage.texi: added info on portability functions
+
+Sat Jul 15 23:52:59 2000  Brian Gough  <bjg@network-theory.co.uk>
+
+	* Makefile.am (EXTRA_DIST): added gsl-design.texi to the
+ 	distributed files
+
+Thu May 18 12:11:24 2000  Brian Gough  <bjg@network-theory.co.uk>
+
+	* gsl-ref.texi (Preliminaries): changed the phrase "collection of
+ 	routines for numerical analysis" to "... numerical computing", as
+ 	on the web page. 
+	
+Wed Apr 26 17:46:48 2000  Brian Gough  <bjg@network-theory.co.uk>
+
+	* math.texi: added a chapter on the elementary functions and
+ 	constants in gsl_math.h
+
+Tue Apr  4 21:45:27 2000  Brian Gough  <bjg@network-theory.co.uk>
+
+	* upgraded texinfo.tex to texinfo-4.0
+
+2000-04-01  Mark Galassi  <rosalia@lanl.gov>
+
+	* roots.texi (Providing the function to solve): fixed a typo,
+	THANKS Dave Morrison.
+
+1999-12-03  Mark Galassi  <rosalia@lanl.gov>
+
+	* gsl-ref.texi, gsl-design.texi: updated my email address.
+
+	* gsl-design.texi: minor changes.
+
+Tue Feb 16 11:36:03 1999  Brian Gough  <bjg@netsci.freeserve.co.uk>
+
+	* statistics.texi: removed the multiple descriptions of double,
+ 	int versions of the functions. Now we just describe the double
+ 	versions and note the existence of the corresponding versions for
+ 	other types.
+
+	* ChangeLog: added a changelog file for the documentation,
+ 	although it is not required by the GNU Coding standards. I use the
+ 	Changelogs to keep track of pending changes that I need to commit
+ 	to repository.
+

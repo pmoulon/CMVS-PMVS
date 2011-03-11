@@ -1,0 +1,198 @@
+@cindex ntuples
+
+This chapter describes functions for creating and manipulating
+@dfn{ntuples}, sets of values associated with events.  The ntuples
+are stored in files. Their values can be extracted in any combination
+and @dfn{booked} in a histogram using a selection function.
+
+The values to be stored are held in a user-defined data structure, and
+an ntuple is created associating this data structure with a file.  The
+values are then written to the file (normally inside a loop) using
+the ntuple functions described below.
+
+A histogram can be created from ntuple data by providing a selection
+function and a value function.  The selection function specifies whether
+an event should be included in the subset to be analyzed or not. The value
+function computes the entry to be added to the histogram for each
+event.
+
+All the ntuple functions are defined in the header file
+@file{gsl_ntuple.h}
+
+@menu
+* The ntuple struct::           
+* Creating ntuples::            
+* Opening an existing ntuple file::  
+* Writing ntuples::             
+* Reading ntuples ::            
+* Closing an ntuple file::      
+* Histogramming ntuple values::  
+* Example ntuple programs::     
+* Ntuple References and Further Reading::  
+@end menu
+
+@node The ntuple struct
+@section The ntuple struct
+@tpindex gsl_ntuple
+Ntuples are manipulated using the @code{gsl_ntuple} struct. This struct
+contains information on the file where the ntuple data is stored, a
+pointer to the current ntuple data row and the size of the user-defined
+ntuple data struct.
+
+@example
+typedef struct @{
+    FILE * file;
+    void * ntuple_data;
+    size_t size;
+@} gsl_ntuple;
+@end example
+
+@node Creating ntuples
+@section Creating ntuples
+
+@deftypefun {gsl_ntuple *} gsl_ntuple_create (char * @var{filename}, void * @var{ntuple_data}, size_t @var{size})
+This function creates a new write-only ntuple file @var{filename} for
+ntuples of size @var{size} and returns a pointer to the newly created
+ntuple struct.  Any existing file with the same name is truncated to
+zero length and overwritten.  A pointer to memory for the current ntuple
+row @var{ntuple_data} must be supplied---this is used to copy ntuples
+in and out of the file.
+@end deftypefun
+
+@node Opening an existing ntuple file
+@section Opening an existing ntuple file
+
+@deftypefun {gsl_ntuple *} gsl_ntuple_open (char * @var{filename}, void * @var{ntuple_data}, size_t @var{size})
+This function opens an existing ntuple file @var{filename} for reading
+and returns a pointer to a corresponding ntuple struct. The ntuples in
+the file must have size @var{size}.  A pointer to memory for the current
+ntuple row @var{ntuple_data} must be supplied---this is used to copy
+ntuples in and out of the file.
+@end deftypefun
+
+@node Writing ntuples
+@section Writing ntuples
+
+@deftypefun int gsl_ntuple_write (gsl_ntuple * @var{ntuple})
+This function writes the current ntuple @var{ntuple->ntuple_data} of
+size @var{ntuple->size} to the corresponding file.
+@end deftypefun
+
+@deftypefun int gsl_ntuple_bookdata (gsl_ntuple * @var{ntuple})
+This function is a synonym for @code{gsl_ntuple_write}.
+@end deftypefun
+
+@node Reading ntuples 
+@section Reading ntuples
+
+@deftypefun int gsl_ntuple_read (gsl_ntuple * @var{ntuple})
+This function reads the current row of the ntuple file for @var{ntuple}
+and stores the values in @var{ntuple->data}.
+@end deftypefun
+
+@node Closing an ntuple file
+@section Closing an ntuple file
+
+@deftypefun int gsl_ntuple_close (gsl_ntuple * @var{ntuple})
+This function closes the ntuple file @var{ntuple} and frees its
+associated allocated memory.
+@end deftypefun
+
+@node Histogramming ntuple values
+@section Histogramming ntuple values
+
+Once an ntuple has been created its contents can be histogrammed in
+various ways using the function @code{gsl_ntuple_project}.  Two
+user-defined functions must be provided, a function to select events and
+a function to compute scalar values. The selection function and the
+value function both accept the ntuple row as a first argument and other
+parameters as a second argument.
+
+@cindex selection function, ntuples
+@tpindex gsl_ntuple_select_fn
+The @dfn{selection function} determines which ntuple rows are selected
+for histogramming.  It is defined by the following struct,
+
+@smallexample
+typedef struct @{
+  int (* function) (void * ntuple_data, void * params);
+  void * params;
+@} gsl_ntuple_select_fn;
+@end smallexample
+
+@noindent
+The struct component @var{function} should return a non-zero value for
+each ntuple row that is to be included in the histogram.
+
+@cindex value function, ntuples
+@tpindex gsl_ntuple_value_fn
+The @dfn{value function} computes scalar values for those ntuple rows
+selected by the selection function,
+
+@smallexample
+typedef struct @{
+  double (* function) (void * ntuple_data, void * params);
+  void * params;
+@} gsl_ntuple_value_fn;
+@end smallexample
+
+@noindent
+In this case the struct component @var{function} should return the value
+to be added to the histogram for the ntuple row.  
+
+@cindex histogram, from ntuple
+@cindex projection of ntuples
+@deftypefun int gsl_ntuple_project (gsl_histogram * @var{h}, gsl_ntuple * @var{ntuple}, gsl_ntuple_value_fn * @var{value_func}, gsl_ntuple_select_fn * @var{select_func})
+This function updates the histogram @var{h} from the ntuple @var{ntuple}
+using the functions @var{value_func} and @var{select_func}. For each
+ntuple row where the selection function @var{select_func} is non-zero the
+corresponding value of that row is computed using the function
+@var{value_func} and added to the histogram.  Those ntuple rows where
+@var{select_func} returns zero are ignored.  New entries are added to
+the histogram, so subsequent calls can be used to accumulate further
+data in the same histogram.
+@end deftypefun
+
+@node Example ntuple programs
+@section Examples
+
+The following example programs demonstrate the use of ntuples in
+managing a large dataset.  The first program creates a set of 10,000
+simulated ``events'', each with 3 associated values @math{(x,y,z)}.  These
+are generated from a gaussian distribution with unit variance, for
+demonstration purposes, and written to the ntuple file @file{test.dat}.
+
+@example
+@verbatiminclude examples/ntuplew.c
+@end example
+
+@noindent
+The next program analyses the ntuple data in the file @file{test.dat}.
+The analysis procedure is to compute the squared-magnitude of each
+event, @math{E^2=x^2+y^2+z^2}, and select only those which exceed a
+lower limit of 1.5.  The selected events are then histogrammed using
+their @math{E^2} values.
+
+@example
+@verbatiminclude examples/ntupler.c
+@end example
+
+@need 3000
+The following plot shows the distribution of the selected events.
+Note the cut-off at the lower bound.
+
+@iftex
+@sp 1
+@center @image{ntuple,3.4in}
+@end iftex
+
+@node Ntuple References and Further Reading
+@section References and Further Reading
+@cindex PAW
+@cindex HBOOK
+
+Further information on the use of ntuples can be found in the
+documentation for the @sc{cern} packages @sc{paw} and @sc{hbook}
+(available online).
+
+

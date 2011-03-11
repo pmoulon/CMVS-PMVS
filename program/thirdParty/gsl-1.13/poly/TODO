@@ -1,0 +1,130 @@
+* Estimate error on general poly roots using Newton method? Allow for
+multiple roots and higher derivatives
+
+* Newton-Maehly (Newton with implicit deflation)
+
+* Jenkins-Traub
+
+* Brian Smith's adaptation of Laguerre's method
+
+* Hirano's method, SIAM J Num Anal 19 (1982) 793-99 by Murota
+
+* Carstensen, Petkovic, "On iteration methods without derivatives for
+the simultaneous determination of polynomial zeros", J. Comput. Appl.
+Math., 45 (1993) 251-267
+
+* Investigate this,
+
+ > NA Digest   Sunday, July 11, 1999   Volume 99 : Issue 28
+ > 
+ > From: Murakami Hiroshi <nadigest@tmca.ac.jp>
+ > Date: Sun, 11 Jul 1999 18:56:54 +0900 (JST)
+ > Subject: Code for Wilf's Complex Bisection Method
+ > 
+ >   A sample demo source of root finding method for the general complex 
+ > coefficient polynomial is placed to URL <ftp://ftp.tmca.ac.jp/wilf.taz>. 
+ > It is about 8KB in size and is a tar and gnu-zipped file.
+ > The algorithm is taken from the following reference: 
+ >     HERBERT S.WILF,"A Global Bisection Algorithm for Computing the Zeros 
+ >     of Polynomials in the Complex Plane",ACM.vol.25,No.3,July 1978,pp.415-420.
+ > 
+ >   The Wilf's method is the complex plane version of the Sturm bi-section 
+ > method for the real polynomial. And theoretically very interesting.
+ > For the given complex interval (complex rectilinear region and sides are 
+ > parallel to the x-y axis), the procedure gives the count of the complex 
+ > roots of the polynomial inside the interval. Thus, successive bi-section
+ > or quad-section of the interval can give the sequence of the shrinking 
+ > intervals containing the root inside to attain the required accuracies.
+ >   The source code is written mostly Fortran77 language, however some 
+ > violations are intensionally left as: 1: The DO-ENDDO loop structure.
+ > 2: The longer than 6 letter names. 3: The use of under-score letter. 
+ > 4: The use of include statement.
+ >   The code will be placed in the public domain.
+ > 
+
+* Investigate this
+
+From: "Steven G. Johnson" <stevenj@alum.mit.edu>
+To: help-gsl@gnu.org
+Subject: [Help-gsl] (in)accuracy of gsl_poly_complex_solve for repeated
+	roots?
+Date: Sun, 05 Jun 2005 16:25:40 -0400
+Precedence: list
+Envelope-to: bjg@network-theory.co.uk
+
+Hi, I noticed that gsl_poly_complex_solve seems to be surprisingly 
+inaccurate.  For example, if you ask it for the roots of 1 + 4x + 6x^2 + 
+4x^3 + x^4, which should have x = -1 as a four-fold root (note that the 
+coefficients and solutions are exactly representable), it gives roots:
+
+-0.999903+9.66605e-05i
+-0.999903-9.66605e-05i
+-1.0001+9.66834e-05i
+-1.0001-9.66834e-05i
+
+i.e. it is accurate to only 4 significant digits.  (On the other hand, 
+when I have 4 distinct real roots it seems to be accurate to machine 
+precision.)
+
+If this kind of catastrophic accuracy loss is intrinsic to the algorithm 
+when repeated roots are encountered, please note it in the manual.
+
+However, I suspect that there may be algorithms to obtain higher 
+accuracy for multiple roots.   I found the below references in a 
+literature search on the topic, which you may want to look into.  (The 
+first reference can be found online at 
+http://www.neiu.edu/~zzeng/multroot.htm)
+
+Cordially,
+Steven G. Johnson
+
+---------------------------------------------------------------------
+Algorithm 835: MULTROOT - a Matlab package for computing polynomial 
+roots and multiplicities
+Zeng, Z. (Dept. of Math., Northeastern Illinois Univ., Chicago, IL, USA) 
+Source: ACM Transactions on Mathematical Software, v 30, n 2, June 2004, 
+p 218-36
+ISSN: 0098-3500 CODEN: ACMSCU
+Publisher: ACM, USA
+
+Abstract: MULTROOT is a collection of Matlab modules for accurate 
+computation of polynomial roots, especially roots with nontrivial 
+multiplicities. As a blackbox-type software, MULTROOT requires the 
+polynomial coefficients as the only input, and outputs the computed 
+roots, multiplicities, backward error, estimated forward error, and the 
+structure-preserving condition number. The most significant features of 
+MULTROOT are the multiplicity identification capability and high 
+accuracy on multiple roots without using multiprecision arithmetic, even 
+if the polynomial coefficients are inexact. A comprehensive test suite 
+of polynomials that are collected from the literature is included for 
+numerical experiments and performance comparison (21 refs.)
+
+---------------------------------------------------------------------
+Ten methods to bound multiple roots of polynomials
+Rump, S.M. (Inst. fur Informatik III, Tech. Univ. Hamburg-Harburg, 
+Hamburg, Germany) Source: Journal of Computational and Applied 
+Mathematics, v 156, n 2, 15 July 2003, p 403-32
+ISSN: 0377-0427 CODEN: JCAMDI
+Publisher: Elsevier, Netherlands
+
+Abstract: Given a univariate polynomial P with a k-fold multiple root or 
+a k-fold root cluster near some z, we discuss nine different methods to 
+compute a disc near z which either contains exactly or contains at least 
+k roots of P. Many of the presented methods are known and of those some 
+are new. We are especially interested in the behavior of methods when 
+implemented in a rigorous way, that is, when taking into account all 
+possible effects of rounding errors. In other words, every result shall 
+be mathematically correct. We display extensive test sets comparing the 
+methods under different circumstances. Based on the results, we present 
+a tenth, hybrid method combining five of the previous methods which, for 
+give z, (i) detects the number k of roots near z and (ii) computes an 
+including disc with in most cases a radius of the order of the numerical 
+sensitivity of the root cluster. Therefore, the resulting discs are 
+numerically nearly optimal
+
+
+
+_______________________________________________
+Help-gsl mailing list
+Help-gsl@gnu.org
+http://lists.gnu.org/mailman/listinfo/help-gsl

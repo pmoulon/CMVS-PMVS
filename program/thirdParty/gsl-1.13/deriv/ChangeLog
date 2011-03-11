@@ -1,0 +1,13 @@
+2008-07-03  Brian Gough  <bjg@hp2.network-theory.co.uk>
+
+	* Makefile.am (INCLUDES): use top_srcdir instead of top_builddir
+
+2007-08-22  Brian Gough  <bjg@network-theory.co.uk>
+
+	* deriv.c (central_deriv): corrected dy term for error in h
+	(forward_deriv): corrected dy term for error in h
+
+2004-03-06  Brian Gough  <bjg@network-theory.co.uk>
+
+	* reworking API of gsl_diff
+

@@ -1,0 +1,10 @@
+* Sort out "const" in prototypes, it looks odd since there are consts
+for many functions which modify the state.  (Applies to both qrng and rng)
+
+*  It would be useful to include functions to generate quasi-random
+  number distributions (at least the Gaussian distribution)? obviously
+  the Box-Mueller algorithm cannot be used to maintain the low
+  discrepancy characteristics of the sequence, there are several
+  methods suggested in the literature but it isn't at all my field so
+  I'm not sure which is to be preferred. (DENISON Francis
+  <francis.denison@irsn.fr>)

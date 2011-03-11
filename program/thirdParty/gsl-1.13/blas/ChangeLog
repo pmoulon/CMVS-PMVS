@@ -1,0 +1,77 @@
+2009-04-30  Brian Gough  <bjg@network-theory.co.uk>
+
+	* blas.c (gsl_blas_drotm): fix incorrect length check
+
+2005-04-05  Brian Gough  <bjg@network-theory.co.uk>
+
+	* blas.c (gsl_blas_ssyrk): test conformance against size correctly
+	allowing for transpose
+
+2004-12-21  Brian Gough  <bjg@network-theory.co.uk>
+
+	* blas.c (gsl_blas_ssyrk): corrected K to be A->size2 instead of
+	A->size1
+	(gsl_blas_dsyrk): as above
+	(gsl_blas_csyrk): as above
+	(gsl_blas_zsyrk): as above
+	(gsl_blas_cherk): as above
+	(gsl_blas_zherk): as above
+
+Mon Mar 18 19:39:34 2002  Brian Gough  <bjg@network-theory.co.uk>
+
+	* blas.c (gsl_blas_zgemv): added missing case of CblasConjTrans to
+ 	zgemv and cgemv
+
+Mon Feb 18 20:01:49 2002  Brian Gough  <bjg@network-theory.co.uk>
+
+	* gsl_blas_types.h: removed unneeded header files
+
+Sat Apr 28 15:25:16 2001  Brian Gough  <bjg@network-theory.co.uk>
+
+	* blas.c: cast size_t to int for calls to CBLAS
+
+Mon Mar 19 17:04:47 2001  Brian Gough  <bjg@network-theory.co.uk>
+
+	* split cblas routines out into a separate directory and library
+ 	which can be used as a cblas outside gsl
+
+Tue Sep 19 19:07:44 2000  Brian Gough  <bjg@network-theory.co.uk>
+
+	* test_blas_raw.c: added tests for dtbsv
+
+Sat Sep 16 20:27:18 2000  Brian Gough  <bjg@network-theory.co.uk>
+
+	* blas.c: use GSL_ERROR macro to signal errors
+
+Fri Sep 15 20:04:28 2000  Brian Gough  <bjg@network-theory.co.uk>
+
+	* source_iamax_r.h source_iamax_c.h: initialize max index to zero
+ 	before loop, so that the result is defined for a null vector
+
+Mon May 22 12:27:47 2000  Brian Gough  <bjg@network-theory.co.uk>
+
+	* Makefile.am (lib_LTLIBRARIES): renamed libgslblasnative.la to
+ 	libgslblas.la since "native" is ambiguous (suggests
+ 	system-supplied blas).
+
+	* test_blas_raw.c (test_L1): added test to cover for initial
+ 	run-in of odd lengths on loop unrolling in saxpy.
+
+Tue Mar 21 14:22:30 2000  Brian Gough  <bjg@network-theory.co.uk>
+
+	* test_blas_raw.c (test_L1): test norms for zero vectors
+
+	* source_nrm2_r.h, source_nrm2_r.h: skip zero elements of array,
+ 	as in original BLAS, fixes bug for vectors with leading zeros.
+
+Tue Mar  7 19:05:43 2000  Brian Gough  <bjg@network-theory.co.uk>
+
+	* Makefile.am (noinst_LTLIBRARIES): with libtool blasnative and
+ 	blascblas layers need to be installed as additional libraries, not
+ 	in libgsl.a.
+
+Fri Oct  1 15:50:14 1999  Brian Gough  <bjg@network-theory.co.uk>
+
+	* blas.c: make use of "trailing dimension" in matrix struct to
+ 	support LDA arguments for level 2 BLAS.
+

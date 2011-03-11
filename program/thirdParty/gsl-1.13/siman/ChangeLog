@@ -1,0 +1,129 @@
+2008-07-03  Brian Gough  <bjg@hp2.network-theory.co.uk>
+
+	* Makefile.am (INCLUDES): use top_srcdir instead of top_builddir
+
+2007-05-30  Brian Gough  <bjg@network-theory.co.uk>
+
+	* siman.c (boltzmann): moved safe_exp into boltzmann
+	(copy_state): put all copying into one function
+
+2006-03-08  Brian Gough  <bjg@network-theory.co.uk>
+
+	* test.c (square): removed inline since it causes problems with
+	some compilers
+
+2005-11-14  Brian Gough  <bjg@network-theory.co.uk>
+
+	* siman.c (safe_exp): added a safe_exp function to avoid underflow
+	for large uphill steps
+	
+2003-03-31  Brian Gough  <bjg@network-theory.co.uk>
+
+	* siman.c (gsl_siman_solve): avoid reevaluation for best_E
+	(gsl_siman_solve): loop over param.iters_fixed_T not
+	params.n_tries
+	(gsl_siman_solve): initialise energy at start
+
+Sat Aug  3 20:32:38 2002  Brian Gough  <bjg@network-theory.co.uk>
+
+	* siman.c (gsl_siman_solve): fix acceptance criterion to match
+	documentation (Peter S. Christopher)
+
+Thu Jun 13 20:57:00 2002  Brian Gough  <bjg@network-theory.co.uk>
+
+	* siman.c (gsl_siman_solve): keep track of the best result
+
+2002-02-07  Mark Galassi  <rosalia@galassi.org>
+
+	* siman.c (gsl_siman_solve): bug fix in the destructor for x and
+	new_x which was being called on &x and &new_x instead of x and
+	new_x; thanks to Karsten Howes <karsten@videotron.ca>
+
+Thu Jul 12 21:50:07 2001  Brian Gough  <bjg@network-theory.co.uk>
+
+	* gsl_siman.h: changed renamed gsl_Efunc_t to gsl_siman_Efunc_t,
+	in accordance with namespace conventions
+
+2000-12-15  Mark Galassi  <rosalia@galassi.org>
+
+	* siman.c (gsl_siman_solve): reversed a small change I had made
+	earlier and went back to taking Boltzmann-conditional steps when
+	the new energy is equal to the previous one.  This allows you to
+	move around if you are stuck on a plateau.
+
+	* gsl_siman.h, siman.c, siman_test.c, siman_tsp.c, test.c: changed
+	the siman_solve API to allow for more general search spaces.  The
+	problem was that we assumed that points in the search space were
+	data structures that were allocated in continguous memory, so they
+	could not be linked structures.  I replaced the malloc(), memcpy()
+	and free() calls with copy_constructor(), copyfunc() and
+	copy_destructor() functions.  The user passes these functions,
+	which means that siman_solve() now takes three more arguments of
+	type gsl_siman_copy_t, gsl_siman_copy_construct_t and
+	gsl_siman_destroy_t.  If these arguments are NULL (and all three
+	of them have to be NULL together), the traditional memcpy()
+	approach is used.
+
+1999-02-14  Mark Galassi  <rosalia@cygnus.com>
+
+	* minor fixes.
+
+Tue Nov 17 17:22:14 1998  Brian Gough  <bjg@vvv.lanl.gov>
+
+	* added #include <config.h> to all top-level source files
+
+Sun Nov  8 20:40:28 1998  Brian Gough  <bjg@vvv.lanl.gov>
+
+	* siman_tsp.c: clean up for make strict
+
+1998-11-06    <bjg@ancho.lanl.gov>
+
+	* test.c: added prototype for memcpy using #include <string.h>
+
+	* siman_test.c: added prototype for memcpy using #include <string.h>
+
+Wed Oct 28 15:06:58 1998  Brian Gough  <bjg@vvv.lanl.gov>
+
+	* siman.c: added #include <string.h> for memcpy
+
+Thu Aug 20 12:22:28 1998  Brian Gough  <bjg@vvv.lanl.gov>
+
+	* siman.c: use (char *) judiciously to avoid warnings about void
+ 	pointer arithmetic (see randist/shuffle.c for similar examples)
+
+	* siman_test.c: perform several tests, using the exact answer as
+ 	the comparison value, rather than checking for stationarity.
+
+Sun Jun 28 14:11:04 1998  Brian Gough  <bjg@vvv.lanl.gov>
+
+	* Converted to work with rng-style random number generators
+
+	* gsl_siman.h: gsl_siman_step_t type functions now take a gsl_rng
+ 	random number generator as their first argument
+
+	* siman.c (gsl_siman_solve): Now takes a gsl_rng random number
+ 	generator as the first argument
+
+Fri Jun 19 11:17:24 1998  Brian Gough  <bjg@vvv.lanl.gov>
+
+	* siman.c (gsl_siman_solve_many): changed the variable 'throw' to
+ 	'u' (for uniform-random-number) so that we can compile with c++
+ 	where throw is a reserved word.
+	
+Sat May 23 13:59:55 1998  Brian Gough  <bjg@vvv.lanl.gov>
+
+	* siman.c: made the solving functions deterministic by removing
+ 	the random seed, gsl_ran_seed(time(0L)). When the function is
+ 	non-deterministic it is hard to debug and test (about 1 time in 20
+ 	the test would fail due to the randomness). We can let the user do
+ 	the seeding if they need that.
+	
+1998-02-09  Mark Galassi  <rosalia@nis.lanl.gov>
+
+	* siman_test_driver.sh (LAST_ENERGY): fixed a typo; the tests now
+	report well when they converge.
+
+1998-01-30  Mark Galassi  <rosalia@cygnus.com>
+
+	* siman_test_driver.sh, Makefile.am (TESTS): added a test driver
+	so that now "make check" does something interesting.

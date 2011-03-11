@@ -1,0 +1,161 @@
+2004-07-10  Brian Gough  <bjg@network-theory.co.uk>
+
+	* error.c (gsl_error): flush stdout/stderr before aborting (needed
+	to get a useful error message on some platforms)
+
+2003-06-17  Brian Gough  <bjg@network-theory.co.uk>
+
+	* warn.c: removed, the functions are not used
+
+Sat Apr 27 21:27:32 2002  Brian Gough  <bjg@network-theory.co.uk>
+
+	* error.c (gsl_error): added an explanatory message in the default
+ 	error handler before aborting
+
+Tue Jun 12 11:52:23 2001  Brian Gough  <bjg@network-theory.co.uk>
+
+	* gsl_errno.h (GSL_STATUS_UPDATE): added macro for updating
+ 	status value multiple times
+
+Fri Apr 27 18:18:59 2001  Brian Gough  <bjg@network-theory.co.uk>
+
+	* gsl_errno.h (GSL_ERROR_NULL): added macro which returns NULL,
+ 	for out of memory conditions
+
+Mon Jan 22 16:01:55 2001  Brian Gough  <bjg@network-theory.co.uk>
+
+	* gsl_errno.h: added EOF for end of file
+
+Sat Aug 26 19:26:59 2000  Brian Gough  <bjg@network-theory.co.uk>
+
+	* gsl_errno.h: added error codes ETOLF, ETOLX, ETOLG for
+ 	unattainable tolerances in (F,X,G) in multimin MINPACK LM
+ 	algorithm.
+
+Fri May  5 11:20:10 2000  Brian Gough  <bjg@network-theory.co.uk>
+
+	* split gsl_test code out into separate test/ directory
+
+Sun Nov 28 17:17:03 1999  Brian Gough  <bjg@network-theory.co.uk>
+
+	* gsl_errno.h: added GSL_ENOPROG and GSL_ENOPROGJ to handle error
+ 	conditions from minpack hybrid algorithms (INFO=5,4 in the
+ 	original code)
+
+Thu Oct 28 14:41:31 1999  Brian Gough  <bjg@network-theory.co.uk>
+
+	* gsl_test.h: changed variable name in prototype for clarity
+
+Thu Oct  7 11:46:53 1999  Brian Gough  <bjg@network-theory.co.uk>
+
+	* test_results.c (gsl_test_str): changed #if __STDC__ to #ifdef
+ 	__STDC__ so the code will compile with compilers that define
+ 	__STDC__ to 0 meaning STDC+extensions.
+
+Sun Jul 11 21:48:25 1999  Brian Gough  <bjg@network-theory.co.uk>
+
+	* test_errnos.c (main): added GSL_ECACHE to handle internal cache
+ 	structures which grow and can hit a limit
+
+Sun Mar  7 17:00:08 1999  Brian Gough  <bjg@netsci.freeserve.co.uk>
+
+	* gsl_errno.h, test_errnos.c, strerror.c: added GSL_EDIVERGE for
+ 	divergent integrals and series
+
+Sat Feb 20 12:14:47 1999  Brian Gough  <bjg@netsci.freeserve.co.uk>
+
+	* test_errnos.c (main): added the new error codes to the tests
+
+	* gsl_errno.h: moved all the error codes into a single enum
+ 	instead of having a separate enum for GSL_SUCCESS and GSL_FAILURE
+
+Fri Feb 19 15:56:15 1999  Brian Gough  <bjg@netsci.freeserve.co.uk>
+
+	* gsl_errno.h, strerror.c: added GSL_CONTINUE as an error code
+ 	indicating that an iteration process has not converged and should
+ 	be continued for more iterations.
+
+Tue Nov 17 17:11:31 1998  Brian Gough  <bjg@vvv.lanl.gov>
+
+	* gsl_test.h: removed #include <config.h> which should not be
+ 	present in installed header files
+
+Tue Nov 10 15:55:56 1998  Brian Gough  <bjg@vvv.lanl.gov>
+
+	* test_results.c (gsl_test_abs), gsl_test.h: added gsl_test_abs
+ 	for absolute errors, like gsl_test_rel for relative errors
+
+Fri Oct 23 12:51:01 1998  Brian Gough  <bjg@vvv.lanl.gov>
+
+	* test_results.c (gsl_test_rel): print a shorter "observed vs
+ 	expected" message if the description is 45 characters or longer
+
+Mon Jun  1 11:02:04 1998  Brian Gough  <bjg@vvv.lanl.gov>
+
+	* gsl_errno.h: added GSL_EUNSUP for errors caused by a hardware
+	feature which is not supported on a particular platform
+
+	* renamed test.c to test_results.c to avoid confusion when debugging
+	other test programs called test.c
+
+Sat May 30 16:11:34 1998  Brian Gough  <bjg@vvv.lanl.gov>
+
+	* gsl_errno.h: add GSL_ESING for errors caused by singularities
+	or other bad function behavior
+
+Fri May 29 14:41:19 1998  Brian Gough  <bjg@vvv.lanl.gov>
+
+	* gsl_errno.h: added GSL_EBADLEN to signify bad lengths of
+ 	matrices or vectors (e.g. non-conformant sizes in a matrix or
+ 	vector multiplication)
+
+Wed May 27 18:15:34 1998  Brian Gough  <bjg@vvv.lanl.gov>
+
+	* test.c (gsl_test_str): changed things so that the strings aren't
+ 	printed unless the string equality test fails (usually they were
+ 	too long)
+
+Mon May 18 17:58:20 1998  Brian Gough  <bjg@vvv.lanl.gov>
+
+	* test.c (gsl_test_rel): added a test for numerical quantities,
+ 	given a result, an expected result and an allowable relative
+ 	error.
+	(gsl_test_int): added a test for comparing integers
+
+Sun May 10 16:03:12 1998  Brian Gough  <bjg@vvv.lanl.gov>
+
+	* gsl_errno.h: added GSL_EROUND for roundoff errors
+
+Fri May  8 18:50:13 1998  Brian Gough  <bjg@vvv.lanl.gov>
+
+	* gsl_errno.h: changed GSL_ETIMEOUT to GSL_EMAXITER to describe
+ 	the error that occurs when a specified number of iterations is
+ 	exceeded.
+
+Sun Apr 19 19:14:05 1998  Brian Gough  <bjg@vvv.lanl.gov>
+
+	* strerror.c (gsl_strerror): added an strerror function for making
+ 	readable descriptions of the error number
+
+Wed Apr 15 21:59:57 1998  Brian Gough  <bjg@vvv.lanl.gov>
+
+	* added a stream handler, for the error stream
+
+	* completely reorganized the files, but the functions are
+ 	relatively unchanged
+
+Wed Apr  8 13:55:48 1998  Brian Gough  <bjg@vvv.lanl.gov>
+
+	* gsl_errno.h (GSL_ERROR_RETURN_NOTHING): added an error macro
+ 	suitable for void functions
+
+Mon Apr  6 14:10:48 1998  Brian Gough  <bjg@vvv.lanl.gov>
+
+	* gsl_errno.h: use enum instead of #define for symbolic constants,
+ 	so that they can be seen in the debugger
+
+Sun Apr  5 19:49:17 1998  Brian Gough  <bjg@vvv.lanl.gov>
+
+	* err/errno.c (gsl_error): now takes gsl_errno as an argument
+ 	(this is useful for doing conditional breakpoints)
+

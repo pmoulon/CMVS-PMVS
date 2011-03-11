@@ -1,0 +1,32 @@
+2009-07-09  Brian Gough  <bjg@network-theory.co.uk>
+
+	* wavelet.c (gsl_wavelet_free): handle NULL argument in free
+	(gsl_wavelet_workspace_free): handle NULL argument in free
+
+2008-10-13  Brian Gough  <bjg@network-theory.co.uk>
+
+	* test.c (test_2d): change typename variable to name to avoid
+	conflict with C++ typename keyword
+
+2008-07-03  Brian Gough  <bjg@hp2.network-theory.co.uk>
+
+	* Makefile.am (INCLUDES): use top_srcdir instead of top_builddir
+
+2008-01-03  Brian Gough  <bjg@network-theory.co.uk>
+
+	* dwt.c (dwt_step): move pointer dereference out of loop
+
+2006-03-16  Brian Gough  <bjg@network-theory.co.uk>
+
+	* changed to gsl_wavelet_forward and gsl_wavelet_backward enums
+	throughout internally instead of forward and backward. 
+	
+2004-12-29  Brian Gough  <bjg@network-theory.co.uk>
+
+	* gsl_wavelet.h: added missing includes, use GSL_VAR instead of
+	extern
+
+2004-07-23  Brian Gough  <bjg@network-theory.co.uk>
+
+	* added wavelet directory from Ivo Alxneit.
+

@@ -1,0 +1,14 @@
+* Sine and Cosine Transforms from FFTPACK. 
+
+* A simple multidimensional fft.
+
+* Convolutions. This will need different interfaces corresponding to
+the type of underlying FFT (radix-2, mixed-radix, radix-2 real,
+mixed-radix real). The convolution function should be fft'ed before
+being passed, so that the function can be used in a loop.  The main
+point of the function being to do the index manipulation for the
+multiplication F*G.  Theoretically someone might want to convolve real
+and complex data together which could be done but would double the
+number of interfaces. It would be reasonable to restrict the
+convolutions to real-real and complex-complex.
+

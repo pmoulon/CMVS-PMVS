@@ -1,0 +1,102 @@
+2009-07-09  Brian Gough  <bjg@network-theory.co.uk>
+
+	* work_utrunc.c (gsl_sum_levin_utrunc_free): handle NULL argument
+	in free
+
+	* work_u.c (gsl_sum_levin_u_free): handle NULL argument in free
+
+2009-06-28  Brian Gough  <bjg@network-theory.co.uk>
+
+	* test.c (check_full): allow for case where err_est is zero.
+
+	* levin_u.c (gsl_sum_levin_u_minmax): handle the special case
+	where the sum has the form 1+0+0+0+... by ignoring trailing zeros.
+
+2008-07-03  Brian Gough  <bjg@hp2.network-theory.co.uk>
+
+	* Makefile.am (INCLUDES): use top_srcdir instead of top_builddir
+
+Thu Dec 21 21:46:54 2000  Brian Gough  <bjg@network-theory.co.uk>
+
+	* changed err to abserr, to make it clear that it is an absolute
+ 	error in line with other modules.
+
+Thu Nov  2 20:08:14 2000  Brian Gough  <bjg@network-theory.co.uk>
+
+	* added support for a workspace so that the user does not have to
+ 	allocate memory
+
+	* made the names of the functions consistent as either levin_u,
+ 	for the full u transform with error estimate, or levin_utrunc for
+ 	the u transform with only a truncation error estimate.
+
+Mon Apr 24 21:15:27 2000  Brian Gough  <bjg@network-theory.co.uk>
+
+	* gsl_sum.h: added #include <stdlib.h> for size_t
+
+Mon Nov  1 12:50:17 1999  Brian Gough  <bjg@network-theory.co.uk>
+
+	* test.c (main): added tests using series for the Euler constant
+ 	and eta(1/2)
+
+	* resolved problems with spurious failures by replacing the
+ 	directly computed truncation error by an estimate which varies
+ 	more smoothly. I have used the average of the previous two values,
+ 	which seems to give a reliable estimate of the truncation
+ 	error. The direct evaluation of the truncation error sometimes
+ 	fluctuated wildly, due to cancellation effects.
+
+Thu Oct 28 12:05:47 1999  Brian Gough  <bjg@network-theory.co.uk>
+
+	* test.c: cleaned up tests, now find that everything works in
+ 	double-precision but not extended-precision where there are two
+ 	failures depending on the optimization level
+
+	* levin_uerr.c (gsl_sum_levin_u_accel_minmax): changed loop
+ 	maximum from <=n to <n to avoid access of uninitialized memory,
+ 	need further correctness checks on algorithm though.
+
+Thu Oct  7 12:03:36 1999  Brian Gough  <bjg@network-theory.co.uk>
+
+	* levin_u.c levin_uerr.c: changed DBL_MAX to GSL_DBL_MAX since we
+ 	don't rely on DBL_MAX
+
+Sat Feb  6 20:35:26 1999  Brian Gough  <bjg@netsci.freeserve.co.uk>
+
+	* test.c: adjusted the precision check to allow for "infinite
+ 	accuracy" which occurs when two results agree to machine precision
+
+Thu Nov 19 13:10:19 1998  Brian Gough  <bjg@vvv.lanl.gov>
+
+	* added an n_used parameter to all routines which gives the number
+ 	of terms actually used
+
+Tue Nov 17 12:31:03 1998  Brian Gough  <bjg@vvv.lanl.gov>
+
+	* test.c: added #include <config.h>
+
+	* renamed test_sum.c to test.c
+
+	* renamed all the functions so that _with_derivs is now the
+ 	default and _trunc is the case of no error estimates from the
+ 	derivatives
+
+	* test_sum.c (main): cleaned up tests
+
+Mon Nov  9 22:05:45 1998  Brian Gough  <bjg@vvv.lanl.gov>
+
+	* levin_u.c (gsl_sum_levin_u_accel_minmax): got rid of noise
+ 	variables since they aren't used in the non-derivative case
+
+1998-11-06    <bjg@ancho.lanl.gov>
+
+	* test_sum.c: replace variable N by macro to avoid variable length
+	array warning
+
+Tue Oct 27 18:06:16 1998  Brian Gough  <bjg@vvv.lanl.gov>
+
+	* levin_u.c: added in noise but it does not seem to be giving the
+ 	right answer for the error estimate. The actual value for the
+ 	accelerated sum is correct though. Check toms/602 for the original
+ 	algorithm.
+

@@ -1,0 +1,1 @@
+ADD_LIBRARY(cmvs_lib bundle.h bundle.cc graclus.h graclus.cc)

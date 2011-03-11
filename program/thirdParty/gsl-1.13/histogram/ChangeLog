@@ -1,0 +1,170 @@
+2009-07-09  Brian Gough  <bjg@network-theory.co.uk>
+
+	* pdf2d.c (gsl_histogram2d_pdf_free): handle NULL argument in free
+
+	* pdf.c (gsl_histogram_pdf_free): handle NULL argument in free
+
+	* init2d.c (gsl_histogram2d_free): handle NULL argument in free
+
+	* init.c (gsl_histogram_free): handle NULL argument in free
+
+2008-07-03  Brian Gough  <bjg@hp2.network-theory.co.uk>
+
+	* Makefile.am (INCLUDES): use top_srcdir instead of top_builddir
+
+2004-11-28  Brian Gough  <bjg@network-theory.co.uk>
+
+	* init2d.c (make_uniform): compute uniform range without
+	cancellation error.
+
+	* init.c (make_uniform): compute uniform range without
+	cancellation error.
+
+Tue Aug 27 19:36:43 2002  Brian Gough  <bjg@network-theory.co.uk>
+
+	* test2d.c (main): changed test output format from %g to %e for
+ 	portability
+
+	* test.c (main): changed test output format from %g to %e for
+ 	portability
+
+Wed Mar  6 22:03:35 2002  Brian Gough  <bjg@network-theory.co.uk>
+
+	* test2d.c (main): cleaned up the tests a bit
+
+	* stat2d.c: added checks for wi>0 (Achim Gaedke)
+
+Sat Jan 26 17:09:10 2002  Brian Gough  <bjg@network-theory.co.uk>
+
+	* stat2d.c: added <math.h> include for sqrt
+
+Fri Jan 18 21:45:35 2002  Brian Gough  <bjg@network-theory.co.uk>
+
+	* stat2d.c: functions to compute statistics of 2d histograms
+ 	(Achim Gaedke)
+
+Mon Jan 14 19:34:31 2002  Brian Gough  <bjg@network-theory.co.uk>
+
+	* stat.c (gsl_histogram_sum): new function to sum bins (Achim
+ 	Gaedke)
+
+	* maxval2d.c (gsl_histogram2d_sum): new function to sum bins
+ 	(Achim Gaedke)
+
+Thu Oct 18 14:48:07 2001  Brian Gough  <bjg@network-theory.co.uk>
+
+	* pdf2d.c (gsl_histogram2d_pdf_alloc): changed the definition of
+ 	the pdf alloc function to be consistent with the rest of the
+ 	library
+
+	* pdf.c (gsl_histogram_pdf_alloc): changed the definition of the
+ 	pdf alloc function to be consistent with the rest of the library
+
+	* init2d.c (gsl_histogram2d_alloc): added an alloc function for
+ 	consistency
+
+	* init.c (gsl_histogram_alloc): added an alloc function for
+ 	consistency
+
+Wed Sep 12 13:38:40 2001  Brian Gough  <bjg@network-theory.co.uk>
+
+	* stat.c (gsl_histogram_mean): fixed calculation of mean/sigma and
+ 	made it part of the library
+
+Sun Aug 19 13:31:35 2001  Brian Gough  <bjg@network-theory.co.uk>
+
+	* test_gsl_histogram.sh: moved to top-level directory
+
+Sat Aug 18 22:21:26 2001  Brian Gough  <bjg@network-theory.co.uk>
+
+	* gsl-histogram.c: moved to top-level directory
+
+Mon Jun 25 17:41:42 2001  Brian Gough  <bjg@network-theory.co.uk>
+
+	* init2d.c (gsl_histogram2d_set_ranges_uniform): added range
+ 	initialization functions suggested by Achim Gaedke
+
+	* init.c (gsl_histogram_set_ranges_uniform): added range
+ 	initialization functions suggested by Achim Gaedke
+
+Tue Apr 17 22:13:05 2001  Brian Gough  <bjg@network-theory.co.uk>
+
+	* get2d.c: include "find.c"
+
+Mon Apr 16 20:13:45 2001  Brian Gough  <bjg@network-theory.co.uk>
+
+	* get2d.c (gsl_histogram2d_get): removed unnecessary reference to
+ 	find2d
+
+Mon Jan 22 13:55:13 2001  Brian Gough  <bjg@network-theory.co.uk>
+
+	* find.c (find): optimize for the linear case, include own binary
+ 	search for speed
+
+	* add.c (gsl_histogram_accumulate): fix check of array bound for
+ 	index
+
+Sun May 28 12:23:46 2000  Brian Gough  <bjg@network-theory.co.uk>
+
+	* test2d.c (main): use binary mode "b" when reading and writing
+ 	binary files
+
+	* test.c (main): use binary mode "b" when reading and writing
+ 	binary files
+
+Wed Apr 26 15:09:22 2000  Brian Gough  <bjg@network-theory.co.uk>
+
+	* oper2d.c (gsl_histogram2d_shift): added function for shifting
+ 	histogram by a constant offset
+
+	* oper.c (gsl_histogram_shift): added function for shifting
+ 	histogram by a constant offset
+
+Wed Apr 19 17:27:44 2000  Brian Gough  <bjg@network-theory.co.uk>
+
+	* added numerous extensions from Simone Piccardi
+
+2000-04-01  Mark Galassi  <rosalia@lanl.gov>
+
+	* *.c: changed 0 -> GSL_SUCCESS where appropriate; THANKS to Dave
+	Morrison.
+
+Fri Nov 19 15:31:51 1999  Brian Gough  <bjg@network-theory.co.uk>
+
+	* gsl-histogram.c (main): free memory before exit, eliminates
+ 	warning from checkergcc
+
+	* test_gsl_histogram.sh: added a test for the gsl-histogram
+ 	program
+
+Fri Oct  1 15:47:01 1999  Brian Gough  <bjg@network-theory.co.uk>
+
+	* file.c file2d.c: converted to use new block i/o functions
+
+Wed Aug 18 11:41:40 1999  Brian Gough  <bjg@network-theory.co.uk>
+
+	* eliminated obvious memory leaks from the tests, so that we can
+ 	check that the _free functions work correctly
+
+	* gsl-histogram.c (main): removed unused variable
+
+Fri Aug  6 11:19:37 1999  Brian Gough  <bjg@network-theory.co.uk>
+
+	* removed dependence on rand() and RAND_MAX
+
+1999-08-05  Mark Galassi  <rosalia@lanl.gov>
+
+	* gsl-histogram.c (main): fixed a simple logic bug.  Thanks to
+	Barak Pearlmutter (bap@cs.unm.edu) for the patch.
+
+1998-11-06    <bjg@ancho.lanl.gov>
+
+	* used a cast of (int) when attempting to print size_t variables
+	with %d
+
+Wed Sep 16 15:08:59 1998  Brian Gough  <bjg@vvv.lanl.gov>
+
+	* gsl-histogram.c (main): made the number of bins
+ 	optional. If you don't specify it then it uses bins of width 1.
+
+

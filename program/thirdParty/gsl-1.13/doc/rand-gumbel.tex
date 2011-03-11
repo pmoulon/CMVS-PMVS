@@ -1,0 +1,966 @@
+% GNUPLOT: plain TeX with Postscript
+\expandafter\ifx\csname GNUPLOTpicture\endcsname\relax
+  \begingroup
+    % Inner version of \newdimen from btxmac.tex
+    \edef\innernewdimen{\expandafter\noexpand\csname newdimen\endcsname}%
+    \innernewdimen\GNUPLOTunit
+  \endgroup
+  \gdef\GNUPLOTpicture(#1,#2){\vbox to#2\GNUPLOTunit\bgroup
+    \def\put(##1,##2)##3{\unskip\raise##2\GNUPLOTunit
+      \hbox to0pt{\kern##1\GNUPLOTunit ##3\hss}\ignorespaces}%
+    \def\ljust##1{\vbox to0pt{\vss\hbox to0pt{##1\hss}\vss}}%
+    \def\cjust##1{\vbox to0pt{\vss\hbox to0pt{\hss ##1\hss}\vss}}%
+    \def\rjust##1{\vbox to0pt{\vss\hbox to0pt{\hss ##1}\vss}}%
+    \def\stack##1{\let\\=\cr\tabskip=0pt\halign{\hfil ####\hfil\cr ##1\crcr}}%
+    \def\lstack##1{\hbox to0pt{\vbox to0pt{\vss\stack{##1}}\hss}}%
+    \def\cstack##1{\hbox to0pt{\hss\vbox to0pt{\vss\stack{##1}}\hss}}%
+    \def\rstack##1{\hbox to0pt{\vbox to0pt{\stack{##1}\vss}\hss}}%
+    \vss\hbox to#1\GNUPLOTunit\bgroup\ignorespaces}%
+  \gdef\endGNUPLOTpicture{\hss\egroup\egroup}%
+\fi
+\GNUPLOTunit=0.1bp
+\special{!
+%!PS-Adobe-2.0 EPSF-2.0
+%%Title: rand-gumbel.tex
+%%Creator: gnuplot 3.5 (pre 3.6) patchlevel beta 340
+%%CreationDate: Wed Sep 16 16:35:38 1998
+%%DocumentFonts: 
+%%BoundingBox: 0 0 360 237
+%%Orientation: Landscape
+%%EndComments
+/gnudict 120 dict def
+gnudict begin
+/Color false def
+/Solid false def
+/gnulinewidth 5.000 def
+/userlinewidth gnulinewidth def
+/vshift -33 def
+/dl {10 mul} def
+/hpt_ 31.5 def
+/vpt_ 31.5 def
+/hpt hpt_ def
+/vpt vpt_ def
+/M {moveto} bind def
+/L {lineto} bind def
+/R {rmoveto} bind def
+/V {rlineto} bind def
+/vpt2 vpt 2 mul def
+/hpt2 hpt 2 mul def
+/Lshow { currentpoint stroke M
+  0 vshift R show } def
+/Rshow { currentpoint stroke M
+  dup stringwidth pop neg vshift R show } def
+/Cshow { currentpoint stroke M
+  dup stringwidth pop -2 div vshift R show } def
+/UP { dup vpt_ mul /vpt exch def hpt_ mul /hpt exch def
+  /hpt2 hpt 2 mul def /vpt2 vpt 2 mul def } def
+/DL { Color {setrgbcolor Solid {pop []} if 0 setdash }
+ {pop pop pop Solid {pop []} if 0 setdash} ifelse } def
+/BL { stroke gnulinewidth 2 mul setlinewidth } def
+/AL { stroke gnulinewidth 2 div setlinewidth } def
+/UL { gnulinewidth mul /userlinewidth exch def } def
+/PL { stroke userlinewidth setlinewidth } def
+/LTb { BL [] 0 0 0 DL } def
+/LTa { AL [1 dl 2 dl] 0 setdash 0 0 0 setrgbcolor } def
+/LT0 { PL [] 0 1 0 DL } def
+/LT1 { PL [4 dl 2 dl] 0 0 1 DL } def
+/LT2 { PL [2 dl 3 dl] 1 0 0 DL } def
+/LT3 { PL [1 dl 1.5 dl] 1 0 1 DL } def
+/LT4 { PL [5 dl 2 dl 1 dl 2 dl] 0 1 1 DL } def
+/LT5 { PL [4 dl 3 dl 1 dl 3 dl] 1 1 0 DL } def
+/LT6 { PL [2 dl 2 dl 2 dl 4 dl] 0 0 0 DL } def
+/LT7 { PL [2 dl 2 dl 2 dl 2 dl 2 dl 4 dl] 1 0.3 0 DL } def
+/LT8 { PL [2 dl 2 dl 2 dl 2 dl 2 dl 2 dl 2 dl 4 dl] 0.5 0.5 0.5 DL } def
+/Pnt { stroke [] 0 setdash
+   gsave 1 setlinecap M 0 0 V stroke grestore } def
+/Dia { stroke [] 0 setdash 2 copy vpt add M
+  hpt neg vpt neg V hpt vpt neg V
+  hpt vpt V hpt neg vpt V closepath stroke
+  Pnt } def
+/Pls { stroke [] 0 setdash vpt sub M 0 vpt2 V
+  currentpoint stroke M
+  hpt neg vpt neg R hpt2 0 V stroke
+  } def
+/Box { stroke [] 0 setdash 2 copy exch hpt sub exch vpt add M
+  0 vpt2 neg V hpt2 0 V 0 vpt2 V
+  hpt2 neg 0 V closepath stroke
+  Pnt } def
+/Crs { stroke [] 0 setdash exch hpt sub exch vpt add M
+  hpt2 vpt2 neg V currentpoint stroke M
+  hpt2 neg 0 R hpt2 vpt2 V stroke } def
+/TriU { stroke [] 0 setdash 2 copy vpt 1.12 mul add M
+  hpt neg vpt -1.62 mul V
+  hpt 2 mul 0 V
+  hpt neg vpt 1.62 mul V closepath stroke
+  Pnt  } def
+/Star { 2 copy Pls Crs } def
+/BoxF { stroke [] 0 setdash exch hpt sub exch vpt add M
+  0 vpt2 neg V  hpt2 0 V  0 vpt2 V
+  hpt2 neg 0 V  closepath fill } def
+/TriUF { stroke [] 0 setdash vpt 1.12 mul add M
+  hpt neg vpt -1.62 mul V
+  hpt 2 mul 0 V
+  hpt neg vpt 1.62 mul V closepath fill } def
+/TriD { stroke [] 0 setdash 2 copy vpt 1.12 mul sub M
+  hpt neg vpt 1.62 mul V
+  hpt 2 mul 0 V
+  hpt neg vpt -1.62 mul V closepath stroke
+  Pnt  } def
+/TriDF { stroke [] 0 setdash vpt 1.12 mul sub M
+  hpt neg vpt 1.62 mul V
+  hpt 2 mul 0 V
+  hpt neg vpt -1.62 mul V closepath fill} def
+/DiaF { stroke [] 0 setdash vpt add M
+  hpt neg vpt neg V hpt vpt neg V
+  hpt vpt V hpt neg vpt V closepath fill } def
+/Pent { stroke [] 0 setdash 2 copy gsave
+  translate 0 hpt M 4 {72 rotate 0 hpt L} repeat
+  closepath stroke grestore Pnt } def
+/PentF { stroke [] 0 setdash gsave
+  translate 0 hpt M 4 {72 rotate 0 hpt L} repeat
+  closepath fill grestore } def
+/Circle { stroke [] 0 setdash 2 copy
+  hpt 0 360 arc stroke Pnt } def
+/CircleF { stroke [] 0 setdash hpt 0 360 arc fill } def
+/C0 { BL [] 0 setdash 2 copy moveto vpt 90 450  arc } bind def
+/C1 { BL [] 0 setdash 2 copy        moveto
+       2 copy  vpt 0 90 arc closepath fill
+               vpt 0 360 arc closepath } bind def
+/C2 { BL [] 0 setdash 2 copy moveto
+       2 copy  vpt 90 180 arc closepath fill
+               vpt 0 360 arc closepath } bind def
+/C3 { BL [] 0 setdash 2 copy moveto
+       2 copy  vpt 0 180 arc closepath fill
+               vpt 0 360 arc closepath } bind def
+/C4 { BL [] 0 setdash 2 copy moveto
+       2 copy  vpt 180 270 arc closepath fill
+               vpt 0 360 arc closepath } bind def
+/C5 { BL [] 0 setdash 2 copy moveto
+       2 copy  vpt 0 90 arc
+       2 copy moveto
+       2 copy  vpt 180 270 arc closepath fill
+               vpt 0 360 arc } bind def
+/C6 { BL [] 0 setdash 2 copy moveto
+      2 copy  vpt 90 270 arc closepath fill
+              vpt 0 360 arc closepath } bind def
+/C7 { BL [] 0 setdash 2 copy moveto
+      2 copy  vpt 0 270 arc closepath fill
+              vpt 0 360 arc closepath } bind def
+/C8 { BL [] 0 setdash 2 copy moveto
+      2 copy vpt 270 360 arc closepath fill
+              vpt 0 360 arc closepath } bind def
+/C9 { BL [] 0 setdash 2 copy moveto
+      2 copy  vpt 270 450 arc closepath fill
+              vpt 0 360 arc closepath } bind def
+/C10 { BL [] 0 setdash 2 copy 2 copy moveto vpt 270 360 arc closepath fill
+       2 copy moveto
+       2 copy vpt 90 180 arc closepath fill
+               vpt 0 360 arc closepath } bind def
+/C11 { BL [] 0 setdash 2 copy moveto
+       2 copy  vpt 0 180 arc closepath fill
+       2 copy moveto
+       2 copy  vpt 270 360 arc closepath fill
+               vpt 0 360 arc closepath } bind def
+/C12 { BL [] 0 setdash 2 copy moveto
+       2 copy  vpt 180 360 arc closepath fill
+               vpt 0 360 arc closepath } bind def
+/C13 { BL [] 0 setdash  2 copy moveto
+       2 copy  vpt 0 90 arc closepath fill
+       2 copy moveto
+       2 copy  vpt 180 360 arc closepath fill
+               vpt 0 360 arc closepath } bind def
+/C14 { BL [] 0 setdash 2 copy moveto
+       2 copy  vpt 90 360 arc closepath fill
+               vpt 0 360 arc } bind def
+/C15 { BL [] 0 setdash 2 copy vpt 0 360 arc closepath fill
+               vpt 0 360 arc closepath } bind def
+/Rec   { newpath 4 2 roll moveto 1 index 0 rlineto 0 exch rlineto
+       neg 0 rlineto closepath } bind def
+/Square { dup Rec } bind def
+/Bsquare { vpt sub exch vpt sub exch vpt2 Square } bind def
+/S0 { BL [] 0 setdash 2 copy moveto 0 vpt rlineto BL Bsquare } bind def
+/S1 { BL [] 0 setdash 2 copy vpt Square fill Bsquare } bind def
+/S2 { BL [] 0 setdash 2 copy exch vpt sub exch vpt Square fill Bsquare } bind def
+/S3 { BL [] 0 setdash 2 copy exch vpt sub exch vpt2 vpt Rec fill Bsquare } bind def
+/S4 { BL [] 0 setdash 2 copy exch vpt sub exch vpt sub vpt Square fill Bsquare } bind def
+/S5 { BL [] 0 setdash 2 copy 2 copy vpt Square fill
+       exch vpt sub exch vpt sub vpt Square fill Bsquare } bind def
+/S6 { BL [] 0 setdash 2 copy exch vpt sub exch vpt sub vpt vpt2 Rec fill Bsquare } bind def
+/S7 { BL [] 0 setdash 2 copy exch vpt sub exch vpt sub vpt vpt2 Rec fill
+       2 copy vpt Square fill
+       Bsquare } bind def
+/S8 { BL [] 0 setdash 2 copy vpt sub vpt Square fill Bsquare } bind def
+/S9 { BL [] 0 setdash 2 copy vpt sub vpt vpt2 Rec fill Bsquare } bind def
+/S10 { BL [] 0 setdash 2 copy vpt sub vpt Square fill 2 copy exch vpt sub exch vpt Square fill
+       Bsquare } bind def
+/S11 { BL [] 0 setdash 2 copy vpt sub vpt Square fill 2 copy exch vpt sub exch vpt2 vpt Rec fill
+       Bsquare } bind def
+/S12 { BL [] 0 setdash 2 copy exch vpt sub exch vpt sub vpt2 vpt Rec fill Bsquare } bind def
+/S13 { BL [] 0 setdash 2 copy exch vpt sub exch vpt sub vpt2 vpt Rec fill
+       2 copy vpt Square fill Bsquare } bind def
+/S14 { BL [] 0 setdash 2 copy exch vpt sub exch vpt sub vpt2 vpt Rec fill
+       2 copy exch vpt sub exch vpt Square fill Bsquare } bind def
+/S15 { BL [] 0 setdash 2 copy Bsquare fill Bsquare } bind def
+/D0 { gsave translate 45 rotate 0 0 S0 stroke grestore } bind def
+/D1 { gsave translate 45 rotate 0 0 S1 stroke grestore } bind def
+/D2 { gsave translate 45 rotate 0 0 S2 stroke grestore } bind def
+/D3 { gsave translate 45 rotate 0 0 S3 stroke grestore } bind def
+/D4 { gsave translate 45 rotate 0 0 S4 stroke grestore } bind def
+/D5 { gsave translate 45 rotate 0 0 S5 stroke grestore } bind def
+/D6 { gsave translate 45 rotate 0 0 S6 stroke grestore } bind def
+/D7 { gsave translate 45 rotate 0 0 S7 stroke grestore } bind def
+/D8 { gsave translate 45 rotate 0 0 S8 stroke grestore } bind def
+/D9 { gsave translate 45 rotate 0 0 S9 stroke grestore } bind def
+/D10 { gsave translate 45 rotate 0 0 S10 stroke grestore } bind def
+/D11 { gsave translate 45 rotate 0 0 S11 stroke grestore } bind def
+/D12 { gsave translate 45 rotate 0 0 S12 stroke grestore } bind def
+/D13 { gsave translate 45 rotate 0 0 S13 stroke grestore } bind def
+/D14 { gsave translate 45 rotate 0 0 S14 stroke grestore } bind def
+/D15 { gsave translate 45 rotate 0 0 S15 stroke grestore } bind def
+/DiaE { stroke [] 0 setdash vpt add M
+  hpt neg vpt neg V hpt vpt neg V
+  hpt vpt V hpt neg vpt V closepath stroke } def
+/BoxE { stroke [] 0 setdash exch hpt sub exch vpt add M
+  0 vpt2 neg V hpt2 0 V 0 vpt2 V
+  hpt2 neg 0 V closepath stroke } def
+/TriUE { stroke [] 0 setdash vpt 1.12 mul add M
+  hpt neg vpt -1.62 mul V
+  hpt 2 mul 0 V
+  hpt neg vpt 1.62 mul V closepath stroke } def
+/TriDE { stroke [] 0 setdash vpt 1.12 mul sub M
+  hpt neg vpt 1.62 mul V
+  hpt 2 mul 0 V
+  hpt neg vpt -1.62 mul V closepath stroke } def
+/PentE { stroke [] 0 setdash gsave
+  translate 0 hpt M 4 {72 rotate 0 hpt L} repeat
+  closepath stroke grestore } def
+/CircE { stroke [] 0 setdash 
+  hpt 0 360 arc stroke } def
+/BoxFill { gsave Rec 1 setgray fill grestore } def
+end
+%%EndProlog
+}
+\GNUPLOTpicture(3600,2376)
+\special{"
+gnudict begin
+gsave
+0 0 translate
+0.100 0.100 scale
+0 setgray
+newpath
+LTb
+450 400 M
+63 0 V
+3037 0 R
+-63 0 V
+450 647 M
+63 0 V
+3037 0 R
+-63 0 V
+450 893 M
+63 0 V
+3037 0 R
+-63 0 V
+450 1140 M
+63 0 V
+3037 0 R
+-63 0 V
+450 1386 M
+63 0 V
+3037 0 R
+-63 0 V
+450 1633 M
+63 0 V
+3037 0 R
+-63 0 V
+450 1879 M
+63 0 V
+3037 0 R
+-63 0 V
+450 2126 M
+63 0 V
+3037 0 R
+-63 0 V
+450 400 M
+0 63 V
+0 1663 R
+0 -63 V
+838 400 M
+0 63 V
+0 1663 R
+0 -63 V
+1225 400 M
+0 63 V
+0 1663 R
+0 -63 V
+1613 400 M
+0 63 V
+0 1663 R
+0 -63 V
+2000 400 M
+0 63 V
+0 1663 R
+0 -63 V
+2388 400 M
+0 63 V
+0 1663 R
+0 -63 V
+2775 400 M
+0 63 V
+0 1663 R
+0 -63 V
+3163 400 M
+0 63 V
+0 1663 R
+0 -63 V
+3550 400 M
+0 63 V
+0 1663 R
+0 -63 V
+LTb
+450 400 M
+3100 0 V
+0 1726 V
+-3100 0 V
+450 400 L
+1.000 UL
+LT0
+3187 2013 M
+263 0 V
+450 411 M
+10 1 V
+11 1 V
+10 1 V
+10 2 V
+11 1 V
+10 1 V
+11 2 V
+10 1 V
+10 2 V
+11 2 V
+10 2 V
+10 2 V
+11 2 V
+10 2 V
+11 2 V
+10 3 V
+10 2 V
+11 3 V
+10 3 V
+10 3 V
+11 3 V
+10 3 V
+10 4 V
+11 3 V
+10 4 V
+11 4 V
+10 4 V
+10 4 V
+11 4 V
+10 5 V
+10 4 V
+11 5 V
+10 5 V
+11 5 V
+10 6 V
+10 5 V
+11 6 V
+10 6 V
+10 6 V
+11 6 V
+10 6 V
+10 7 V
+11 6 V
+10 7 V
+11 7 V
+10 8 V
+10 7 V
+11 7 V
+10 8 V
+10 8 V
+11 8 V
+10 8 V
+10 8 V
+11 9 V
+10 8 V
+11 9 V
+10 9 V
+10 9 V
+11 9 V
+10 9 V
+10 9 V
+11 9 V
+10 10 V
+11 9 V
+10 10 V
+10 10 V
+11 10 V
+10 9 V
+10 10 V
+11 10 V
+10 10 V
+10 10 V
+11 11 V
+10 10 V
+11 10 V
+10 10 V
+10 10 V
+11 10 V
+10 11 V
+10 10 V
+11 10 V
+10 10 V
+11 10 V
+10 10 V
+10 10 V
+11 10 V
+10 10 V
+10 10 V
+11 10 V
+10 10 V
+10 9 V
+11 10 V
+10 9 V
+11 10 V
+10 9 V
+10 9 V
+11 9 V
+10 9 V
+10 9 V
+11 9 V
+10 8 V
+11 9 V
+10 8 V
+10 8 V
+11 8 V
+10 8 V
+10 8 V
+11 7 V
+10 8 V
+10 7 V
+11 7 V
+10 7 V
+11 7 V
+10 6 V
+10 7 V
+11 6 V
+10 6 V
+10 6 V
+11 5 V
+10 6 V
+11 5 V
+10 5 V
+10 5 V
+11 5 V
+10 4 V
+10 5 V
+11 4 V
+10 4 V
+10 3 V
+11 4 V
+10 3 V
+11 4 V
+10 3 V
+10 2 V
+11 3 V
+10 2 V
+10 3 V
+11 2 V
+10 2 V
+11 1 V
+10 2 V
+10 1 V
+11 2 V
+10 1 V
+10 0 V
+11 1 V
+10 1 V
+10 0 V
+11 0 V
+10 0 V
+11 0 V
+10 0 V
+10 -1 V
+11 -1 V
+10 0 V
+10 -1 V
+11 -1 V
+10 -2 V
+10 -1 V
+11 -1 V
+10 -2 V
+11 -2 V
+10 -2 V
+10 -2 V
+11 -2 V
+10 -2 V
+10 -3 V
+11 -2 V
+10 -3 V
+11 -3 V
+10 -2 V
+10 -3 V
+11 -4 V
+10 -3 V
+10 -3 V
+11 -3 V
+10 -4 V
+10 -3 V
+11 -4 V
+10 -4 V
+11 -4 V
+10 -3 V
+10 -4 V
+11 -5 V
+10 -4 V
+10 -4 V
+11 -4 V
+10 -4 V
+11 -5 V
+10 -4 V
+10 -5 V
+11 -4 V
+10 -5 V
+10 -5 V
+11 -4 V
+10 -5 V
+10 -5 V
+11 -5 V
+10 -5 V
+11 -5 V
+10 -5 V
+10 -5 V
+11 -5 V
+10 -5 V
+10 -5 V
+11 -5 V
+10 -5 V
+11 -5 V
+10 -6 V
+10 -5 V
+11 -5 V
+10 -5 V
+10 -5 V
+11 -6 V
+10 -5 V
+10 -5 V
+11 -6 V
+10 -5 V
+11 -5 V
+10 -6 V
+10 -5 V
+11 -5 V
+10 -5 V
+10 -6 V
+11 -5 V
+10 -5 V
+11 -6 V
+10 -5 V
+10 -5 V
+11 -6 V
+10 -5 V
+10 -5 V
+11 -5 V
+10 -6 V
+10 -5 V
+11 -5 V
+10 -5 V
+11 -5 V
+10 -5 V
+10 -6 V
+11 -5 V
+10 -5 V
+10 -5 V
+11 -5 V
+10 -5 V
+11 -5 V
+10 -5 V
+10 -5 V
+11 -5 V
+10 -5 V
+10 -5 V
+11 -4 V
+10 -5 V
+10 -5 V
+11 -5 V
+10 -5 V
+11 -4 V
+10 -5 V
+10 -5 V
+11 -4 V
+10 -5 V
+10 -5 V
+11 -4 V
+10 -5 V
+10 -4 V
+11 -5 V
+10 -4 V
+11 -4 V
+10 -5 V
+10 -4 V
+11 -4 V
+10 -5 V
+10 -4 V
+11 -4 V
+10 -4 V
+11 -4 V
+10 -5 V
+10 -4 V
+11 -4 V
+10 -4 V
+10 -4 V
+11 -4 V
+10 -3 V
+10 -4 V
+11 -4 V
+10 -4 V
+11 -4 V
+10 -4 V
+10 -3 V
+11 -4 V
+10 -4 V
+10 -3 V
+11 -4 V
+10 -3 V
+11 -4 V
+10 -3 V
+10 -4 V
+11 -3 V
+10 -4 V
+1.000 UL
+LT1
+3187 1913 M
+263 0 V
+450 400 M
+10 0 V
+11 0 V
+10 0 V
+10 0 V
+11 0 V
+10 0 V
+11 0 V
+10 0 V
+10 0 V
+11 0 V
+10 0 V
+10 0 V
+11 0 V
+10 0 V
+11 0 V
+10 0 V
+10 0 V
+11 0 V
+10 0 V
+10 0 V
+11 0 V
+10 0 V
+10 0 V
+11 0 V
+10 0 V
+11 0 V
+10 0 V
+10 0 V
+11 0 V
+10 0 V
+10 0 V
+11 0 V
+10 0 V
+11 0 V
+10 0 V
+10 0 V
+11 0 V
+10 0 V
+10 0 V
+11 0 V
+10 0 V
+10 0 V
+11 0 V
+10 0 V
+11 0 V
+10 0 V
+10 0 V
+11 0 V
+10 0 V
+10 0 V
+11 0 V
+10 0 V
+10 0 V
+11 0 V
+10 0 V
+11 0 V
+10 0 V
+10 0 V
+11 0 V
+10 0 V
+10 0 V
+11 0 V
+10 0 V
+11 0 V
+10 0 V
+10 0 V
+11 0 V
+10 0 V
+10 0 V
+11 0 V
+10 0 V
+10 0 V
+11 0 V
+10 0 V
+11 0 V
+10 0 V
+10 0 V
+11 0 V
+10 0 V
+10 0 V
+11 0 V
+10 0 V
+11 0 V
+10 0 V
+10 0 V
+11 0 V
+10 0 V
+10 0 V
+11 0 V
+10 0 V
+10 0 V
+11 0 V
+10 0 V
+11 0 V
+10 0 V
+10 0 V
+11 0 V
+10 0 V
+10 0 V
+11 0 V
+10 0 V
+11 0 V
+10 0 V
+10 0 V
+11 0 V
+10 0 V
+10 0 V
+11 0 V
+10 0 V
+10 0 V
+11 0 V
+10 0 V
+11 0 V
+10 0 V
+10 0 V
+11 0 V
+10 0 V
+10 0 V
+11 0 V
+10 0 V
+11 0 V
+10 0 V
+10 0 V
+11 0 V
+10 0 V
+10 0 V
+11 0 V
+10 0 V
+10 0 V
+11 0 V
+10 0 V
+11 0 V
+10 0 V
+10 0 V
+11 0 V
+10 0 V
+10 0 V
+11 0 V
+10 0 V
+11 0 V
+10 0 V
+10 0 V
+11 0 V
+10 0 V
+10 0 V
+11 0 V
+10 0 V
+10 0 V
+11 0 V
+10 0 V
+11 0 V
+10 0 V
+10 0 V
+11 0 V
+10 1 V
+10 2 V
+11 8 V
+10 18 V
+10 29 V
+11 43 V
+10 56 V
+11 66 V
+10 75 V
+10 80 V
+11 83 V
+10 84 V
+10 83 V
+11 80 V
+10 76 V
+11 71 V
+10 66 V
+10 61 V
+11 55 V
+10 49 V
+10 44 V
+11 39 V
+10 33 V
+10 29 V
+11 25 V
+10 21 V
+11 17 V
+10 14 V
+10 10 V
+11 8 V
+10 5 V
+10 3 V
+11 1 V
+10 -1 V
+11 -3 V
+10 -5 V
+10 -5 V
+11 -7 V
+10 -8 V
+10 -9 V
+11 -10 V
+10 -10 V
+10 -11 V
+11 -12 V
+10 -12 V
+11 -12 V
+10 -13 V
+10 -13 V
+11 -14 V
+10 -13 V
+10 -14 V
+11 -14 V
+10 -13 V
+11 -14 V
+10 -14 V
+10 -14 V
+11 -14 V
+10 -13 V
+10 -14 V
+11 -14 V
+10 -13 V
+10 -14 V
+11 -13 V
+10 -13 V
+11 -13 V
+10 -13 V
+10 -13 V
+11 -12 V
+10 -13 V
+10 -12 V
+11 -12 V
+10 -12 V
+11 -12 V
+10 -11 V
+10 -12 V
+11 -11 V
+10 -11 V
+10 -11 V
+11 -11 V
+10 -10 V
+10 -11 V
+11 -10 V
+10 -10 V
+11 -10 V
+10 -10 V
+10 -10 V
+11 -9 V
+10 -9 V
+10 -10 V
+11 -9 V
+10 -8 V
+11 -9 V
+10 -9 V
+10 -8 V
+11 -8 V
+10 -9 V
+10 -8 V
+11 -8 V
+10 -7 V
+10 -8 V
+11 -8 V
+10 -7 V
+11 -7 V
+10 -7 V
+10 -7 V
+11 -7 V
+10 -7 V
+10 -7 V
+11 -6 V
+10 -7 V
+10 -6 V
+11 -7 V
+10 -6 V
+11 -6 V
+10 -6 V
+10 -6 V
+11 -6 V
+10 -5 V
+10 -6 V
+11 -5 V
+10 -6 V
+11 -5 V
+10 -5 V
+10 -6 V
+11 -5 V
+10 -5 V
+10 -5 V
+11 -5 V
+10 -4 V
+10 -5 V
+11 -5 V
+10 -4 V
+11 -5 V
+10 -4 V
+10 -5 V
+11 -4 V
+10 -4 V
+10 -4 V
+11 -5 V
+10 -4 V
+11 -4 V
+10 -4 V
+10 -4 V
+11 -3 V
+10 -4 V
+stroke
+grestore
+end
+showpage
+}
+\put(3137,1913){\rjust{Type 2, $a=1,b=1$}}
+\put(3137,2013){\rjust{Type 1, $a=1,b=1$}}
+\put(2000,2276){\cjust{Gumbel Distributions}}
+\put(2000,150){\cjust{$x$}}
+\put(100,1263){%
+\special{ps: gsave currentpoint currentpoint translate
+270 rotate neg exch neg exch translate}%
+\cstack{$p(x)$}%
+\special{ps: currentpoint grestore moveto}%
+}
+\put(3550,300){\cjust{2}}
+\put(3163,300){\cjust{1.5}}
+\put(2775,300){\cjust{1}}
+\put(2388,300){\cjust{0.5}}
+\put(2000,300){\cjust{0}}
+\put(1613,300){\cjust{-0.5}}
+\put(1225,300){\cjust{-1}}
+\put(838,300){\cjust{-1.5}}
+\put(450,300){\cjust{-2}}
+\put(400,2126){\rjust{0.7}}
+\put(400,1879){\rjust{0.6}}
+\put(400,1633){\rjust{0.5}}
+\put(400,1386){\rjust{0.4}}
+\put(400,1140){\rjust{0.3}}
+\put(400,893){\rjust{0.2}}
+\put(400,647){\rjust{0.1}}
+\put(400,400){\rjust{0}}
+\endGNUPLOTpicture

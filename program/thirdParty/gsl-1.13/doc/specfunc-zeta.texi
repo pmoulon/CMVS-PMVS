@@ -1,0 +1,101 @@
+@cindex Zeta functions
+
+The Riemann zeta function is defined in Abramowitz & Stegun, Section
+23.2.  The functions described in this section are declared in the
+header file @file{gsl_sf_zeta.h}.
+
+@menu
+* Riemann Zeta Function::
+* Riemann Zeta Function Minus One::
+* Hurwitz Zeta Function::
+* Eta Function::
+@end menu
+
+@node Riemann Zeta Function
+@subsection Riemann Zeta Function
+@cindex Riemann Zeta Function
+
+The Riemann zeta function is defined by the infinite sum 
+@c{$\zeta(s) = \sum_{k=1}^\infty k^{-s}$}
+@math{\zeta(s) = \sum_@{k=1@}^\infty k^@{-s@}}.  
+
+@deftypefun double gsl_sf_zeta_int (int @var{n})
+@deftypefunx int gsl_sf_zeta_int_e (int @var{n}, gsl_sf_result * @var{result})
+These routines compute the Riemann zeta function @math{\zeta(n)} 
+for integer @var{n},
+@math{n \ne 1}.
+@comment Domain: n integer, n != 1
+@comment Exceptional Return Values: GSL_EDOM, GSL_EOVRFLW
+@end deftypefun
+
+@deftypefun double gsl_sf_zeta (double @var{s})
+@deftypefunx int gsl_sf_zeta_e (double @var{s}, gsl_sf_result * @var{result})
+These routines compute the Riemann zeta function @math{\zeta(s)}
+for arbitrary @var{s},
+@math{s \ne 1}.
+@comment Domain: s != 1.0
+@comment Exceptional Return Values: GSL_EDOM, GSL_EOVRFLW
+@end deftypefun
+
+
+@node Riemann Zeta Function Minus One
+@subsection Riemann Zeta Function Minus One
+
+For large positive argument, the Riemann zeta function approaches one.
+In this region the fractional part is interesting, and therefore we
+need a function to evaluate it explicitly.
+
+@deftypefun double gsl_sf_zetam1_int (int @var{n})
+@deftypefunx int gsl_sf_zetam1_int_e (int @var{n}, gsl_sf_result * @var{result})
+These routines compute @math{\zeta(n) - 1} for integer @var{n},
+@math{n \ne 1}.
+@comment Domain: n integer, n != 1
+@comment Exceptional Return Values: GSL_EDOM, GSL_EOVRFLW
+@end deftypefun
+
+@deftypefun double gsl_sf_zetam1 (double @var{s})
+@deftypefunx int gsl_sf_zetam1_e (double @var{s}, gsl_sf_result * @var{result})
+These routines compute @math{\zeta(s) - 1} for arbitrary @var{s},
+@math{s \ne 1}.
+@comment Domain: s != 1.0
+@comment Exceptional Return Values: GSL_EDOM, GSL_EOVRFLW
+@end deftypefun
+
+
+@node Hurwitz Zeta Function
+@subsection Hurwitz Zeta Function
+@cindex Hurwitz Zeta Function
+
+The Hurwitz zeta function is defined by
+@c{$\zeta(s,q) = \sum_0^\infty (k+q)^{-s}$}
+@math{\zeta(s,q) = \sum_0^\infty (k+q)^@{-s@}}.
+
+@deftypefun double gsl_sf_hzeta (double @var{s}, double @var{q})
+@deftypefunx int gsl_sf_hzeta_e (double @var{s}, double @var{q}, gsl_sf_result * @var{result})
+These routines compute the Hurwitz zeta function @math{\zeta(s,q)} for
+@math{s > 1}, @math{q > 0}.
+@comment Domain: s > 1.0, q > 0.0
+@comment Exceptional Return Values: GSL_EDOM, GSL_EUNDRFLW, GSL_EOVRFLW
+@end deftypefun
+
+
+@node Eta Function
+@subsection Eta Function
+@cindex Eta Function
+
+The eta function is defined by
+@c{$\eta(s) = (1-2^{1-s}) \zeta(s)$}
+@math{\eta(s) = (1-2^@{1-s@}) \zeta(s)}.
+
+@deftypefun double gsl_sf_eta_int (int @var{n})
+@deftypefunx int gsl_sf_eta_int_e (int @var{n}, gsl_sf_result * @var{result})
+These routines compute the eta function @math{\eta(n)} for integer @var{n}.
+@comment Exceptional Return Values: GSL_EUNDRFLW, GSL_EOVRFLW
+@end deftypefun
+
+@deftypefun double gsl_sf_eta (double @var{s})
+@deftypefunx int gsl_sf_eta_e (double @var{s}, gsl_sf_result * @var{result})
+These routines compute the eta function @math{\eta(s)} for arbitrary @var{s}.
+@comment Exceptional Return Values: GSL_EUNDRFLW, GSL_EOVRFLW
+@end deftypefun
+

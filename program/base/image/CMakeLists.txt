@@ -1,0 +1,10 @@
+ADD_LIBRARY(image_lib
+camera.h
+camera.cc
+image.h
+image.cc
+photo.h
+photo.cc
+photoSetS.h
+photoSetS.cc
+)

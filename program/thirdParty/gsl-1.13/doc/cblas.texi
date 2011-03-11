@@ -1,0 +1,514 @@
+@cindex Low-level CBLAS
+@cindex CBLAS, Low-level interface
+@cindex BLAS, Low-level C interface
+@cindex Basic Linear Algebra Subroutines (BLAS)
+The prototypes for the low-level @sc{cblas} functions are declared in
+the file @file{gsl_cblas.h}.  For the definition of the functions
+consult the documentation available from Netlib (@pxref{BLAS References
+and Further Reading}).
+
+@menu
+* Level 1 CBLAS Functions::     
+* Level 2 CBLAS Functions::     
+* Level 3 CBLAS Functions::     
+* GSL CBLAS Examples::          
+@end menu
+
+@node Level 1 CBLAS Functions
+@section Level 1 
+
+@deftypefun float cblas_sdsdot (const int @var{N}, const float @var{alpha}, const float * @var{x}, const int @var{incx}, const float * @var{y}, const int @var{incy})
+@end deftypefun
+
+@deftypefun double cblas_dsdot (const int @var{N}, const float * @var{x}, const int @var{incx}, const float * @var{y}, const int @var{incy})
+@end deftypefun
+
+@deftypefun float cblas_sdot (const int @var{N}, const float * @var{x}, const int @var{incx}, const float * @var{y}, const int @var{incy})
+@end deftypefun
+
+@deftypefun double cblas_ddot (const int @var{N}, const double * @var{x}, const int @var{incx}, const double * @var{y}, const int @var{incy})
+@end deftypefun
+
+@deftypefun void cblas_cdotu_sub (const int @var{N}, const void * @var{x}, const int @var{incx}, const void * @var{y}, const int @var{incy}, void * @var{dotu})
+@end deftypefun
+
+@deftypefun void cblas_cdotc_sub (const int @var{N}, const void * @var{x}, const int @var{incx}, const void * @var{y}, const int @var{incy}, void * @var{dotc})
+@end deftypefun
+
+@deftypefun void cblas_zdotu_sub (const int @var{N}, const void * @var{x}, const int @var{incx}, const void * @var{y}, const int @var{incy}, void * @var{dotu})
+@end deftypefun
+
+@deftypefun void cblas_zdotc_sub (const int @var{N}, const void * @var{x}, const int @var{incx}, const void * @var{y}, const int @var{incy}, void * @var{dotc})
+@end deftypefun
+
+@deftypefun float cblas_snrm2 (const int @var{N}, const float * @var{x}, const int @var{incx})
+@end deftypefun
+
+@deftypefun float cblas_sasum (const int @var{N}, const float * @var{x}, const int @var{incx})
+@end deftypefun
+
+@deftypefun double cblas_dnrm2 (const int @var{N}, const double * @var{x}, const int @var{incx})
+@end deftypefun
+
+@deftypefun double cblas_dasum (const int @var{N}, const double * @var{x}, const int @var{incx})
+@end deftypefun
+
+@deftypefun float cblas_scnrm2 (const int @var{N}, const void * @var{x}, const int @var{incx})
+@end deftypefun
+
+@deftypefun float cblas_scasum (const int @var{N}, const void * @var{x}, const int @var{incx})
+@end deftypefun
+
+@deftypefun double cblas_dznrm2 (const int @var{N}, const void * @var{x}, const int @var{incx})
+@end deftypefun
+
+@deftypefun double cblas_dzasum (const int @var{N}, const void * @var{x}, const int @var{incx})
+@end deftypefun
+
+@deftypefun CBLAS_INDEX cblas_isamax (const int @var{N}, const float * @var{x}, const int @var{incx})
+@end deftypefun
+
+@deftypefun CBLAS_INDEX cblas_idamax (const int @var{N}, const double * @var{x}, const int @var{incx})
+@end deftypefun
+
+@deftypefun CBLAS_INDEX cblas_icamax (const int @var{N}, const void * @var{x}, const int @var{incx})
+@end deftypefun
+
+@deftypefun CBLAS_INDEX cblas_izamax (const int @var{N}, const void * @var{x}, const int @var{incx})
+@end deftypefun
+
+@deftypefun void cblas_sswap (const int @var{N}, float * @var{x}, const int @var{incx}, float * @var{y}, const int @var{incy})
+@end deftypefun
+
+@deftypefun void cblas_scopy (const int @var{N}, const float * @var{x}, const int @var{incx}, float * @var{y}, const int @var{incy})
+@end deftypefun
+
+@deftypefun void cblas_saxpy (const int @var{N}, const float @var{alpha}, const float * @var{x}, const int @var{incx}, float * @var{y}, const int @var{incy})
+@end deftypefun
+
+@deftypefun void cblas_dswap (const int @var{N}, double * @var{x}, const int @var{incx}, double * @var{y}, const int @var{incy})
+@end deftypefun
+
+@deftypefun void cblas_dcopy (const int @var{N}, const double * @var{x}, const int @var{incx}, double * @var{y}, const int @var{incy})
+@end deftypefun
+
+@deftypefun void cblas_daxpy (const int @var{N}, const double @var{alpha}, const double * @var{x}, const int @var{incx}, double * @var{y}, const int @var{incy})
+@end deftypefun
+
+@deftypefun void cblas_cswap (const int @var{N}, void * @var{x}, const int @var{incx}, void * @var{y}, const int @var{incy})
+@end deftypefun
+
+@deftypefun void cblas_ccopy (const int @var{N}, const void * @var{x}, const int @var{incx}, void * @var{y}, const int @var{incy})
+@end deftypefun
+
+@deftypefun void cblas_caxpy (const int @var{N}, const void * @var{alpha}, const void * @var{x}, const int @var{incx}, void * @var{y}, const int @var{incy})
+@end deftypefun
+
+@deftypefun void cblas_zswap (const int @var{N}, void * @var{x}, const int @var{incx}, void * @var{y}, const int @var{incy})
+@end deftypefun
+
+@deftypefun void cblas_zcopy (const int @var{N}, const void * @var{x}, const int @var{incx}, void * @var{y}, const int @var{incy})
+@end deftypefun
+
+@deftypefun void cblas_zaxpy (const int @var{N}, const void * @var{alpha}, const void * @var{x}, const int @var{incx}, void * @var{y}, const int @var{incy})
+@end deftypefun
+
+@deftypefun void cblas_srotg (float * @var{a}, float * @var{b}, float * @var{c}, float * @var{s})
+@end deftypefun
+
+@deftypefun void cblas_srotmg (float * @var{d1}, float * @var{d2}, float * @var{b1}, const float @var{b2}, float * @var{P})
+@end deftypefun
+
+@deftypefun void cblas_srot (const int @var{N}, float * @var{x}, const int @var{incx}, float * @var{y}, const int @var{incy}, const float @var{c}, const float @var{s})
+@end deftypefun
+
+@deftypefun void cblas_srotm (const int @var{N}, float * @var{x}, const int @var{incx}, float * @var{y}, const int @var{incy}, const float * @var{P})
+@end deftypefun
+
+@deftypefun void cblas_drotg (double * @var{a}, double * @var{b}, double * @var{c}, double * @var{s})
+@end deftypefun
+
+@deftypefun void cblas_drotmg (double * @var{d1}, double * @var{d2}, double * @var{b1}, const double @var{b2}, double * @var{P})
+@end deftypefun
+
+@deftypefun void cblas_drot (const int @var{N}, double * @var{x}, const int @var{incx}, double * @var{y}, const int @var{incy}, const double @var{c}, const double @var{s})
+@end deftypefun
+
+@deftypefun void cblas_drotm (const int @var{N}, double * @var{x}, const int @var{incx}, double * @var{y}, const int @var{incy}, const double * @var{P})
+@end deftypefun
+
+@deftypefun void cblas_sscal (const int @var{N}, const float @var{alpha}, float * @var{x}, const int @var{incx})
+@end deftypefun
+
+@deftypefun void cblas_dscal (const int @var{N}, const double @var{alpha}, double * @var{x}, const int @var{incx})
+@end deftypefun
+
+@deftypefun void cblas_cscal (const int @var{N}, const void * @var{alpha}, void * @var{x}, const int @var{incx})
+@end deftypefun
+
+@deftypefun void cblas_zscal (const int @var{N}, const void * @var{alpha}, void * @var{x}, const int @var{incx})
+@end deftypefun
+
+@deftypefun void cblas_csscal (const int @var{N}, const float @var{alpha}, void * @var{x}, const int @var{incx})
+@end deftypefun
+
+@deftypefun void cblas_zdscal (const int @var{N}, const double @var{alpha}, void * @var{x}, const int @var{incx})
+@end deftypefun
+
+@node Level 2 CBLAS Functions
+@section Level 2 
+
+@deftypefun void cblas_sgemv (const enum CBLAS_ORDER @var{order}, const enum CBLAS_TRANSPOSE @var{TransA}, const int @var{M}, const int @var{N}, const float @var{alpha}, const float * @var{A}, const int @var{lda}, const float * @var{x}, const int @var{incx}, const float @var{beta}, float * @var{y}, const int @var{incy})
+@end deftypefun
+
+@deftypefun void cblas_sgbmv (const enum CBLAS_ORDER @var{order}, const enum CBLAS_TRANSPOSE @var{TransA}, const int @var{M}, const int @var{N}, const int @var{KL}, const int @var{KU}, const float @var{alpha}, const float * @var{A}, const int @var{lda}, const float * @var{x}, const int @var{incx}, const float @var{beta}, float * @var{y}, const int @var{incy})
+@end deftypefun
+
+@deftypefun void cblas_strmv (const enum CBLAS_ORDER @var{order}, const enum CBLAS_UPLO @var{Uplo}, const enum CBLAS_TRANSPOSE @var{TransA}, const enum CBLAS_DIAG @var{Diag}, const int @var{N}, const float * @var{A}, const int @var{lda}, float * @var{x}, const int @var{incx})
+@end deftypefun
+
+@deftypefun void cblas_stbmv (const enum CBLAS_ORDER @var{order}, const enum CBLAS_UPLO @var{Uplo}, const enum CBLAS_TRANSPOSE @var{TransA}, const enum CBLAS_DIAG @var{Diag}, const int @var{N}, const int @var{K}, const float * @var{A}, const int @var{lda}, float * @var{x}, const int @var{incx})
+@end deftypefun
+
+@deftypefun void cblas_stpmv (const enum CBLAS_ORDER @var{order}, const enum CBLAS_UPLO @var{Uplo}, const enum CBLAS_TRANSPOSE @var{TransA}, const enum CBLAS_DIAG @var{Diag}, const int @var{N}, const float * @var{Ap}, float * @var{x}, const int @var{incx})
+@end deftypefun
+
+@deftypefun void cblas_strsv (const enum CBLAS_ORDER @var{order}, const enum CBLAS_UPLO @var{Uplo}, const enum CBLAS_TRANSPOSE @var{TransA}, const enum CBLAS_DIAG @var{Diag}, const int @var{N}, const float * @var{A}, const int @var{lda}, float * @var{x}, const int @var{incx})
+@end deftypefun
+
+@deftypefun void cblas_stbsv (const enum CBLAS_ORDER @var{order}, const enum CBLAS_UPLO @var{Uplo}, const enum CBLAS_TRANSPOSE @var{TransA}, const enum CBLAS_DIAG @var{Diag}, const int @var{N}, const int @var{K}, const float * @var{A}, const int @var{lda}, float * @var{x}, const int @var{incx})
+@end deftypefun
+
+@deftypefun void cblas_stpsv (const enum CBLAS_ORDER @var{order}, const enum CBLAS_UPLO @var{Uplo}, const enum CBLAS_TRANSPOSE @var{TransA}, const enum CBLAS_DIAG @var{Diag}, const int @var{N}, const float * @var{Ap}, float * @var{x}, const int @var{incx})
+@end deftypefun
+
+@deftypefun void cblas_dgemv (const enum CBLAS_ORDER @var{order}, const enum CBLAS_TRANSPOSE @var{TransA}, const int @var{M}, const int @var{N}, const double @var{alpha}, const double * @var{A}, const int @var{lda}, const double * @var{x}, const int @var{incx}, const double @var{beta}, double * @var{y}, const int @var{incy})
+@end deftypefun
+
+@deftypefun void cblas_dgbmv (const enum CBLAS_ORDER @var{order}, const enum CBLAS_TRANSPOSE @var{TransA}, const int @var{M}, const int @var{N}, const int @var{KL}, const int @var{KU}, const double @var{alpha}, const double * @var{A}, const int @var{lda}, const double * @var{x}, const int @var{incx}, const double @var{beta}, double * @var{y}, const int @var{incy})
+@end deftypefun
+
+@deftypefun void cblas_dtrmv (const enum CBLAS_ORDER @var{order}, const enum CBLAS_UPLO @var{Uplo}, const enum CBLAS_TRANSPOSE @var{TransA}, const enum CBLAS_DIAG @var{Diag}, const int @var{N}, const double * @var{A}, const int @var{lda}, double * @var{x}, const int @var{incx})
+@end deftypefun
+
+@deftypefun void cblas_dtbmv (const enum CBLAS_ORDER @var{order}, const enum CBLAS_UPLO @var{Uplo}, const enum CBLAS_TRANSPOSE @var{TransA}, const enum CBLAS_DIAG @var{Diag}, const int @var{N}, const int @var{K}, const double * @var{A}, const int @var{lda}, double * @var{x}, const int @var{incx})
+@end deftypefun
+
+@deftypefun void cblas_dtpmv (const enum CBLAS_ORDER @var{order}, const enum CBLAS_UPLO @var{Uplo}, const enum CBLAS_TRANSPOSE @var{TransA}, const enum CBLAS_DIAG @var{Diag}, const int @var{N}, const double * @var{Ap}, double * @var{x}, const int @var{incx})
+@end deftypefun
+
+@deftypefun void cblas_dtrsv (const enum CBLAS_ORDER @var{order}, const enum CBLAS_UPLO @var{Uplo}, const enum CBLAS_TRANSPOSE @var{TransA}, const enum CBLAS_DIAG @var{Diag}, const int @var{N}, const double * @var{A}, const int @var{lda}, double * @var{x}, const int @var{incx})
+@end deftypefun
+
+@deftypefun void cblas_dtbsv (const enum CBLAS_ORDER @var{order}, const enum CBLAS_UPLO @var{Uplo}, const enum CBLAS_TRANSPOSE @var{TransA}, const enum CBLAS_DIAG @var{Diag}, const int @var{N}, const int @var{K}, const double * @var{A}, const int @var{lda}, double * @var{x}, const int @var{incx})
+@end deftypefun
+
+@deftypefun void cblas_dtpsv (const enum CBLAS_ORDER @var{order}, const enum CBLAS_UPLO @var{Uplo}, const enum CBLAS_TRANSPOSE @var{TransA}, const enum CBLAS_DIAG @var{Diag}, const int @var{N}, const double * @var{Ap}, double * @var{x}, const int @var{incx})
+@end deftypefun
+
+@deftypefun void cblas_cgemv (const enum CBLAS_ORDER @var{order}, const enum CBLAS_TRANSPOSE @var{TransA}, const int @var{M}, const int @var{N}, const void * @var{alpha}, const void * @var{A}, const int @var{lda}, const void * @var{x}, const int @var{incx}, const void * @var{beta}, void * @var{y}, const int @var{incy})
+@end deftypefun
+
+@deftypefun void cblas_cgbmv (const enum CBLAS_ORDER @var{order}, const enum CBLAS_TRANSPOSE @var{TransA}, const int @var{M}, const int @var{N}, const int @var{KL}, const int @var{KU}, const void * @var{alpha}, const void * @var{A}, const int @var{lda}, const void * @var{x}, const int @var{incx}, const void * @var{beta}, void * @var{y}, const int @var{incy})
+@end deftypefun
+
+@deftypefun void cblas_ctrmv (const enum CBLAS_ORDER @var{order}, const enum CBLAS_UPLO @var{Uplo}, const enum CBLAS_TRANSPOSE @var{TransA}, const enum CBLAS_DIAG @var{Diag}, const int @var{N}, const void * @var{A}, const int @var{lda}, void * @var{x}, const int @var{incx})
+@end deftypefun
+
+@deftypefun void cblas_ctbmv (const enum CBLAS_ORDER @var{order}, const enum CBLAS_UPLO @var{Uplo}, const enum CBLAS_TRANSPOSE @var{TransA}, const enum CBLAS_DIAG @var{Diag}, const int @var{N}, const int @var{K}, const void * @var{A}, const int @var{lda}, void * @var{x}, const int @var{incx})
+@end deftypefun
+
+@deftypefun void cblas_ctpmv (const enum CBLAS_ORDER @var{order}, const enum CBLAS_UPLO @var{Uplo}, const enum CBLAS_TRANSPOSE @var{TransA}, const enum CBLAS_DIAG @var{Diag}, const int @var{N}, const void * @var{Ap}, void * @var{x}, const int @var{incx})
+@end deftypefun
+
+@deftypefun void cblas_ctrsv (const enum CBLAS_ORDER @var{order}, const enum CBLAS_UPLO @var{Uplo}, const enum CBLAS_TRANSPOSE @var{TransA}, const enum CBLAS_DIAG @var{Diag}, const int @var{N}, const void * @var{A}, const int @var{lda}, void * @var{x}, const int @var{incx})
+@end deftypefun
+
+@deftypefun void cblas_ctbsv (const enum CBLAS_ORDER @var{order}, const enum CBLAS_UPLO @var{Uplo}, const enum CBLAS_TRANSPOSE @var{TransA}, const enum CBLAS_DIAG @var{Diag}, const int @var{N}, const int @var{K}, const void * @var{A}, const int @var{lda}, void * @var{x}, const int @var{incx})
+@end deftypefun
+
+@deftypefun void cblas_ctpsv (const enum CBLAS_ORDER @var{order}, const enum CBLAS_UPLO @var{Uplo}, const enum CBLAS_TRANSPOSE @var{TransA}, const enum CBLAS_DIAG @var{Diag}, const int @var{N}, const void * @var{Ap}, void * @var{x}, const int @var{incx})
+@end deftypefun
+
+@deftypefun void cblas_zgemv (const enum CBLAS_ORDER @var{order}, const enum CBLAS_TRANSPOSE @var{TransA}, const int @var{M}, const int @var{N}, const void * @var{alpha}, const void * @var{A}, const int @var{lda}, const void * @var{x}, const int @var{incx}, const void * @var{beta}, void * @var{y}, const int @var{incy})
+@end deftypefun
+
+@deftypefun void cblas_zgbmv (const enum CBLAS_ORDER @var{order}, const enum CBLAS_TRANSPOSE @var{TransA}, const int @var{M}, const int @var{N}, const int @var{KL}, const int @var{KU}, const void * @var{alpha}, const void * @var{A}, const int @var{lda}, const void * @var{x}, const int @var{incx}, const void * @var{beta}, void * @var{y}, const int @var{incy})
+@end deftypefun
+
+@deftypefun void cblas_ztrmv (const enum CBLAS_ORDER @var{order}, const enum CBLAS_UPLO @var{Uplo}, const enum CBLAS_TRANSPOSE @var{TransA}, const enum CBLAS_DIAG @var{Diag}, const int @var{N}, const void * @var{A}, const int @var{lda}, void * @var{x}, const int @var{incx})
+@end deftypefun
+
+@deftypefun void cblas_ztbmv (const enum CBLAS_ORDER @var{order}, const enum CBLAS_UPLO @var{Uplo}, const enum CBLAS_TRANSPOSE @var{TransA}, const enum CBLAS_DIAG @var{Diag}, const int @var{N}, const int @var{K}, const void * @var{A}, const int @var{lda}, void * @var{x}, const int @var{incx})
+@end deftypefun
+
+@deftypefun void cblas_ztpmv (const enum CBLAS_ORDER @var{order}, const enum CBLAS_UPLO @var{Uplo}, const enum CBLAS_TRANSPOSE @var{TransA}, const enum CBLAS_DIAG @var{Diag}, const int @var{N}, const void * @var{Ap}, void * @var{x}, const int @var{incx})
+@end deftypefun
+
+@deftypefun void cblas_ztrsv (const enum CBLAS_ORDER @var{order}, const enum CBLAS_UPLO @var{Uplo}, const enum CBLAS_TRANSPOSE @var{TransA}, const enum CBLAS_DIAG @var{Diag}, const int @var{N}, const void * @var{A}, const int @var{lda}, void * @var{x}, const int @var{incx})
+@end deftypefun
+
+@deftypefun void cblas_ztbsv (const enum CBLAS_ORDER @var{order}, const enum CBLAS_UPLO @var{Uplo}, const enum CBLAS_TRANSPOSE @var{TransA}, const enum CBLAS_DIAG @var{Diag}, const int @var{N}, const int @var{K}, const void * @var{A}, const int @var{lda}, void * @var{x}, const int @var{incx})
+@end deftypefun
+
+@deftypefun void cblas_ztpsv (const enum CBLAS_ORDER @var{order}, const enum CBLAS_UPLO @var{Uplo}, const enum CBLAS_TRANSPOSE @var{TransA}, const enum CBLAS_DIAG @var{Diag}, const int @var{N}, const void * @var{Ap}, void * @var{x}, const int @var{incx})
+@end deftypefun
+
+@deftypefun void cblas_ssymv (const enum CBLAS_ORDER @var{order}, const enum CBLAS_UPLO @var{Uplo}, const int @var{N}, const float @var{alpha}, const float * @var{A}, const int @var{lda}, const float * @var{x}, const int @var{incx}, const float @var{beta}, float * @var{y}, const int @var{incy})
+@end deftypefun
+
+@deftypefun void cblas_ssbmv (const enum CBLAS_ORDER @var{order}, const enum CBLAS_UPLO @var{Uplo}, const int @var{N}, const int @var{K}, const float @var{alpha}, const float * @var{A}, const int @var{lda}, const float * @var{x}, const int @var{incx}, const float @var{beta}, float * @var{y}, const int @var{incy})
+@end deftypefun
+
+@deftypefun void cblas_sspmv (const enum CBLAS_ORDER @var{order}, const enum CBLAS_UPLO @var{Uplo}, const int @var{N}, const float @var{alpha}, const float * @var{Ap}, const float * @var{x}, const int @var{incx}, const float @var{beta}, float * @var{y}, const int @var{incy})
+@end deftypefun
+
+@deftypefun void cblas_sger (const enum CBLAS_ORDER @var{order}, const int @var{M}, const int @var{N}, const float @var{alpha}, const float * @var{x}, const int @var{incx}, const float * @var{y}, const int @var{incy}, float * @var{A}, const int @var{lda})
+@end deftypefun
+
+@deftypefun void cblas_ssyr (const enum CBLAS_ORDER @var{order}, const enum CBLAS_UPLO @var{Uplo}, const int @var{N}, const float @var{alpha}, const float * @var{x}, const int @var{incx}, float * @var{A}, const int @var{lda})
+@end deftypefun
+
+@deftypefun void cblas_sspr (const enum CBLAS_ORDER @var{order}, const enum CBLAS_UPLO @var{Uplo}, const int @var{N}, const float @var{alpha}, const float * @var{x}, const int @var{incx}, float * @var{Ap})
+@end deftypefun
+
+@deftypefun void cblas_ssyr2 (const enum CBLAS_ORDER @var{order}, const enum CBLAS_UPLO @var{Uplo}, const int @var{N}, const float @var{alpha}, const float * @var{x}, const int @var{incx}, const float * @var{y}, const int @var{incy}, float * @var{A}, const int @var{lda})
+@end deftypefun
+
+@deftypefun void cblas_sspr2 (const enum CBLAS_ORDER @var{order}, const enum CBLAS_UPLO @var{Uplo}, const int @var{N}, const float @var{alpha}, const float * @var{x}, const int @var{incx}, const float * @var{y}, const int @var{incy}, float * @var{A})
+@end deftypefun
+
+@deftypefun void cblas_dsymv (const enum CBLAS_ORDER @var{order}, const enum CBLAS_UPLO @var{Uplo}, const int @var{N}, const double @var{alpha}, const double * @var{A}, const int @var{lda}, const double * @var{x}, const int @var{incx}, const double @var{beta}, double * @var{y}, const int @var{incy})
+@end deftypefun
+
+@deftypefun void cblas_dsbmv (const enum CBLAS_ORDER @var{order}, const enum CBLAS_UPLO @var{Uplo}, const int @var{N}, const int @var{K}, const double @var{alpha}, const double * @var{A}, const int @var{lda}, const double * @var{x}, const int @var{incx}, const double @var{beta}, double * @var{y}, const int @var{incy})
+@end deftypefun
+
+@deftypefun void cblas_dspmv (const enum CBLAS_ORDER @var{order}, const enum CBLAS_UPLO @var{Uplo}, const int @var{N}, const double @var{alpha}, const double * @var{Ap}, const double * @var{x}, const int @var{incx}, const double @var{beta}, double * @var{y}, const int @var{incy})
+@end deftypefun
+
+@deftypefun void cblas_dger (const enum CBLAS_ORDER @var{order}, const int @var{M}, const int @var{N}, const double @var{alpha}, const double * @var{x}, const int @var{incx}, const double * @var{y}, const int @var{incy}, double * @var{A}, const int @var{lda})
+@end deftypefun
+
+@deftypefun void cblas_dsyr (const enum CBLAS_ORDER @var{order}, const enum CBLAS_UPLO @var{Uplo}, const int @var{N}, const double @var{alpha}, const double * @var{x}, const int @var{incx}, double * @var{A}, const int @var{lda})
+@end deftypefun
+
+@deftypefun void cblas_dspr (const enum CBLAS_ORDER @var{order}, const enum CBLAS_UPLO @var{Uplo}, const int @var{N}, const double @var{alpha}, const double * @var{x}, const int @var{incx}, double * @var{Ap})
+@end deftypefun
+
+@deftypefun void cblas_dsyr2 (const enum CBLAS_ORDER @var{order}, const enum CBLAS_UPLO @var{Uplo}, const int @var{N}, const double @var{alpha}, const double * @var{x}, const int @var{incx}, const double * @var{y}, const int @var{incy}, double * @var{A}, const int @var{lda})
+@end deftypefun
+
+@deftypefun void cblas_dspr2 (const enum CBLAS_ORDER @var{order}, const enum CBLAS_UPLO @var{Uplo}, const int @var{N}, const double @var{alpha}, const double * @var{x}, const int @var{incx}, const double * @var{y}, const int @var{incy}, double * @var{A})
+@end deftypefun
+
+@deftypefun void cblas_chemv (const enum CBLAS_ORDER @var{order}, const enum CBLAS_UPLO @var{Uplo}, const int @var{N}, const void * @var{alpha}, const void * @var{A}, const int @var{lda}, const void * @var{x}, const int @var{incx}, const void * @var{beta}, void * @var{y}, const int @var{incy})
+@end deftypefun
+
+@deftypefun void cblas_chbmv (const enum CBLAS_ORDER @var{order}, const enum CBLAS_UPLO @var{Uplo}, const int @var{N}, const int @var{K}, const void * @var{alpha}, const void * @var{A}, const int @var{lda}, const void * @var{x}, const int @var{incx}, const void * @var{beta}, void * @var{y}, const int @var{incy})
+@end deftypefun
+
+@deftypefun void cblas_chpmv (const enum CBLAS_ORDER @var{order}, const enum CBLAS_UPLO @var{Uplo}, const int @var{N}, const void * @var{alpha}, const void * @var{Ap}, const void * @var{x}, const int @var{incx}, const void * @var{beta}, void * @var{y}, const int @var{incy})
+@end deftypefun
+
+@deftypefun void cblas_cgeru (const enum CBLAS_ORDER @var{order}, const int @var{M}, const int @var{N}, const void * @var{alpha}, const void * @var{x}, const int @var{incx}, const void * @var{y}, const int @var{incy}, void * @var{A}, const int @var{lda})
+@end deftypefun
+
+@deftypefun void cblas_cgerc (const enum CBLAS_ORDER @var{order}, const int @var{M}, const int @var{N}, const void * @var{alpha}, const void * @var{x}, const int @var{incx}, const void * @var{y}, const int @var{incy}, void * @var{A}, const int @var{lda})
+@end deftypefun
+
+@deftypefun void cblas_cher (const enum CBLAS_ORDER @var{order}, const enum CBLAS_UPLO @var{Uplo}, const int @var{N}, const float @var{alpha}, const void * @var{x}, const int @var{incx}, void * @var{A}, const int @var{lda})
+@end deftypefun
+
+@deftypefun void cblas_chpr (const enum CBLAS_ORDER @var{order}, const enum CBLAS_UPLO @var{Uplo}, const int @var{N}, const float @var{alpha}, const void * @var{x}, const int @var{incx}, void * @var{A})
+@end deftypefun
+
+@deftypefun void cblas_cher2 (const enum CBLAS_ORDER @var{order}, const enum CBLAS_UPLO @var{Uplo}, const int @var{N}, const void * @var{alpha}, const void * @var{x}, const int @var{incx}, const void * @var{y}, const int @var{incy}, void * @var{A}, const int @var{lda})
+@end deftypefun
+
+@deftypefun void cblas_chpr2 (const enum CBLAS_ORDER @var{order}, const enum CBLAS_UPLO @var{Uplo}, const int @var{N}, const void * @var{alpha}, const void * @var{x}, const int @var{incx}, const void * @var{y}, const int @var{incy}, void * @var{Ap})
+@end deftypefun
+
+@deftypefun void cblas_zhemv (const enum CBLAS_ORDER @var{order}, const enum CBLAS_UPLO @var{Uplo}, const int @var{N}, const void * @var{alpha}, const void * @var{A}, const int @var{lda}, const void * @var{x}, const int @var{incx}, const void * @var{beta}, void * @var{y}, const int @var{incy})
+@end deftypefun
+
+@deftypefun void cblas_zhbmv (const enum CBLAS_ORDER @var{order}, const enum CBLAS_UPLO @var{Uplo}, const int @var{N}, const int @var{K}, const void * @var{alpha}, const void * @var{A}, const int @var{lda}, const void * @var{x}, const int @var{incx}, const void * @var{beta}, void * @var{y}, const int @var{incy})
+@end deftypefun
+
+@deftypefun void cblas_zhpmv (const enum CBLAS_ORDER @var{order}, const enum CBLAS_UPLO @var{Uplo}, const int @var{N}, const void * @var{alpha}, const void * @var{Ap}, const void * @var{x}, const int @var{incx}, const void * @var{beta}, void * @var{y}, const int @var{incy})
+@end deftypefun
+
+@deftypefun void cblas_zgeru (const enum CBLAS_ORDER @var{order}, const int @var{M}, const int @var{N}, const void * @var{alpha}, const void * @var{x}, const int @var{incx}, const void * @var{y}, const int @var{incy}, void * @var{A}, const int @var{lda})
+@end deftypefun
+
+@deftypefun void cblas_zgerc (const enum CBLAS_ORDER @var{order}, const int @var{M}, const int @var{N}, const void * @var{alpha}, const void * @var{x}, const int @var{incx}, const void * @var{y}, const int @var{incy}, void * @var{A}, const int @var{lda})
+@end deftypefun
+
+@deftypefun void cblas_zher (const enum CBLAS_ORDER @var{order}, const enum CBLAS_UPLO @var{Uplo}, const int @var{N}, const double @var{alpha}, const void * @var{x}, const int @var{incx}, void * @var{A}, const int @var{lda})
+@end deftypefun
+
+@deftypefun void cblas_zhpr (const enum CBLAS_ORDER @var{order}, const enum CBLAS_UPLO @var{Uplo}, const int @var{N}, const double @var{alpha}, const void * @var{x}, const int @var{incx}, void * @var{A})
+@end deftypefun
+
+@deftypefun void cblas_zher2 (const enum CBLAS_ORDER @var{order}, const enum CBLAS_UPLO @var{Uplo}, const int @var{N}, const void * @var{alpha}, const void * @var{x}, const int @var{incx}, const void * @var{y}, const int @var{incy}, void * @var{A}, const int @var{lda})
+@end deftypefun
+
+@deftypefun void cblas_zhpr2 (const enum CBLAS_ORDER @var{order}, const enum CBLAS_UPLO @var{Uplo}, const int @var{N}, const void * @var{alpha}, const void * @var{x}, const int @var{incx}, const void * @var{y}, const int @var{incy}, void * @var{Ap})
+@end deftypefun
+
+@node Level 3 CBLAS Functions
+@section Level 3 
+
+
+@deftypefun void cblas_sgemm (const enum CBLAS_ORDER @var{Order}, const enum CBLAS_TRANSPOSE @var{TransA}, const enum CBLAS_TRANSPOSE @var{TransB}, const int @var{M}, const int @var{N}, const int @var{K}, const float @var{alpha}, const float * @var{A}, const int @var{lda}, const float * @var{B}, const int @var{ldb}, const float @var{beta}, float * @var{C}, const int @var{ldc})
+@end deftypefun
+
+@deftypefun void cblas_ssymm (const enum CBLAS_ORDER @var{Order}, const enum CBLAS_SIDE @var{Side}, const enum CBLAS_UPLO @var{Uplo}, const int @var{M}, const int @var{N}, const float @var{alpha}, const float * @var{A}, const int @var{lda}, const float * @var{B}, const int @var{ldb}, const float @var{beta}, float * @var{C}, const int @var{ldc})
+@end deftypefun
+
+@deftypefun void cblas_ssyrk (const enum CBLAS_ORDER @var{Order}, const enum CBLAS_UPLO @var{Uplo}, const enum CBLAS_TRANSPOSE @var{Trans}, const int @var{N}, const int @var{K}, const float @var{alpha}, const float * @var{A}, const int @var{lda}, const float @var{beta}, float * @var{C}, const int @var{ldc})
+@end deftypefun
+
+@deftypefun void cblas_ssyr2k (const enum CBLAS_ORDER @var{Order}, const enum CBLAS_UPLO @var{Uplo}, const enum CBLAS_TRANSPOSE @var{Trans}, const int @var{N}, const int @var{K}, const float @var{alpha}, const float * @var{A}, const int @var{lda}, const float * @var{B}, const int @var{ldb}, const float @var{beta}, float * @var{C}, const int @var{ldc})
+@end deftypefun
+
+@deftypefun void cblas_strmm (const enum CBLAS_ORDER @var{Order}, const enum CBLAS_SIDE @var{Side}, const enum CBLAS_UPLO @var{Uplo}, const enum CBLAS_TRANSPOSE @var{TransA}, const enum CBLAS_DIAG @var{Diag}, const int @var{M}, const int @var{N}, const float @var{alpha}, const float * @var{A}, const int @var{lda}, float * @var{B}, const int @var{ldb})
+@end deftypefun
+
+@deftypefun void cblas_strsm (const enum CBLAS_ORDER @var{Order}, const enum CBLAS_SIDE @var{Side}, const enum CBLAS_UPLO @var{Uplo}, const enum CBLAS_TRANSPOSE @var{TransA}, const enum CBLAS_DIAG @var{Diag}, const int @var{M}, const int @var{N}, const float @var{alpha}, const float * @var{A}, const int @var{lda}, float * @var{B}, const int @var{ldb})
+@end deftypefun
+
+@deftypefun void cblas_dgemm (const enum CBLAS_ORDER @var{Order}, const enum CBLAS_TRANSPOSE @var{TransA}, const enum CBLAS_TRANSPOSE @var{TransB}, const int @var{M}, const int @var{N}, const int @var{K}, const double @var{alpha}, const double * @var{A}, const int @var{lda}, const double * @var{B}, const int @var{ldb}, const double @var{beta}, double * @var{C}, const int @var{ldc})
+@end deftypefun
+
+@deftypefun void cblas_dsymm (const enum CBLAS_ORDER @var{Order}, const enum CBLAS_SIDE @var{Side}, const enum CBLAS_UPLO @var{Uplo}, const int @var{M}, const int @var{N}, const double @var{alpha}, const double * @var{A}, const int @var{lda}, const double * @var{B}, const int @var{ldb}, const double @var{beta}, double * @var{C}, const int @var{ldc})
+@end deftypefun
+
+@deftypefun void cblas_dsyrk (const enum CBLAS_ORDER @var{Order}, const enum CBLAS_UPLO @var{Uplo}, const enum CBLAS_TRANSPOSE @var{Trans}, const int @var{N}, const int @var{K}, const double @var{alpha}, const double * @var{A}, const int @var{lda}, const double @var{beta}, double * @var{C}, const int @var{ldc})
+@end deftypefun
+
+@deftypefun void cblas_dsyr2k (const enum CBLAS_ORDER @var{Order}, const enum CBLAS_UPLO @var{Uplo}, const enum CBLAS_TRANSPOSE @var{Trans}, const int @var{N}, const int @var{K}, const double @var{alpha}, const double * @var{A}, const int @var{lda}, const double * @var{B}, const int @var{ldb}, const double @var{beta}, double * @var{C}, const int @var{ldc})
+@end deftypefun
+
+@deftypefun void cblas_dtrmm (const enum CBLAS_ORDER @var{Order}, const enum CBLAS_SIDE @var{Side}, const enum CBLAS_UPLO @var{Uplo}, const enum CBLAS_TRANSPOSE @var{TransA}, const enum CBLAS_DIAG @var{Diag}, const int @var{M}, const int @var{N}, const double @var{alpha}, const double * @var{A}, const int @var{lda}, double * @var{B}, const int @var{ldb})
+@end deftypefun
+
+@deftypefun void cblas_dtrsm (const enum CBLAS_ORDER @var{Order}, const enum CBLAS_SIDE @var{Side}, const enum CBLAS_UPLO @var{Uplo}, const enum CBLAS_TRANSPOSE @var{TransA}, const enum CBLAS_DIAG @var{Diag}, const int @var{M}, const int @var{N}, const double @var{alpha}, const double * @var{A}, const int @var{lda}, double * @var{B}, const int @var{ldb})
+@end deftypefun
+
+@deftypefun void cblas_cgemm (const enum CBLAS_ORDER @var{Order}, const enum CBLAS_TRANSPOSE @var{TransA}, const enum CBLAS_TRANSPOSE @var{TransB}, const int @var{M}, const int @var{N}, const int @var{K}, const void * @var{alpha}, const void * @var{A}, const int @var{lda}, const void * @var{B}, const int @var{ldb}, const void * @var{beta}, void * @var{C}, const int @var{ldc})
+@end deftypefun
+
+@deftypefun void cblas_csymm (const enum CBLAS_ORDER @var{Order}, const enum CBLAS_SIDE @var{Side}, const enum CBLAS_UPLO @var{Uplo}, const int @var{M}, const int @var{N}, const void * @var{alpha}, const void * @var{A}, const int @var{lda}, const void * @var{B}, const int @var{ldb}, const void * @var{beta}, void * @var{C}, const int @var{ldc})
+@end deftypefun
+
+@deftypefun void cblas_csyrk (const enum CBLAS_ORDER @var{Order}, const enum CBLAS_UPLO @var{Uplo}, const enum CBLAS_TRANSPOSE @var{Trans}, const int @var{N}, const int @var{K}, const void * @var{alpha}, const void * @var{A}, const int @var{lda}, const void * @var{beta}, void * @var{C}, const int @var{ldc})
+@end deftypefun
+
+@deftypefun void cblas_csyr2k (const enum CBLAS_ORDER @var{Order}, const enum CBLAS_UPLO @var{Uplo}, const enum CBLAS_TRANSPOSE @var{Trans}, const int @var{N}, const int @var{K}, const void * @var{alpha}, const void * @var{A}, const int @var{lda}, const void * @var{B}, const int @var{ldb}, const void * @var{beta}, void * @var{C}, const int @var{ldc})
+@end deftypefun
+
+@deftypefun void cblas_ctrmm (const enum CBLAS_ORDER @var{Order}, const enum CBLAS_SIDE @var{Side}, const enum CBLAS_UPLO @var{Uplo}, const enum CBLAS_TRANSPOSE @var{TransA}, const enum CBLAS_DIAG @var{Diag}, const int @var{M}, const int @var{N}, const void * @var{alpha}, const void * @var{A}, const int @var{lda}, void * @var{B}, const int @var{ldb})
+@end deftypefun
+
+@deftypefun void cblas_ctrsm (const enum CBLAS_ORDER @var{Order}, const enum CBLAS_SIDE @var{Side}, const enum CBLAS_UPLO @var{Uplo}, const enum CBLAS_TRANSPOSE @var{TransA}, const enum CBLAS_DIAG @var{Diag}, const int @var{M}, const int @var{N}, const void * @var{alpha}, const void * @var{A}, const int @var{lda}, void * @var{B}, const int @var{ldb})
+@end deftypefun
+
+@deftypefun void cblas_zgemm (const enum CBLAS_ORDER @var{Order}, const enum CBLAS_TRANSPOSE @var{TransA}, const enum CBLAS_TRANSPOSE @var{TransB}, const int @var{M}, const int @var{N}, const int @var{K}, const void * @var{alpha}, const void * @var{A}, const int @var{lda}, const void * @var{B}, const int @var{ldb}, const void * @var{beta}, void * @var{C}, const int @var{ldc})
+@end deftypefun
+
+@deftypefun void cblas_zsymm (const enum CBLAS_ORDER @var{Order}, const enum CBLAS_SIDE @var{Side}, const enum CBLAS_UPLO @var{Uplo}, const int @var{M}, const int @var{N}, const void * @var{alpha}, const void * @var{A}, const int @var{lda}, const void * @var{B}, const int @var{ldb}, const void * @var{beta}, void * @var{C}, const int @var{ldc})
+@end deftypefun
+
+@deftypefun void cblas_zsyrk (const enum CBLAS_ORDER @var{Order}, const enum CBLAS_UPLO @var{Uplo}, const enum CBLAS_TRANSPOSE @var{Trans}, const int @var{N}, const int @var{K}, const void * @var{alpha}, const void * @var{A}, const int @var{lda}, const void * @var{beta}, void * @var{C}, const int @var{ldc})
+@end deftypefun
+
+@deftypefun void cblas_zsyr2k (const enum CBLAS_ORDER @var{Order}, const enum CBLAS_UPLO @var{Uplo}, const enum CBLAS_TRANSPOSE @var{Trans}, const int @var{N}, const int @var{K}, const void * @var{alpha}, const void * @var{A}, const int @var{lda}, const void * @var{B}, const int @var{ldb}, const void * @var{beta}, void * @var{C}, const int @var{ldc})
+@end deftypefun
+
+@deftypefun void cblas_ztrmm (const enum CBLAS_ORDER @var{Order}, const enum CBLAS_SIDE @var{Side}, const enum CBLAS_UPLO @var{Uplo}, const enum CBLAS_TRANSPOSE @var{TransA}, const enum CBLAS_DIAG @var{Diag}, const int @var{M}, const int @var{N}, const void * @var{alpha}, const void * @var{A}, const int @var{lda}, void * @var{B}, const int @var{ldb})
+@end deftypefun
+
+@deftypefun void cblas_ztrsm (const enum CBLAS_ORDER @var{Order}, const enum CBLAS_SIDE @var{Side}, const enum CBLAS_UPLO @var{Uplo}, const enum CBLAS_TRANSPOSE @var{TransA}, const enum CBLAS_DIAG @var{Diag}, const int @var{M}, const int @var{N}, const void * @var{alpha}, const void * @var{A}, const int @var{lda}, void * @var{B}, const int @var{ldb})
+@end deftypefun
+
+@deftypefun void cblas_chemm (const enum CBLAS_ORDER @var{Order}, const enum CBLAS_SIDE @var{Side}, const enum CBLAS_UPLO @var{Uplo}, const int @var{M}, const int @var{N}, const void * @var{alpha}, const void * @var{A}, const int @var{lda}, const void * @var{B}, const int @var{ldb}, const void * @var{beta}, void * @var{C}, const int @var{ldc})
+@end deftypefun
+
+@deftypefun void cblas_cherk (const enum CBLAS_ORDER @var{Order}, const enum CBLAS_UPLO @var{Uplo}, const enum CBLAS_TRANSPOSE @var{Trans}, const int @var{N}, const int @var{K}, const float @var{alpha}, const void * @var{A}, const int @var{lda}, const float @var{beta}, void * @var{C}, const int @var{ldc})
+@end deftypefun
+
+@deftypefun void cblas_cher2k (const enum CBLAS_ORDER @var{Order}, const enum CBLAS_UPLO @var{Uplo}, const enum CBLAS_TRANSPOSE @var{Trans}, const int @var{N}, const int @var{K}, const void * @var{alpha}, const void * @var{A}, const int @var{lda}, const void * @var{B}, const int @var{ldb}, const float @var{beta}, void * @var{C}, const int @var{ldc})
+@end deftypefun
+
+@deftypefun void cblas_zhemm (const enum CBLAS_ORDER @var{Order}, const enum CBLAS_SIDE @var{Side}, const enum CBLAS_UPLO @var{Uplo}, const int @var{M}, const int @var{N}, const void * @var{alpha}, const void * @var{A}, const int @var{lda}, const void * @var{B}, const int @var{ldb}, const void * @var{beta}, void * @var{C}, const int @var{ldc})
+@end deftypefun
+
+@deftypefun void cblas_zherk (const enum CBLAS_ORDER @var{Order}, const enum CBLAS_UPLO @var{Uplo}, const enum CBLAS_TRANSPOSE @var{Trans}, const int @var{N}, const int @var{K}, const double @var{alpha}, const void * @var{A}, const int @var{lda}, const double @var{beta}, void * @var{C}, const int @var{ldc})
+@end deftypefun
+
+@deftypefun void cblas_zher2k (const enum CBLAS_ORDER @var{Order}, const enum CBLAS_UPLO @var{Uplo}, const enum CBLAS_TRANSPOSE @var{Trans}, const int @var{N}, const int @var{K}, const void * @var{alpha}, const void * @var{A}, const int @var{lda}, const void * @var{B}, const int @var{ldb}, const double @var{beta}, void * @var{C}, const int @var{ldc})
+@end deftypefun
+
+@deftypefun void cblas_xerbla (int @var{p}, const char * @var{rout}, const char * @var{form}, ...)
+@end deftypefun
+
+@node GSL CBLAS Examples
+@section Examples
+
+The following program computes the product of two matrices using the
+Level-3 @sc{blas} function @sc{sgemm},
+@tex
+\beforedisplay
+$$
+\left(
+\matrix{0.11&0.12&0.13\cr
+0.21&0.22&0.23\cr}
+\right)
+\left(
+\matrix{1011&1012\cr
+1021&1022\cr
+1031&1032\cr}
+\right)
+=
+\left(
+\matrix{367.76&368.12\cr
+674.06&674.72\cr}
+\right)
+$$
+\afterdisplay
+@end tex
+@ifinfo
+
+@example
+[ 0.11 0.12 0.13 ]  [ 1011 1012 ]     [ 367.76 368.12 ]
+[ 0.21 0.22 0.23 ]  [ 1021 1022 ]  =  [ 674.06 674.72 ]
+                    [ 1031 1032 ]
+@end example
+
+@end ifinfo
+@noindent
+The matrices are stored in row major order but could be stored in column
+major order if the first argument of the call to @code{cblas_sgemm} was
+changed to @code{CblasColMajor}.
+
+@example
+@verbatiminclude examples/cblas.c
+@end example
+
+@noindent
+To compile the program use the following command line,
+
+@example
+$ gcc -Wall demo.c -lgslcblas
+@end example
+
+@noindent
+There is no need to link with the main library @code{-lgsl} in this
+case as the @sc{cblas} library is an independent unit. Here is the output
+from the program,
+
+@example
+$ ./a.out
+@verbatiminclude examples/cblas.out
+@end example

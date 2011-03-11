@@ -1,0 +1,6 @@
+term-by-term sum =  1.5961632439130233 using 20 terms
+term-by-term sum =  1.5759958390005426 using 13 terms
+exact value      =  1.6449340668482264
+accelerated sum  =  1.6449340668166479 using 13 terms
+estimated error  =  0.0000000000508580
+actual error     = -0.0000000000315785

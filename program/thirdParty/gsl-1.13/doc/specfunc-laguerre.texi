@@ -1,0 +1,40 @@
+@cindex Laguerre functions
+@cindex confluent hypergeometric function
+
+The generalized Laguerre polynomials are defined in terms of confluent
+hypergeometric functions as
+@c{$L^a_n(x) = ((a+1)_n / n!) {}_1F_1(-n,a+1,x)$}
+@math{L^a_n(x) = ((a+1)_n / n!) 1F1(-n,a+1,x)}, and are sometimes referred to as the
+associated Laguerre polynomials.  They are related to the plain
+Laguerre polynomials @math{L_n(x)} by @math{L^0_n(x) = L_n(x)} and 
+@c{$L^k_n(x) = (-1)^k (d^k/dx^k) L_{(n+k)}(x)$}
+@math{L^k_n(x) = (-1)^k (d^k/dx^k) L_(n+k)(x)}.  For
+more information see Abramowitz & Stegun, Chapter 22.
+
+The functions described in this section are
+declared in the header file @file{gsl_sf_laguerre.h}.  
+
+@deftypefun double gsl_sf_laguerre_1 (double @var{a}, double @var{x})
+@deftypefunx double gsl_sf_laguerre_2 (double @var{a}, double @var{x})
+@deftypefunx double gsl_sf_laguerre_3 (double @var{a}, double @var{x})
+@deftypefunx int gsl_sf_laguerre_1_e (double @var{a}, double @var{x}, gsl_sf_result * @var{result})
+@deftypefunx int gsl_sf_laguerre_2_e (double @var{a}, double @var{x}, gsl_sf_result * @var{result})
+@deftypefunx int gsl_sf_laguerre_3_e (double @var{a}, double @var{x}, gsl_sf_result * @var{result})
+These routines evaluate the generalized Laguerre polynomials
+@math{L^a_1(x)}, @math{L^a_2(x)}, @math{L^a_3(x)} using explicit
+representations.
+@comment Exceptional Return Values: none
+@end deftypefun
+
+
+@deftypefun double gsl_sf_laguerre_n (const int @var{n}, const double @var{a}, const double @var{x})
+@deftypefunx int gsl_sf_laguerre_n_e (int @var{n}, double @var{a}, double @var{x}, gsl_sf_result * @var{result})
+These routines evaluate the generalized Laguerre polynomials
+@math{L^a_n(x)} for @math{a > -1}, 
+@c{$n \ge 0$}
+@math{n >= 0}.
+
+@comment Domain: a > -1.0, n >= 0
+@comment Evaluate generalized Laguerre polynomials.
+@comment Exceptional Return Values: GSL_EDOM
+@end deftypefun

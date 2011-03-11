@@ -1,0 +1,32 @@
+2005-06-21  Brian Gough  <bjg@network-theory.co.uk>
+
+	* results.c: now displayed PASS lines only if GSL_TEST_VERBOSE=1,
+	otherwise only display fail lines by default.
+
+Thu Sep 12 22:56:31 2002  Brian Gough  <bjg@network-theory.co.uk>
+
+	* results.c (gsl_test_rel): catch NaN
+	(gsl_test_abs): catch NaN
+
+Fri Sep 28 10:40:21 2001  Brian Gough  <bjg@network-theory.co.uk>
+
+	* results.c: use the definition STDC_HEADERS instead of __STDC__
+ 	as recommended by the autoconf manual
+
+Thu Sep  6 10:17:10 2001  Brian Gough  <bjg@network-theory.co.uk>
+
+	* results.c (gsl_test_factor): fixed factor to work for case of
+ 	0==0 without dividing by zero
+
+Wed Nov 29 10:42:57 2000  Brian Gough  <bjg@network-theory.co.uk>
+
+	* results.c (gsl_test_factor): added a test for two results being
+ 	within a given factor of each other (e.g. "result should be good
+ 	to within a factor of 2").  Note that this is different from the
+ 	definition of relative error, which starts with a measurement of
+ 	the difference by subtraction.
+
+Fri May  5 11:20:36 2000  Brian Gough  <bjg@network-theory.co.uk>
+
+	* split out gsl_test code from err/ directory
+

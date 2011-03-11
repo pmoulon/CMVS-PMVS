@@ -1,0 +1,10 @@
+ADD_LIBRARY(numeric_lib
+mat2.h
+mat3.h
+mat4.h
+mylapack.h
+mylapack.cc
+vec2.h
+vec3.h
+vec4.h	
+)

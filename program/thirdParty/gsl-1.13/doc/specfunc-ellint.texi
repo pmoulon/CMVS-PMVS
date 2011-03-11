@@ -1,0 +1,198 @@
+@cindex elliptic integrals
+
+The functions described in this section are declared in the header
+file @file{gsl_sf_ellint.h}.  Further information about the elliptic
+integrals can be found in Abramowitz & Stegun, Chapter 17.
+
+@menu
+* Definition of Legendre Forms::  
+* Definition of Carlson Forms::  
+* Legendre Form of Complete Elliptic Integrals::  
+* Legendre Form of Incomplete Elliptic Integrals::  
+* Carlson Forms::               
+@end menu
+
+@node Definition of Legendre Forms
+@subsection Definition of Legendre Forms
+@cindex Legendre forms of elliptic integrals
+The Legendre forms of elliptic integrals @math{F(\phi,k)},
+@math{E(\phi,k)} and @math{\Pi(\phi,k,n)} are defined by,
+@tex
+\beforedisplay
+$$
+\eqalign{
+F(\phi,k)   &= \int_0^\phi dt {1 \over \sqrt{(1 - k^2 \sin^2(t))}}\cr
+E(\phi,k)   &= \int_0^\phi dt   \sqrt{(1 - k^2 \sin^2(t))}\cr
+\Pi(\phi,k,n) &= \int_0^\phi dt {1 \over (1 + n \sin^2(t)) \sqrt{1 - k^2 \sin^2(t)}}
+}
+$$
+\afterdisplay
+@end tex
+@ifinfo
+
+@example
+  F(\phi,k) = \int_0^\phi dt 1/\sqrt((1 - k^2 \sin^2(t)))
+
+  E(\phi,k) = \int_0^\phi dt   \sqrt((1 - k^2 \sin^2(t)))
+
+Pi(\phi,k,n) = \int_0^\phi dt 1/((1 + n \sin^2(t))\sqrt(1 - k^2 \sin^2(t)))
+@end example
+
+@end ifinfo
+@noindent
+The complete Legendre forms are denoted by @math{K(k) = F(\pi/2, k)} and
+@math{E(k) = E(\pi/2, k)}.  
+
+The notation used here is based on Carlson, @cite{Numerische
+Mathematik} 33 (1979) 1 and differs slightly from that used by
+Abramowitz & Stegun, where the functions are given in terms of the
+parameter @math{m = k^2} and @math{n} is replaced by @math{-n}.
+
+@node Definition of Carlson Forms
+@subsection Definition of Carlson Forms
+@cindex Carlson forms of Elliptic integrals
+The Carlson symmetric forms of elliptical integrals @math{RC(x,y)},
+@math{RD(x,y,z)}, @math{RF(x,y,z)} and @math{RJ(x,y,z,p)} are defined
+by,
+@tex
+\beforedisplay
+$$
+\eqalign{
+RC(x,y)   &= 1/2 \int_0^\infty dt (t+x)^{-1/2} (t+y)^{-1}\cr
+RD(x,y,z) &= 3/2 \int_0^\infty dt (t+x)^{-1/2} (t+y)^{-1/2} (t+z)^{-3/2}\cr
+RF(x,y,z) &= 1/2 \int_0^\infty dt (t+x)^{-1/2} (t+y)^{-1/2} (t+z)^{-1/2}\cr
+RJ(x,y,z,p) &= 3/2 \int_0^\infty dt (t+x)^{-1/2} (t+y)^{-1/2} (t+z)^{-1/2} (t+p)^{-1}
+}
+$$
+\afterdisplay
+@end tex
+@ifinfo
+
+@example
+    RC(x,y) = 1/2 \int_0^\infty dt (t+x)^(-1/2) (t+y)^(-1)
+
+  RD(x,y,z) = 3/2 \int_0^\infty dt (t+x)^(-1/2) (t+y)^(-1/2) (t+z)^(-3/2)
+
+  RF(x,y,z) = 1/2 \int_0^\infty dt (t+x)^(-1/2) (t+y)^(-1/2) (t+z)^(-1/2)
+
+RJ(x,y,z,p) = 3/2 \int_0^\infty dt 
+                 (t+x)^(-1/2) (t+y)^(-1/2) (t+z)^(-1/2) (t+p)^(-1)
+@end example
+@end ifinfo
+
+@node Legendre Form of Complete Elliptic Integrals
+@subsection Legendre Form of Complete Elliptic Integrals
+
+@deftypefun double gsl_sf_ellint_Kcomp (double @var{k}, gsl_mode_t @var{mode})
+@deftypefunx int gsl_sf_ellint_Kcomp_e (double @var{k}, gsl_mode_t @var{mode}, gsl_sf_result * @var{result})
+These routines compute the complete elliptic integral @math{K(k)} to
+the accuracy specified by the mode variable @var{mode}.  
+Note that Abramowitz & Stegun define this function in terms of the
+parameter @math{m = k^2}.
+@comment Exceptional Return Values:  GSL_EDOM
+@end deftypefun
+
+@deftypefun double gsl_sf_ellint_Ecomp (double @var{k}, gsl_mode_t @var{mode})
+@deftypefunx int gsl_sf_ellint_Ecomp_e (double @var{k}, gsl_mode_t @var{mode}, gsl_sf_result * @var{result})
+These routines compute the complete elliptic integral @math{E(k)} to the
+accuracy specified by the mode variable @var{mode}.
+Note that Abramowitz & Stegun define this function in terms of the
+parameter @math{m = k^2}.
+@comment Exceptional Return Values:  GSL_EDOM
+@end deftypefun
+
+@deftypefun double gsl_sf_ellint_Pcomp (double @var{k}, double @var{n}, gsl_mode_t @var{mode})
+@deftypefunx int gsl_sf_ellint_Pcomp_e (double @var{k}, double @var{n},  gsl_mode_t @var{mode}, gsl_sf_result * @var{result})
+These routines compute the complete elliptic integral @math{\Pi(k,n)} to the
+accuracy specified by the mode variable @var{mode}.
+Note that Abramowitz & Stegun define this function in terms of the
+parameters @math{m = k^2} and @math{\sin^2(\alpha) = k^2}, with the
+change of sign @math{n \to -n}.
+@comment Exceptional Return Values:  GSL_EDOM
+@end deftypefun
+
+@node Legendre Form of Incomplete Elliptic Integrals
+@subsection Legendre Form of Incomplete Elliptic Integrals
+
+@deftypefun double gsl_sf_ellint_F (double @var{phi}, double @var{k}, gsl_mode_t @var{mode})
+@deftypefunx int gsl_sf_ellint_F_e (double @var{phi}, double @var{k}, gsl_mode_t @var{mode}, gsl_sf_result * @var{result})
+These routines compute the incomplete elliptic integral @math{F(\phi,k)}
+to the accuracy specified by the mode variable @var{mode}.
+Note that Abramowitz & Stegun define this function in terms of the
+parameter @math{m = k^2}.
+@comment Exceptional Return Values: GSL_EDOM
+@end deftypefun
+
+@deftypefun double gsl_sf_ellint_E (double @var{phi}, double @var{k}, gsl_mode_t @var{mode})
+@deftypefunx int gsl_sf_ellint_E_e (double @var{phi}, double @var{k}, gsl_mode_t @var{mode}, gsl_sf_result * @var{result})
+These routines compute the incomplete elliptic integral @math{E(\phi,k)}
+to the accuracy specified by the mode variable @var{mode}.
+Note that Abramowitz & Stegun define this function in terms of the
+parameter @math{m = k^2}.
+@comment Exceptional Return Values: GSL_EDOM
+@end deftypefun
+
+@deftypefun double gsl_sf_ellint_P (double @var{phi}, double @var{k}, double @var{n}, gsl_mode_t @var{mode})
+@deftypefunx int gsl_sf_ellint_P_e (double @var{phi}, double @var{k}, double @var{n}, gsl_mode_t @var{mode}, gsl_sf_result * @var{result})
+These routines compute the incomplete elliptic integral @math{\Pi(\phi,k,n)}
+to the accuracy specified by the mode variable @var{mode}.
+Note that Abramowitz & Stegun define this function in terms of the
+parameters @math{m = k^2} and @math{\sin^2(\alpha) = k^2}, with the
+change of sign @math{n \to -n}.
+@comment Exceptional Return Values: GSL_EDOM
+@end deftypefun
+
+@deftypefun double gsl_sf_ellint_D (double @var{phi}, double @var{k}, double @var{n}, gsl_mode_t @var{mode})
+@deftypefunx int gsl_sf_ellint_D_e (double @var{phi}, double @var{k}, double @var{n}, gsl_mode_t @var{mode}, gsl_sf_result * @var{result})
+These functions compute the incomplete elliptic integral
+@math{D(\phi,k)} which is defined through the Carlson form @math{RD(x,y,z)}
+by the following relation, 
+@tex
+\beforedisplay
+$$
+D(\phi,k,n) = {1 \over 3} (\sin \phi)^3 RD (1-\sin^2(\phi), 1-k^2 \sin^2(\phi), 1).
+$$
+\afterdisplay
+@end tex
+@ifinfo
+
+@example
+D(\phi,k,n) = (1/3)(\sin(\phi))^3 RD (1-\sin^2(\phi), 1-k^2 \sin^2(\phi), 1).
+@end example
+@end ifinfo
+The argument @var{n} is not used and will be removed in a future release.
+
+@comment Exceptional Return Values: GSL_EDOM
+@end deftypefun
+
+
+@node Carlson Forms
+@subsection Carlson Forms
+
+@deftypefun double gsl_sf_ellint_RC (double @var{x}, double @var{y}, gsl_mode_t @var{mode})
+@deftypefunx int gsl_sf_ellint_RC_e (double @var{x}, double @var{y}, gsl_mode_t @var{mode}, gsl_sf_result * @var{result})
+These routines compute the incomplete elliptic integral @math{RC(x,y)}
+to the accuracy specified by the mode variable @var{mode}.
+@comment Exceptional Return Values: GSL_EDOM
+@end deftypefun
+
+@deftypefun double gsl_sf_ellint_RD (double @var{x}, double @var{y}, double @var{z}, gsl_mode_t @var{mode})
+@deftypefunx int gsl_sf_ellint_RD_e (double @var{x}, double @var{y}, double @var{z}, gsl_mode_t @var{mode}, gsl_sf_result * @var{result})
+These routines compute the incomplete elliptic integral @math{RD(x,y,z)}
+to the accuracy specified by the mode variable @var{mode}.
+@comment Exceptional Return Values: GSL_EDOM
+@end deftypefun
+
+@deftypefun double gsl_sf_ellint_RF (double @var{x}, double @var{y}, double @var{z}, gsl_mode_t @var{mode})
+@deftypefunx int gsl_sf_ellint_RF_e (double @var{x}, double @var{y}, double @var{z}, gsl_mode_t @var{mode}, gsl_sf_result * @var{result})
+These routines compute the incomplete elliptic integral @math{RF(x,y,z)}
+to the accuracy specified by the mode variable @var{mode}.
+@comment Exceptional Return Values: GSL_EDOM
+@end deftypefun
+
+@deftypefun double gsl_sf_ellint_RJ (double @var{x}, double @var{y}, double @var{z}, double @var{p}, gsl_mode_t @var{mode})
+@deftypefunx int gsl_sf_ellint_RJ_e (double @var{x}, double @var{y}, double @var{z}, double @var{p}, gsl_mode_t @var{mode}, gsl_sf_result * @var{result})
+These routines compute the incomplete elliptic integral @math{RJ(x,y,z,p)}
+to the accuracy specified by the mode variable @var{mode}.
+@comment Exceptional Return Values: GSL_EDOM
+@end deftypefun

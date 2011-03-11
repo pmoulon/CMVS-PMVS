@@ -1,0 +1,27 @@
+Mark Galassi (rosalia@lanl.gov) - overall design, simulated annealing
+Jim Davies (jimmyd@nis.lanl.gov) - statistics library
+James Theiler (jt@lanl.gov) - random number generators
+Brian Gough (bjg@network-theory.co.uk) -
+  FFTs, numerical integration, random number generators and distributions,
+  root finding, minimization and fitting, polynomial solvers, complex
+  numbers, physical constants, permutations, vector and matrix functions,
+  histograms, statistics, ieee-utils, revised CBLAS Level 2 & 3, matrix
+  decompositions and eigensystems.
+Reid Priedhorsky (rp@lanl.gov) - root finding
+Gerard Jungman (jungman@lanl.gov) special functions, interpolation, 
+  series acceleration, ODEs, BLAS, Linear Algebra, Eigensystems,
+  Hankel Transforms.
+Michael Booth (booth@debian.org (email address not working)) - Monte 
+  Carlo integration
+Fabrice Rossi (rossi@ufrmd.dauphine.fr) - Multidimensional minimization
+Simone Piccardi (piccardi@fi.infn.it) - Ntuples
+Carlo Perassi (carlo@linux.it) - Additional random number generators
+Dan, Ho-Jin (hjdan@sys713.kaist.ac.kr) - divided differences interpolation
+Szymon Jaroszewicz (sj@cs.umb.edu) - combinations
+Nicolas Darnis (ndarnis@cvf.fr) - cyclic functions and the initial functions for
+ canonical permutations.
+Tuomo Keskitalo (tuomo.keskitalo@iki.fi) - multidimensional minimization
+Ivo Alxneit (ivo.alxneit@psi.ch) - multidimensional minimization, wavelet 
+  transforms
+Jason H. Stover (jason@sakla.net) - cumulative distribution functions
+Patrick Alken <patrick.alken@colorado.edu> - nonsymmetric and generalized eigensystems, B-splines

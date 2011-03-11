@@ -1,0 +1,97 @@
+* gfsr: for consistency (Charles A. Wemple).  Make this change in 2.0
+
+ 127a142
+>   state->nd = i-1;
+133,134c148,149
+<   for (i=0; i<32; ++i) {
+<       int k=7+i*3;
+---
+>   for (i=0; i<32; i++) {
+>       int k=7*i+3;
+141d155
+<   state->nd = i;
+
+
+* Sort out "const" in prototypes, it looks odd since there are consts
+for many functions which modify the state.  (Applies to both qrng and rng)
+
+* New 64 bit generators in "Tables of 64-bit Mersenne Twisters",
+Takuji Nishimura, ACM Transactions on Modeling and Computer
+Simulation, Volumen 10, No 4, October 2000, p 348--357
+
+* Need to run tests over the space of seeds, in addition to serial
+tests (DIEHARD) for the default seed.  The congruences used for
+seeding will give poor initial vectors for some seed values, e.g. 2^n.
+Improve the seeding procedure by using a high-quality generator
+(e.g. hash functions, md5 or sha) to generate the initial vectors.
+Even if this is moderately expensive it is worthwhile since the
+seeding is usually a one-off cost at program initialization, and the
+results of all subsequent calls to the generator depend on it.  The
+GSFR4 generator is particularly likely to benefit from this procedure.
+
+* Add SWNS generator Phys.Rev.E 50 (2) p. 1607-1615 (1994), Phys.Rev.E
+60 (6), p.7626-7628 (1999)
+
+* Add get_array type methods which can provide optimized versions of
+each function (?). We should offer the possibility of eliminating
+function call overhead -- there are various possible ways to implement
+it.
+
+* Add ISAAC generator (??)
+
+* Add (A)RC4 and hash based random number generators MD5, SHA.  This
+should give crypto quality randomness, and guarantee different
+sequences for each seed. Make the state (seed, count) where count
+increments on each call of the generator.  Implement count as a big
+integer stored in separate unsigned integers so that the period is
+sufficiently long (e.g. 2^64 or 2^96). The generator would return
+HASH(seed, count) on each call.
+
+* Check that RANLXS will work on machines with non-standard width of
+float/dbl (original has checks for DBL_MANT_DIG ..)
+
+* mention more clearly why not all Cokus used (or recheck MT pages for
+improvements)
+
+* run the DIEHARD tests on all the generators, especially the ones we
+are listing as "Simulation Quality" -- some of those are a bit old and
+might fail one or two diehard tests.
+
+* Add  NAG,       missing, gave up! 
+       CDC 48-bit missing 
+
+* Check out the bug fix to mrand48 that was made in glibc2, pr757
+
+* Check out  the following paper,
+
+    On the anomaly of ran1() in Monte Carlo pricing of financial
+    derivatives; Akira Tajima , Syoiti Ninomiya , and Shu Tezuka ; Winter
+    simulation , 1996, Page 360, from ACM
+
+* The following papers have been published, I think we refer to them
+(or could do),
+
+    Pierre L'Ecuyer, "Tables of Linear Congruential Generators of different
+    size and good lattice structure", Mathematics of Computation, Vol 68,
+    No 225, Jan 1999, p249-260
+
+    Pierre L'Ecuyer, "Tables of Maximally equidistributed combined LSFR
+    generators", ibid, p261-270
+
+* Look at this paper: I. Vattulainen, "Framework for testing random numbers
+  in parallel calculations", Phys. Rev. E, 59, 6, June 1999, p7200
+
+----------------------------------------------------------------------
+DONE
+
+x1. Improve the seeding for routines that use the LCG seed generator.
+It can only generate 130,000 different initial states. We should
+change it to provide 2^31 different initial states (this will also
+prevent the high bits being zero). DONE - we now use a 32-bit
+generator.
+
+x8. Get the macros from the faster MT19937 generator and use them. We
+need to make MT be the fastest of the simulation quality generators if
+it is the default. DONE. It didn't improve the speed on other
+platforms, so I just used the tricks which also worked on the pentium
+(e.g. changing mag[x&1] to x&1 ? mag[1] : mag[0])

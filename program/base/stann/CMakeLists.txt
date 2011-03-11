@@ -1,0 +1,14 @@
+ADD_LIBRARY(stann_lib
+assert.hpp
+bruteNN.hpp
+bsearch.hpp
+dpoint.hpp
+pair_iter.hpp
+qknn.hpp
+rand.hpp
+sep_float.hp
+sfcnn.hpp
+sfcnn_knng.hpp
+zorder_lt.hpp
+zorder_type_traits.hpp
+)

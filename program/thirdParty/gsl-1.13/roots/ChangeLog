@@ -1,0 +1,181 @@
+2009-07-09  Brian Gough  <bjg@network-theory.co.uk>
+
+	* fsolver.c (gsl_root_fsolver_free): handle NULL argument in free
+
+	* fdfsolver.c (gsl_root_fdfsolver_free): handle NULL argument in
+	free
+
+2008-07-03  Brian Gough  <bjg@hp2.network-theory.co.uk>
+
+	* Makefile.am (INCLUDES): use top_srcdir instead of top_builddir
+
+2007-07-30  Brian Gough  <bjg@network-theory.co.uk>
+
+	* newton.c (newton_iterate): use gsl_finite instead of finite
+
+	* roots.h (SAFE_FUNC_CALL): use gsl_finite instead of finite
+
+	* secant.c (secant_iterate): use gsl_finite instead of finite
+
+	* steffenson.c (steffenson_iterate): use gsl_finite instead of
+	finite
+
+2007-01-04  Brian Gough  <bjg@network-theory.co.uk>
+
+	* convergence.c (gsl_root_test_delta): added termination
+	alternative condition x1==x0
+
+2005-03-02  Brian Gough  <bjg@network-theory.co.uk>
+
+	* steffenson.c (steffenson_iterate): improved wording of error messages
+
+	* secant.c (secant_iterate): improved wording of error messages
+
+	* roots.h (SAFE_FUNC_CALL): improved wording of error message
+
+	* newton.c (newton_iterate): improved wording of error messages
+
+	* utility.c: removed, not needed any more
+
+Sun Jul 15 17:53:48 2001  Brian Gough  <bjg@network-theory.co.uk>
+
+	* removed interval type
+
+Sun May  6 14:26:59 2001  Brian Gough  <bjg@network-theory.co.uk>
+
+	* test.c: removed tests for macros, which are now in sys/.
+
+Mon Apr 16 20:17:04 2001  Brian Gough  <bjg@network-theory.co.uk>
+
+	* fsolver.c (gsl_root_fsolver_alloc): removed unnecessary status
+ 	variable
+
+Sun Feb 18 15:35:25 2001  Brian Gough  <bjg@network-theory.co.uk>
+
+	* fdfsolver.c fsolver.c: changed so that the solver _alloc
+ 	function no longer calls _set, the user must do that separately.
+
+Wed May 17 11:37:15 2000  Brian Gough  <bjg@network-theory.co.uk>
+
+	* test_macros.c (test_macros): use GSL_POSINF and GSL_NAN macros
+ 	instead of 1/0 and 0/0
+
+Mon Feb 14 13:05:30 2000  Brian Gough  <bjg@network-theory.co.uk>
+
+	* removed definition of isinf macro (no longer needed)
+
+	* made all internal functions static
+
+Wed Nov  3 11:59:35 1999  Brian Gough  <bjg@network-theory.co.uk>
+
+	* fixed test failures
+
+	* test.c (main): added a call to gsl_ieee_env_setup for testing
+
+	* test_roots.c: increased the maximum number of iterations to 150
+ 	so that the tests still work on the difficult cases.
+
+	* steffenson.c (steffenson_iterate): add a check to avoid division
+ 	by zero
+
+Sat Oct 16 19:43:14 1999  Brian Gough  <bjg@network-theory.co.uk>
+
+	* removed GSL_ROOT_EPSILON_BUFFER, not needed anymore
+
+Wed Jul 21 18:47:01 1999  Brian Gough  <bjg@network-theory.co.uk>
+
+	* gsl_roots.h, convergence.c: changed order of relative and
+ 	absolute errors to make them the same as quadpack routines
+ 	(abs,rel)
+
+Wed Jul 21 16:30:56 1999  Brian Gough  <bjg@network-theory.co.uk>
+
+	* brent.c (brent_iterate): fixed bug where bounding interval could
+ 	be incorrect and not include root.
+
+Mon Mar  1 15:38:06 1999  Brian Gough  <bjg@netsci.freeserve.co.uk>
+
+	* moved static class data out of gsl_root_fsolver and
+ 	gsl_root_fdfsolver and into gsl_root_fsolver_type and
+ 	gsl_root_fdfsolver_type
+
+ 
+Mon Mar  1 15:38:06 1999  Brian Gough  <bjg@netsci.freeserve.co.uk>
+
+	* renamed f_solver to fsolver and fdf_solver to fdfsolver, since
+ 	these look neater
+
+Sun Feb 28 21:11:21 1999  Brian Gough  <bjg@netsci.freeserve.co.uk>
+
+	* rewrote the root finding functions in an iterative framework
+
+Tue Nov 17 16:47:09 1998  Brian Gough  <bjg@vvv.lanl.gov>
+
+	* secant.c, falsepos.c newton.c: added gsl_math.h to included
+ 	headers to import GSL_MAX and GSL_MIN
+
+Mon Nov  9 21:21:45 1998  Brian Gough  <bjg@vvv.lanl.gov>
+
+	* roots.h: got rid of local MAX(a,b) and MIN(a,b) definitions
+ 	since they are now in config.h
+
+Wed Nov  4 16:08:32 1998  Brian Gough  <bjg@vvv.lanl.gov>
+
+	* test.c (test_brent): allow the brent tests to run for more
+ 	iterations since they take longer on the pathological cases.
+
+	* brent.c (gsl_root_brent): on each iteration keep track of
+ 	current best estimates of the root and the bounds so that they are
+ 	returned to the user if the function exits prematurely.
+
+	clean up the brent algorithm based on remarks in the original
+ 	paper
+
+Mon Oct 26 16:31:21 1998  Brian Gough  <bjg@vvv.lanl.gov>
+
+	* in all routines with upper and lower bounds if a root is found
+ 	exactly then the bracket is collapsed onto the root instead of
+ 	being untouched.
+
+Thu Oct 15 13:59:30 1998  Brian Gough  <bjg@vvv.lanl.gov>
+
+	* bisection.c, falsepos.c, secant.c: reordered the tests so that
+ 	the minimum number of function evaluations are performed when
+ 	there is an early exit due to one of the supplied limits lying on
+ 	a root.
+
+Fri Aug 21 14:48:13 1998  Brian Gough  <bjg@vvv.lanl.gov>
+
+	* test.c: clean up of tests to get rid of warnings
+
+Thu Aug 20 10:21:15 1998  Brian Gough  <bjg@vvv.lanl.gov>
+
+	* roots.h (_WITHIN_TOL): added extra parens in macro definition,
+ 	for safety
+
+	* falsepos.c (gsl_root_falsepos): removed test for absolute
+ 	equality and replaced by a flag indicating which variables
+ 	changed.
+
+	* test.c (main): simplified the tests, removed command line
+ 	arguments (can use the debugger to select which ones to run)
+
+Mon Jun 15 22:22:54 1998  Brian Gough  <bjg@vvv.lanl.gov>
+
+	* started to eliminate void * arguments for function types (they
+ 	are not a good idea and can easily be specified)
+
+1998-02-09  Mark Galassi  <rosalia@cygnus.com>
+
+	* test.c (main): added an extra argument so that the $(srcdir) can
+	be passed along when "make check" is run in a separate build
+	directory.
+
+	* test-macros, test-secant, test-bisection, test-newton,
+	test-falsepos: modified these to use build and source directories
+	explicitly.  Now "make check" in a separate build directory works.
+
+1998-02-02  Mark Galassi  <rosalia@cygnus.com>
+
+	* Makefile.am (TESTS): added $(srcdir) before these scripts, since
+	the TESTS target picks things from the build directory.

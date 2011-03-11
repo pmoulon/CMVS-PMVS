@@ -1,0 +1,99 @@
+@cindex error function
+@cindex erf(x)
+@cindex erfc(x)
+
+The error function is described in Abramowitz & Stegun, Chapter 7.  The
+functions in this section are declared in the header file
+@file{gsl_sf_erf.h}.
+
+@menu
+* Error Function::              
+* Complementary Error Function::  
+* Log Complementary Error Function::  
+* Probability functions::       
+@end menu
+
+@node Error Function
+@subsection Error Function
+
+@deftypefun double gsl_sf_erf (double @var{x})
+@deftypefunx int gsl_sf_erf_e (double @var{x}, gsl_sf_result * @var{result})
+These routines compute the error function @c{$\erf(x)$}
+@math{erf(x)}, where
+@c{$\erf(x) = (2/\sqrt{\pi}) \int_0^x dt \exp(-t^2)$}
+@math{erf(x) = (2/\sqrt(\pi)) \int_0^x dt \exp(-t^2)}.
+@comment Exceptional Return Values: none
+@end deftypefun
+
+@node Complementary Error Function
+@subsection Complementary Error Function
+
+@deftypefun double gsl_sf_erfc (double @var{x})
+@deftypefunx int gsl_sf_erfc_e (double @var{x}, gsl_sf_result * @var{result})
+These routines compute the complementary error function 
+@c{$\erfc(x) = 1 - \erf(x) = (2/\sqrt{\pi}) \int_x^\infty \exp(-t^2)$}
+@math{erfc(x) = 1 - erf(x) = (2/\sqrt(\pi)) \int_x^\infty \exp(-t^2)}.
+@comment Exceptional Return Values: none
+@end deftypefun
+
+
+@node Log Complementary Error Function
+@subsection Log Complementary Error Function
+
+@deftypefun double gsl_sf_log_erfc (double @var{x})
+@deftypefunx int gsl_sf_log_erfc_e (double @var{x}, gsl_sf_result * @var{result})
+These routines compute the logarithm of the complementary error function
+@math{\log(\erfc(x))}.
+@comment Exceptional Return Values: none
+@end deftypefun
+
+
+@node Probability functions
+@subsection Probability functions
+
+The probability functions for the Normal or Gaussian distribution are
+described in Abramowitz & Stegun, Section 26.2.
+
+@deftypefun double gsl_sf_erf_Z (double @var{x})
+@deftypefunx int gsl_sf_erf_Z_e (double @var{x}, gsl_sf_result * @var{result})
+These routines compute the Gaussian probability density function 
+@c{$Z(x) = (1/\sqrt{2\pi}) \exp(-x^2/2)$} 
+@math{Z(x) = (1/\sqrt@{2\pi@}) \exp(-x^2/2)}.  
+@end deftypefun
+
+@deftypefun double gsl_sf_erf_Q (double @var{x})
+@deftypefunx int gsl_sf_erf_Q_e (double @var{x}, gsl_sf_result * @var{result})
+These routines compute the upper tail of the Gaussian probability
+function 
+@c{$Q(x) = (1/\sqrt{2\pi}) \int_x^\infty dt \exp(-t^2/2)$}
+@math{Q(x) = (1/\sqrt@{2\pi@}) \int_x^\infty dt \exp(-t^2/2)}.
+@comment Exceptional Return Values: none
+@end deftypefun
+
+@cindex hazard function, normal distribution
+@cindex Mills' ratio, inverse
+The @dfn{hazard function} for the normal distribution, 
+also known as the inverse Mills' ratio, is defined as,
+@tex
+\beforedisplay
+$$
+h(x) = {Z(x)\over Q(x)} = \sqrt{2 \over \pi} {\exp(-x^2 / 2) \over \erfc(x/\sqrt 2)}
+$$
+\afterdisplay
+@end tex
+@ifinfo
+
+@example
+h(x) = Z(x)/Q(x) = \sqrt@{2/\pi@} \exp(-x^2 / 2) / \erfc(x/\sqrt 2)
+@end example
+
+@end ifinfo
+@noindent
+It decreases rapidly as @math{x} approaches @math{-\infty} and asymptotes
+to @math{h(x) \sim x} as @math{x} approaches @math{+\infty}.
+
+@deftypefun double gsl_sf_hazard (double @var{x})
+@deftypefunx int gsl_sf_hazard_e (double @var{x}, gsl_sf_result * @var{result})
+These routines compute the hazard function for the normal distribution.
+@comment Exceptional Return Values: GSL_EUNDRFLW
+@end deftypefun

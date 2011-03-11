@@ -1,0 +1,258 @@
+@cindex Mathieu functions
+
+The routines described in this section compute the angular and radial
+Mathieu functions, and their characteristic values.  Mathieu
+functions are the solutions of the following two differential
+equations:
+@tex
+\beforedisplay
+$$
+\eqalign{
+{{d^2 y}\over{d v^2}}& + (a - 2q\cos 2v)y  = 0, \cr
+{{d^2 f}\over{d u^2}}& - (a - 2q\cosh 2u)f  = 0.
+}
+$$
+\afterdisplay
+@end tex
+@ifinfo
+
+@example
+d^2y/dv^2 + (a - 2q\cos 2v)y = 0
+d^2f/du^2 - (a - 2q\cosh 2u)f = 0
+@end example
+
+@end ifinfo
+@noindent
+The angular Mathieu functions @math{ce_r(x,q)}, @math{se_r(x,q)} are
+the even and odd periodic solutions of the first equation, which is known as Mathieu's equation. These exist
+only for the discrete sequence of  characteristic values @math{a=a_r(q)}
+(even-periodic) and @math{a=b_r(q)} (odd-periodic).
+
+The radial Mathieu functions @c{$Mc^{(j)}_{r}(z,q)$}
+@math{Mc^@{(j)@}_@{r@}(z,q)}, @c{$Ms^{(j)}_{r}(z,q)$}
+@math{Ms^@{(j)@}_@{r@}(z,q)} are the solutions of the second equation,
+which is referred to as Mathieu's modified equation.  The
+radial Mathieu functions of the first, second, third and fourth kind
+are denoted by the parameter @math{j}, which takes the value 1, 2, 3
+or 4.
+
+@comment The angular Mathieu functions can be divided into four types as
+@comment @tex
+@comment \beforedisplay
+@comment $$
+@comment \eqalign{
+@comment x & = \sum_{m=0}^\infty A_{2m+p} \cos(2m+p)\phi, \quad p = 0, 1, \cr
+@comment x & = \sum_{m=0}^\infty B_{2m+p} \sin(2m+p)\phi, \quad p = 0, 1.
+@comment }
+@comment $$
+@comment \afterdisplay
+@comment @end tex
+@comment @ifinfo
+
+@comment @example
+@comment x = \sum_(m=0)^\infty A_(2m+p) \cos(2m+p)\phi,   p = 0, 1,
+@comment x = \sum_(m=0)^\infty B_(2m+p) \sin(2m+p)\phi,   p = 0, 1.
+@comment @end example
+
+@comment @end ifinfo
+@comment @noindent
+@comment The nomenclature used for the angular Mathieu functions is @math{ce_n}
+@comment for the first solution and @math{se_n} for the second.
+
+@comment Similar solutions exist for the radial Mathieu functions by replacing
+@comment the trigonometric functions with their corresponding hyperbolic
+@comment functions as shown below.
+@comment @tex
+@comment \beforedisplay
+@comment $$
+@comment \eqalign{
+@comment x & = \sum_{m=0}^\infty A_{2m+p} \cosh(2m+p)u, \quad p = 0, 1, \cr
+@comment x & = \sum_{m=0}^\infty B_{2m+p} \sinh(2m+p)u, \quad p = 0, 1.
+@comment }
+@comment $$
+@comment \afterdisplay
+@comment @end tex
+@comment @ifinfo
+
+@comment @example
+@comment x = \sum_(m=0)^\infty A_(2m+p) \cosh(2m+p)u,   p = 0, 1,
+@comment x = \sum_(m=0)^\infty B_(2m+p) \sinh(2m+p)u,   p = 0, 1.
+@comment @end example
+
+@comment @end ifinfo
+@comment @noindent
+@comment The nomenclature used for the radial Mathieu functions is @math{Mc_n}
+@comment for the first solution and @math{Ms_n} for the second.  The hyperbolic
+@comment series do not always converge at an acceptable rate.  Therefore most
+@comment texts on the subject suggest using the following equivalent equations
+@comment that are expanded in series of Bessel and Hankel functions.
+@comment @tex
+@comment \beforedisplay
+@comment $$
+@comment \eqalign{
+@comment Mc_{2n}^{(j)}(x,q) & = \sum_{m=0}^\infty (-1)^{r+k}
+@comment       A_{2m}^{2n}(q)\left[J_m(u_1)Z_m^{(j)}(u_2) +
+@comment                           J_m(u_1)Z_m^{(j)}(u_2)\right]/A_2^{2n} \cr
+@comment Mc_{2n+1}^{(j)}(x,q) & = \sum_{m=0}^\infty (-1)^{r+k}
+@comment       A_{2m+1}^{2n+1}(q)\left[J_m(u_1)Z_{m+1}^{(j)}(u_2) +
+@comment                               J_{m+1}(u_1)Z_m^{(j)}(u_2)\right]/A_1^{2n+1} \cr
+@comment Ms_{2n}^{(j)}(x,q) & = \sum_{m=1}^\infty (-1)^{r+k}
+@comment       B_{2m}^{2n}(q)\left[J_{m-1}(u_1)Z_{m+1}^{(j)}(u_2) +
+@comment                           J_{m+1}(u_1)Z_{m-1}^{(j)}(u_2)\right]/B_2^{2n} \cr
+@comment Ms_{2n+1}^{(j)}(x,q) & = \sum_{m=0}^\infty (-1)^{r+k}
+@comment       B_{2m+1}^{2n+1}(q)\left[J_m(u_1)Z_{m+1}^{(j)}(u_2) +
+@comment                               J_{m+1}(u_1)Z_m^{(j)}(u_2)\right]/B_1^{2n+1}
+@comment }
+@comment $$
+@comment \afterdisplay
+@comment @end tex
+@comment @ifinfo
+
+@comment @example
+@comment Mc_(2n)^(j)(x,q) = \sum_(m=0)^\infty (-1)^(r+k) A_(2m)^(2n)(q)
+@comment     [J_m(u_1)Z_m^(j)(u_2) + J_m(u_1)Z_m^(j)(u_2)]/A_2^(2n)
+@comment Mc_(2n+1)^(j)(x,q) = \sum_(m=0)^\infty (-1)^(r+k) A_(2m+1)^(2n+1)(q)
+@comment     [J_m(u_1)Z_(m+1)^(j)(u_2) + J_(m+1)(u_1)Z_m^(j)(u_2)]/A_1^(2n+1)
+@comment Ms_(2n)^(j)(x,q) = \sum_(m=1)^\infty (-1)^(r+k) B_(2m)^(2n)(q)
+@comment     [J_(m-1)(u_1)Z_(m+1)^(j)(u_2) + J_(m+1)(u_1)Z_(m-1)^(j)(u_2)]/B_2^(2n)
+@comment Ms_(2n+1)^(j)(x,q) = \sum_(m=0)^\infty (-1)^(r+k) B_(2m+1)^(2n+1)(q)
+@comment     [J_m(u_1)Z_(m+1)^(j)(u_2) + J_(m+1)(u_1)Z_m^(j)(u_2)]/B_1^(2n+1)
+@comment @end example
+
+@comment @end ifinfo
+@comment @noindent
+@comment where @c{$u_1 = \sqrt{q} \exp(-x)$} 
+@comment @math{u_1 = \sqrt@{q@} \exp(-x)} and @c{$u_2 = \sqrt@{q@} \exp(x)$}
+@comment @math{u_2 = \sqrt@{q@} \exp(x)} and
+@comment @tex
+@comment \beforedisplay
+@comment $$
+@comment \eqalign{
+@comment Z_m^{(1)}(u) & = J_m(u) \cr
+@comment Z_m^{(2)}(u) & = Y_m(u) \cr
+@comment Z_m^{(3)}(u) & = H_m^{(1)}(u) \cr
+@comment Z_m^{(4)}(u) & = H_m^{(2)}(u)
+@comment }
+@comment $$
+@comment \afterdisplay
+@comment @end tex
+@comment @ifinfo
+
+@comment @example
+@comment Z_m^(1)(u) = J_m(u)
+@comment Z_m^(2)(u) = Y_m(u)
+@comment Z_m^(3)(u) = H_m^(1)(u)
+@comment Z_m^(4)(u) = H_m^(2)(u)
+@comment @end example
+
+@comment @end ifinfo
+@comment @noindent
+@comment where @math{J_m(u)}, @math{Y_m(u)}, @math{H_m^{(1)}(u)}, and
+@comment @math{H_m^{(2)}(u)} are the regular and irregular Bessel functions and
+@comment the Hankel functions, respectively.
+
+For more information on the Mathieu functions, see Abramowitz and
+Stegun, Chapter 20.  These functions are defined in the header file
+@file{gsl_sf_mathieu.h}.
+
+@menu
+* Mathieu Function Workspace::  
+* Mathieu Function Characteristic Values::  
+* Angular Mathieu Functions::   
+* Radial Mathieu Functions::    
+@end menu
+
+@node  Mathieu Function Workspace
+@subsection  Mathieu Function Workspace
+
+The Mathieu functions can be computed for a single order or
+for multiple orders, using array-based routines.  The array-based
+routines require a preallocated workspace.
+
+@deftypefun {gsl_sf_mathieu_workspace *} gsl_sf_mathieu_alloc (size_t @var{n}, double @var{qmax})
+@tpindex gsl_sf_mathieu_workspace
+This function returns a workspace for the array versions of the
+Mathieu routines.  The arguments @var{n} and @var{qmax} specify the
+maximum order and @math{q}-value of Mathieu functions which can be
+computed with this workspace.  
+
+@comment This is required in order to properly
+@comment terminate the infinite eigenvalue matrix for high precision solutions.
+@comment The characteristic values for all orders @math{0 \to n} are stored in
+@comment the work structure array element @kbd{work->char_value}.
+@end deftypefun
+
+@deftypefun void gsl_sf_mathieu_free (gsl_sf_mathieu_workspace * @var{work})
+This function frees the workspace @var{work}.
+@end deftypefun
+
+@node Mathieu Function Characteristic Values
+@subsection Mathieu Function Characteristic Values
+@cindex Mathieu Function Characteristic Values
+
+@deftypefun int gsl_sf_mathieu_a (int @var{n}, double @var{q}, gsl_sf_result * @var{result})
+@deftypefunx int gsl_sf_mathieu_b (int @var{n}, double @var{q}, gsl_sf_result * @var{result})
+These routines compute the characteristic values @math{a_n(q)},
+@math{b_n(q)} of the Mathieu functions @math{ce_n(q,x)} and
+@math{se_n(q,x)}, respectively.
+@end deftypefun
+
+@deftypefun int gsl_sf_mathieu_a_array (int @var{order_min}, int @var{order_max}, double @var{q}, gsl_sf_mathieu_workspace * @var{work}, double @var{result_array}[])
+@deftypefunx int gsl_sf_mathieu_b_array (int @var{order_min}, int @var{order_max}, double @var{q}, gsl_sf_mathieu_workspace * @var{work}, double @var{result_array}[])
+These routines compute a series of Mathieu characteristic values
+@math{a_n(q)}, @math{b_n(q)} for @math{n} from @var{order_min} to
+@var{order_max} inclusive, storing the results in the array @var{result_array}.
+@end deftypefun
+
+@node Angular Mathieu Functions
+@subsection Angular Mathieu Functions
+@cindex Angular Mathieu Functions
+@cindex @math{ce(q,x)}, Mathieu function
+@cindex @math{se(q,x)}, Mathieu function
+
+@deftypefun int gsl_sf_mathieu_ce (int @var{n}, double @var{q}, double @var{x}, gsl_sf_result * @var{result})
+@deftypefunx int gsl_sf_mathieu_se (int @var{n}, double @var{q}, double @var{x}, gsl_sf_result * @var{result})
+These routines compute the angular Mathieu functions @math{ce_n(q,x)}
+and @math{se_n(q,x)}, respectively.
+@end deftypefun
+
+@deftypefun int gsl_sf_mathieu_ce_array (int @var{nmin}, int @var{nmax}, double @var{q}, double @var{x}, gsl_sf_mathieu_workspace * @var{work}, double @var{result_array}[])
+@deftypefunx int gsl_sf_mathieu_se_array (int @var{nmin}, int @var{nmax}, double @var{q}, double @var{x}, gsl_sf_mathieu_workspace * @var{work}, double @var{result_array}[])
+These routines compute a series of the angular Mathieu functions
+@math{ce_n(q,x)} and @math{se_n(q,x)} of order @math{n} from
+@var{nmin} to @var{nmax} inclusive, storing the results in the array
+@var{result_array}.
+@end deftypefun
+
+@node Radial Mathieu Functions
+@subsection Radial Mathieu Functions
+@cindex Radial Mathieu Functions
+
+@deftypefun int gsl_sf_mathieu_Mc (int @var{j}, int @var{n}, double @var{q}, double @var{x}, gsl_sf_result * @var{result})
+@deftypefunx int gsl_sf_mathieu_Ms (int @var{j}, int @var{n}, double @var{q}, double @var{x}, gsl_sf_result * @var{result})
+These routines compute the radial @var{j}-th kind Mathieu functions
+@c{$Mc_n^{(j)}(q,x)$}
+@math{Mc_n^@{(j)@}(q,x)} and 
+@c{$Ms_n^{(j)}(q,x)$}
+@math{Ms_n^@{(j)@}(q,x)} of order @var{n}.
+
+The allowed values of @var{j} are 1 and 2.
+The functions for @math{j = 3,4} can be computed as 
+@c{$M_n^{(3)} = M_n^{(1)} + iM_n^{(2)}$}
+@math{M_n^@{(3)@} = M_n^@{(1)@} + iM_n^@{(2)@}} and 
+@c{$M_n^{(4)} = M_n^{(1)} - iM_n^{(2)}$}
+@math{M_n^@{(4)@} = M_n^@{(1)@} - iM_n^@{(2)@}},
+where 
+@c{$M_n^{(j)} = Mc_n^{(j)}$}
+@math{M_n^@{(j)@} = Mc_n^@{(j)@}} or 
+@c{$Ms_n^{(j)}$}
+@math{Ms_n^@{(j)@}}.
+@end deftypefun
+
+@deftypefun int gsl_sf_mathieu_Mc_array (int @var{j}, int @var{nmin}, int @var{nmax}, double @var{q}, double @var{x}, gsl_sf_mathieu_workspace * @var{work}, double @var{result_array}[])
+@deftypefunx int gsl_sf_mathieu_Ms_array (int @var{j}, int @var{nmin}, int @var{nmax}, double @var{q}, double @var{x}, gsl_sf_mathieu_workspace * @var{work}, double @var{result_array}[])
+These routines compute a series of the radial Mathieu functions of
+kind @var{j}, with order from @var{nmin} to @var{nmax} inclusive, storing the
+results in the array @var{result_array}.
+@end deftypefun
+

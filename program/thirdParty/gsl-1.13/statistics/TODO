@@ -1,0 +1,102 @@
+* From: James Theiler <jt@lanl.gov>
+To: John Lamb <J.D.Lamb@btinternet.com>
+Cc: gsl-discuss@sources.redhat.com
+Subject: Re: Collecting statistics for time dependent data?
+Date: Thu, 9 Dec 2004 14:18:36 -0700 (MST)
+
+On Thu, 9 Dec 2004, John Lamb wrote:
+
+] Raimondo Giammanco wrote:
+] > Hello,
+] > 
+] >  I was wondering if there is a way to compute "running" statistics with
+] > gsl.
+] > 
+] Yes you can do it, but there's nothing in GSL that does it and its eay 
+] enough that you don't need GSL. Something like (untested)
+] 
+] double update_mean( double* mean, int* n, double x ){
+]    if( *n == 1 )
+]      *mean = x;
+]    else
+]      *mean = (1 - (double)1 / *n ) * *mean + x / n;
+] }
+] 
+] will work and you can derive a similar method for updating the variance 
+] using the usual textbook formula.
+] 
+] var[x] = (1/n) sum x^2_i - mean(x)^2
+] 
+] I don't know if there is a method that avoids the rounding errors. I 
+] don't know why so many textbooks repeat this formula without the 
+] slightest warning that it can go so badly wrong.
+] 
+]
+
+Stably updating mean and variance is remarkably nontrivial.  There was
+a series of papers in Comm ACM that discussed the issue; the final one
+(that I know of) refers back to the earlier ones, and it can be found
+in D.H.D. West, Updating mean and variance estimates: an improved
+method, Comm ACM 22:9, 532 (1979)  [* I see Luke Stras just sent this
+reference! *].  I'll just copy out the pseudocode since the paper is
+old enough that it might not be easy to find.  This, by the way, is
+generalized for weighted data, so it assumes that you get a weight and
+a data value (W_i and X_i) that you use to update the estimates XBAR
+and S2:
+
+    SUMW = W_1
+    M = X_1
+    T = 0
+    For i=2,3,...,n 
+    {
+       Q = X_i - M
+       TEMP = SUM + W_i    // typo: He meant SUMW
+       R = Q*W_i/TEMP
+       M = M + R
+       T = T + R*SUMW*Q
+       SUMW = TEMP
+    }
+    XBAR = M
+    S2 = T*n/((n-1)*SUMW)
+
+
+
+jt 
+
+-- 
+James Theiler            Space and Remote Sensing Sciences
+MS-B244, ISR-2, LANL     Los Alamos National Laboratory
+Los Alamos, NM 87545     http://nis-www.lanl.gov/~jt
+
+
+* Look at STARPAC ftp://ftp.ucar.edu/starpac/ and Statlib
+http://lib.stat.cmu.edu/ for more ideas
+
+* Try using the Kahan summation formula to improve accuracy for the
+NIST tests (see Brian for details, below is a sketch of the algorithm).
+
+      sum = x(1)
+      c = 0
+      
+      DO i = 2, 1000000, 1
+         y = x(i) - c
+         t = sum + y
+         c = (t - sum) - y
+         sum = t
+      ENDDO
+
+* Prevent incorrect use of unsorted data for quartile calculations
+using a typedef for sorted data (?)
+
+* Rejection of outliers
+
+* Time series. Auto correlation, cross-correlation, smoothing (moving
+average), detrending, various econometric things. Integrated
+quantities (area under the curve). Interpolation of noisy data/fitting
+-- maybe add that to the existing interpolation stuff.What about
+missing data and gaps?
+
+   There is a new GNU package called gretl which does econometrics
+
+* Statistical tests (equal means, equal variance, etc).
+

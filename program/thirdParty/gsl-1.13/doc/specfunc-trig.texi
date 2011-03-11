@@ -1,0 +1,160 @@
+@cindex trigonometric functions
+
+The library includes its own trigonometric functions in order to provide
+consistency across platforms and reliable error estimates.  These
+functions are declared in the header file @file{gsl_sf_trig.h}.
+
+@menu
+* Circular Trigonometric Functions::  
+* Trigonometric Functions for Complex Arguments::  
+* Hyperbolic Trigonometric Functions::  
+* Conversion Functions::        
+* Restriction Functions::       
+* Trigonometric Functions With Error Estimates::  
+@end menu
+
+@node Circular Trigonometric Functions
+@subsection Circular Trigonometric Functions
+
+@deftypefun double gsl_sf_sin (double @var{x})
+@deftypefunx int gsl_sf_sin_e (double @var{x}, gsl_sf_result * @var{result})
+@cindex sine function, special functions
+These routines compute the sine function @math{\sin(x)}.
+@comment Exceptional Return Values:
+@end deftypefun
+
+@deftypefun double gsl_sf_cos (double @var{x})
+@deftypefunx int gsl_sf_cos_e (double @var{x}, gsl_sf_result * @var{result})
+@cindex cosine function, special functions
+These routines compute the cosine function @math{\cos(x)}.
+@comment Exceptional Return Values:
+@end deftypefun
+
+@deftypefun double gsl_sf_hypot (double @var{x}, double @var{y})
+@deftypefunx int gsl_sf_hypot_e (double @var{x}, double @var{y}, gsl_sf_result * @var{result})
+@cindex hypot function, special functions
+These routines compute the hypotenuse function @c{$\sqrt{x^2 + y^2}$}
+@math{\sqrt@{x^2 + y^2@}} avoiding overflow and underflow.
+@comment Exceptional Return Values:
+@end deftypefun
+
+@deftypefun double gsl_sf_sinc (double @var{x})
+@deftypefunx int gsl_sf_sinc_e (double @var{x}, gsl_sf_result * @var{result})
+@cindex complex sinc function, special functions
+These routines compute @math{\sinc(x) = \sin(\pi x) / (\pi x)} for any
+value of @var{x}.
+@comment Exceptional Return Values: none
+@end deftypefun
+
+@node Trigonometric Functions for Complex Arguments
+@subsection Trigonometric Functions for Complex Arguments
+
+@deftypefun int gsl_sf_complex_sin_e (double @var{zr}, double @var{zi}, gsl_sf_result * @var{szr}, gsl_sf_result * @var{szi})
+@cindex complex sine function, special functions
+This function computes the complex sine, @math{\sin(z_r + i z_i)} storing
+the real and imaginary parts in @var{szr}, @var{szi}.
+@comment Exceptional Return Values: GSL_EOVRFLW
+@end deftypefun
+
+@deftypefun int gsl_sf_complex_cos_e (double @var{zr}, double @var{zi}, gsl_sf_result * @var{czr}, gsl_sf_result * @var{czi})
+@cindex complex cosine function, special functions
+This function computes the complex cosine, @math{\cos(z_r + i z_i)} storing
+the real and imaginary parts in @var{czr}, @var{czi}.
+@comment Exceptional Return Values: GSL_EOVRFLW
+@end deftypefun
+
+@deftypefun int gsl_sf_complex_logsin_e (double @var{zr}, double @var{zi}, gsl_sf_result * @var{lszr}, gsl_sf_result * @var{lszi})
+@cindex complex log sine function, special functions
+This function computes the logarithm of the complex sine,
+@math{\log(\sin(z_r + i z_i))} storing the real and imaginary parts in
+@var{lszr}, @var{lszi}.
+@comment Exceptional Return Values: GSL_EDOM, GSL_ELOSS
+@end deftypefun
+
+@node Hyperbolic Trigonometric Functions
+@subsection Hyperbolic Trigonometric Functions
+
+@deftypefun double gsl_sf_lnsinh (double @var{x})
+@deftypefunx int gsl_sf_lnsinh_e (double @var{x}, gsl_sf_result * @var{result})
+@cindex logarithm of sinh function, special functions
+These routines compute @math{\log(\sinh(x))} for @math{x > 0}.
+@comment Domain: x > 0 
+@comment Exceptional Return Values: GSL_EDOM
+@end deftypefun
+
+@deftypefun double gsl_sf_lncosh (double @var{x})
+@deftypefunx int gsl_sf_lncosh_e (double @var{x}, gsl_sf_result * @var{result})
+@cindex logarithm of cosh function, special functions
+These routines compute @math{\log(\cosh(x))} for any @var{x}.
+@comment Exceptional Return Values: none
+@end deftypefun
+
+
+@node Conversion Functions
+@subsection Conversion Functions
+@cindex polar to rectangular conversion
+@cindex rectangular to polar conversion
+
+@deftypefun int gsl_sf_polar_to_rect (double @var{r}, double @var{theta}, gsl_sf_result * @var{x}, gsl_sf_result * @var{y}); 
+This function converts the polar coordinates (@var{r},@var{theta}) to
+rectilinear coordinates (@var{x},@var{y}), @math{x = r\cos(\theta)},
+@math{y = r\sin(\theta)}.
+@comment Exceptional Return Values: GSL_ELOSS
+@end deftypefun
+
+@deftypefun int gsl_sf_rect_to_polar (double @var{x}, double @var{y}, gsl_sf_result * @var{r}, gsl_sf_result * @var{theta})
+This function converts the rectilinear coordinates (@var{x},@var{y}) to
+polar coordinates (@var{r},@var{theta}), such that @math{x =
+r\cos(\theta)}, @math{y = r\sin(\theta)}.  The argument @var{theta}
+lies in the range @math{[-\pi, \pi]}.
+@comment Exceptional Return Values: GSL_EDOM
+@end deftypefun
+
+@node Restriction Functions
+@subsection Restriction Functions
+@cindex angular reduction
+@cindex reduction of angular variables
+
+@deftypefun double gsl_sf_angle_restrict_symm (double @var{theta})
+@deftypefunx int gsl_sf_angle_restrict_symm_e (double * @var{theta})
+These routines force the angle @var{theta} to lie in the range
+@math{(-\pi,\pi]}.  
+
+Note that the mathematical value of @math{\pi} is slightly greater
+than @code{M_PI}, so the machine numbers @code{M_PI} and @code{-M_PI}
+are included in the range.
+@comment Exceptional Return Values: GSL_ELOSS
+@end deftypefun
+
+@deftypefun double gsl_sf_angle_restrict_pos (double @var{theta})
+@deftypefunx int gsl_sf_angle_restrict_pos_e (double * @var{theta})
+These routines force the angle @var{theta} to lie in the range @math{[0,
+2\pi)}. 
+
+Note that the mathematical value of @math{2\pi} is slightly greater
+than @code{2*M_PI}, so the machine number @code{2*M_PI} is included in
+the range.
+
+@comment Exceptional Return Values: GSL_ELOSS
+@end deftypefun
+
+
+@node Trigonometric Functions With Error Estimates
+@subsection Trigonometric Functions With Error Estimates
+
+@deftypefun int gsl_sf_sin_err_e (double @var{x}, double @var{dx}, gsl_sf_result * @var{result})
+This routine computes the sine of an angle @var{x} with an associated 
+absolute error @var{dx},
+@c{$\sin(x \pm dx)$}
+@math{\sin(x \pm dx)}.  Note that this function is provided in the error-handling form only since
+its purpose is to compute the propagated error.
+@end deftypefun
+
+@deftypefun int gsl_sf_cos_err_e (double @var{x}, double @var{dx}, gsl_sf_result * @var{result})
+This routine computes the cosine of an angle @var{x} with an associated
+absolute error @var{dx}, 
+@c{$\cos(x \pm dx)$}
+@math{\cos(x \pm dx)}.  Note that this function is provided in the error-handling form only since
+its purpose is to compute the propagated error.
+@end deftypefun
+

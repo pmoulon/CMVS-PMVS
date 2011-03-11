@@ -1,0 +1,5 @@
+ADD_SUBDIRECTORY(cmvs)
+ADD_SUBDIRECTORY(image)
+ADD_SUBDIRECTORY(numeric)
+ADD_SUBDIRECTORY(pmvs)
+#ADD_SUBDIRECTORY(stann) #header library

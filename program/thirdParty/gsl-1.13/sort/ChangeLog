@@ -1,0 +1,66 @@
+2008-07-03  Brian Gough  <bjg@hp2.network-theory.co.uk>
+
+	* Makefile.am (INCLUDES): use top_srcdir instead of top_builddir
+
+2008-02-09  Brian Gough  <bjg@network-theory.co.uk>
+
+	* test_source.c: prevent signed overflow in tests
+
+2005-08-31  Brian Gough  <bjg@network-theory.co.uk>
+
+	* test_source.c: free index memory as well
+
+2005-04-08  Brian Gough  <bjg@network-theory.co.uk>
+
+	* sortvecind_source.c sortvec_source.c: write tests in such a way
+	as to avoid an infinite loop if nan, by always comparing in the
+	same direction (note that nan < x and nan > x are both false)
+
+Tue Jun 26 12:06:58 2001  Brian Gough  <bjg@network-theory.co.uk>
+
+	* subset_source. subsetind_source.c: make prototypes match header
+ 	file
+
+Sun Jan 21 18:36:04 2001  Brian Gough  <bjg@network-theory.co.uk>
+
+	* subset.c, subsetind.c: added functions for selecting subsets
+ 	(k-th smallest or largest values)
+
+Mon Mar 13 13:57:33 2000  Brian Gough  <bjg@network-theory.co.uk>
+
+	* sortind.c (gsl_heapsort_index): changed to use an array of
+ 	size_t's directly instead of gsl_permutation
+
+Mon Feb 28 20:30:06 2000  Brian Gough  <bjg@network-theory.co.uk>
+
+	* renamed gsl_sort to gsl_heapsort, since this is more meaningful
+ 	and gsl_sort, gsl_sort_float, ... is now used for sorting of
+ 	arrays.
+
+	* added support for sorting of arrays, without going through a
+ 	gsl_vector object (gsl_sort_vector is now implemented in terms of
+ 	these functions)
+
+Sat Feb 26 14:47:36 2000  Brian Gough  <bjg@network-theory.co.uk>
+
+	* added support for indirect sorting of objects
+
+	* fixed bug in indirect sorting from use of BASE type instead of
+ 	size_t for index.
+
+	* reorganized directory
+
+Fri Feb 25 19:30:08 2000  Brian Gough  <bjg@network-theory.co.uk>
+
+	* sortind_source.c: changed return type of indirect sort to int,
+ 	to allow error return code in case where permutation and vector
+ 	sizes do not match
+
+Sat Feb 19 12:18:28 2000  Brian Gough  <bjg@network-theory.co.uk>
+
+	* sortind_source.c: added indirect sorting
+
+Fri Feb 18 10:48:24 2000  Brian Gough  <bjg@network-theory.co.uk>
+
+	* initial GPL sources from Thomas Walter
+ 	<walter@pctc.chemie.uni-erlangen.de>

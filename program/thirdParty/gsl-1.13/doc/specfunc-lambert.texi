@@ -1,0 +1,28 @@
+@cindex W function
+@cindex Lambert function
+
+Lambert's W functions, @math{W(x)}, are defined to be solutions
+of the equation @math{W(x) \exp(W(x)) = x}. This function has
+multiple branches for @math{x < 0}; however, it has only
+two real-valued branches. We define @math{W_0(x)} to be the
+principal branch, where @math{W > -1} for @math{x < 0}, and 
+@c{$W_{-1}(x)$}
+@math{W_@{-1@}(x)} to be the other real branch, where
+@math{W < -1} for @math{x < 0}.  The Lambert functions are
+declared in the header file @file{gsl_sf_lambert.h}.
+
+
+@deftypefun double gsl_sf_lambert_W0 (double @var{x})
+@deftypefunx int gsl_sf_lambert_W0_e (double @var{x}, gsl_sf_result * @var{result})
+These compute the principal branch of the Lambert W function, @math{W_0(x)}.
+@comment exceptions: GSL_EDOM, GSL_EMAXITER
+@end deftypefun
+
+@deftypefun double gsl_sf_lambert_Wm1 (double @var{x})
+@deftypefunx int gsl_sf_lambert_Wm1_e (double @var{x}, gsl_sf_result * @var{result})
+These compute the secondary real-valued branch of the Lambert W function, 
+@c{$W_{-1}(x)$}
+@math{W_@{-1@}(x)}.
+@comment exceptions: GSL_EDOM, GSL_EMAXITER
+@end deftypefun
+

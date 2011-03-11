@@ -1,0 +1,90 @@
+@cindex psi function
+@cindex digamma function
+@cindex polygamma functions
+
+The polygamma functions of order @math{n} are defined by
+@tex
+\beforedisplay
+$$
+\psi^{(n)}(x) = \left(d \over dx\right)^n \psi(x) = \left(d \over dx\right)^{n+1} \log(\Gamma(x))
+$$
+\afterdisplay
+@end tex
+@ifinfo
+
+@example
+\psi^@{(n)@}(x) = (d/dx)^n \psi(x) = (d/dx)^@{n+1@} \log(\Gamma(x))
+@end example
+
+@end ifinfo
+@noindent
+where @math{\psi(x) = \Gamma'(x)/\Gamma(x)} is known as the digamma function.
+These functions are declared in the header file @file{gsl_sf_psi.h}.
+
+@menu
+* Digamma Function::            
+* Trigamma Function::           
+* Polygamma Function::          
+@end menu
+
+@node Digamma Function
+@subsection Digamma Function
+
+@deftypefun double gsl_sf_psi_int (int @var{n})
+@deftypefunx int gsl_sf_psi_int_e (int @var{n}, gsl_sf_result * @var{result})
+These routines compute the digamma function @math{\psi(n)} for positive
+integer @var{n}.  The digamma function is also called the Psi function.
+@comment Domain: n integer, n > 0
+@comment Exceptional Return Values: GSL_EDOM
+@end deftypefun
+
+
+@deftypefun double gsl_sf_psi (double @var{x})
+@deftypefunx int gsl_sf_psi_e (double @var{x}, gsl_sf_result * @var{result})
+These routines compute the digamma function @math{\psi(x)} for general
+@math{x}, @math{x \ne 0}.
+@comment Domain: x != 0.0, -1.0, -2.0, ...
+@comment Exceptional Return Values: GSL_EDOM, GSL_ELOSS
+@end deftypefun
+
+
+@deftypefun double gsl_sf_psi_1piy (double @var{y})
+@deftypefunx int gsl_sf_psi_1piy_e (double @var{y}, gsl_sf_result * @var{result})
+These routines compute the real part of the digamma function on the line
+@math{1+i y}, @math{\Re[\psi(1 + i y)]}.
+@comment exceptions: none
+@comment Exceptional Return Values: none
+@end deftypefun
+
+
+@node Trigamma Function
+@subsection Trigamma Function
+
+@deftypefun double gsl_sf_psi_1_int (int @var{n})
+@deftypefunx int gsl_sf_psi_1_int_e (int @var{n}, gsl_sf_result * @var{result})
+These routines compute the Trigamma function @math{\psi'(n)} for
+positive integer @math{n}.
+@comment Domain: n integer, n > 0 
+@comment Exceptional Return Values: GSL_EDOM
+@end deftypefun
+
+@deftypefun double gsl_sf_psi_1 (double @var{x})
+@deftypefunx int gsl_sf_psi_1_e (double @var{x}, gsl_sf_result * @var{result})
+These routines compute the Trigamma function @math{\psi'(x)} for
+general @math{x}.
+@comment Domain: x != 0.0, -1.0, -2.0, ...
+@comment Exceptional Return Values: GSL_EDOM, GSL_ELOSS
+@end deftypefun
+
+@node Polygamma Function
+@subsection Polygamma Function
+
+@deftypefun double gsl_sf_psi_n (int @var{n}, double @var{x})
+@deftypefunx int gsl_sf_psi_n_e (int @var{n}, double @var{x}, gsl_sf_result * @var{result})
+These routines compute the polygamma function @c{$\psi^{(n)}(x)$}
+@math{\psi^@{(n)@}(x)} for
+@c{$n \ge 0$}
+@math{n >= 0}, @math{x > 0}.  
+@comment Domain: n >= 0, x > 0.0
+@comment Exceptional Return Values: GSL_EDOM
+@end deftypefun

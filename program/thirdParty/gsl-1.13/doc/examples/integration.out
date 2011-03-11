@@ -1,0 +1,5 @@
+result          = -3.999999999999973799
+exact result    = -4.000000000000000000
+estimated error =  0.000000000000246025
+actual error    =  0.000000000000026201
+intervals =  8

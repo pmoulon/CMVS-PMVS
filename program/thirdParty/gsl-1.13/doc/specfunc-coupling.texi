@@ -1,0 +1,109 @@
+@cindex coupling coefficients
+@cindex 3-j symbols
+@cindex 6-j symbols
+@cindex 9-j symbols
+@cindex Wigner coefficients
+@cindex Racah coefficients
+
+The Wigner 3-j, 6-j and 9-j symbols give the coupling coefficients for
+combined angular momentum vectors.  Since the arguments of the standard
+coupling coefficient functions are integer or half-integer, the
+arguments of the following functions are, by convention, integers equal
+to twice the actual spin value.  For information on the 3-j coefficients
+see Abramowitz & Stegun, Section 27.9.  The functions described in this
+section are declared in the header file @file{gsl_sf_coupling.h}.
+
+@menu
+* 3-j Symbols::                 
+* 6-j Symbols::                 
+* 9-j Symbols::                 
+@end menu
+
+@node 3-j Symbols
+@subsection 3-j Symbols
+
+@deftypefun double gsl_sf_coupling_3j (int @var{two_ja}, int @var{two_jb}, int @var{two_jc}, int @var{two_ma}, int @var{two_mb}, int @var{two_mc})
+@deftypefunx int gsl_sf_coupling_3j_e (int @var{two_ja}, int @var{two_jb}, int @var{two_jc}, int @var{two_ma}, int @var{two_mb}, int @var{two_mc}, gsl_sf_result * @var{result})
+These routines compute the Wigner 3-j coefficient, 
+@tex
+\beforedisplay
+$$
+\pmatrix{ja & jb & jc\cr
+         ma & mb & mc\cr}
+$$
+\afterdisplay
+@end tex
+@ifinfo
+
+@example
+(ja jb jc
+ ma mb mc)
+@end example
+
+@end ifinfo
+@noindent
+where the arguments are given in half-integer units, @math{ja} =
+@var{two_ja}/2, @math{ma} = @var{two_ma}/2, etc.
+@comment Exceptional Return Values: GSL_EDOM, GSL_EOVRFLW
+@end deftypefun
+
+
+@node 6-j Symbols
+@subsection 6-j Symbols
+
+@deftypefun double gsl_sf_coupling_6j (int @var{two_ja}, int @var{two_jb}, int @var{two_jc}, int @var{two_jd}, int @var{two_je}, int @var{two_jf})
+@deftypefunx int gsl_sf_coupling_6j_e (int @var{two_ja}, int @var{two_jb}, int @var{two_jc}, int @var{two_jd}, int @var{two_je}, int @var{two_jf}, gsl_sf_result * @var{result}) 
+These routines compute the Wigner 6-j coefficient, 
+@tex
+\beforedisplay
+$$
+\left\{\matrix{ja & jb & jc\cr
+               jd & je & jf\cr}\right\}
+$$
+\afterdisplay
+@end tex
+@ifinfo
+
+@example
+@{ja jb jc
+ jd je jf@}
+@end example
+
+@end ifinfo
+@noindent
+where the arguments are given in half-integer units, @math{ja} =
+@var{two_ja}/2, @math{ma} = @var{two_ma}/2, etc.
+@comment Exceptional Return Values: GSL_EDOM, GSL_EOVRFLW
+@end deftypefun
+
+
+@node 9-j Symbols
+@subsection 9-j Symbols
+
+@deftypefun double gsl_sf_coupling_9j (int @var{two_ja}, int @var{two_jb}, int @var{two_jc}, int @var{two_jd}, int @var{two_je}, int @var{two_jf}, int @var{two_jg}, int @var{two_jh}, int @var{two_ji})
+@deftypefunx int gsl_sf_coupling_9j_e (int @var{two_ja}, int @var{two_jb}, int @var{two_jc}, int @var{two_jd}, int @var{two_je}, int @var{two_jf}, int @var{two_jg}, int @var{two_jh}, int @var{two_ji}, gsl_sf_result * @var{result}) 
+These routines compute the Wigner 9-j coefficient, 
+@tex
+\beforedisplay
+$$
+\left\{\matrix{ja & jb & jc\cr
+               jd & je & jf\cr
+               jg & jh & ji\cr}\right\}
+$$
+\afterdisplay
+@end tex
+@ifinfo
+
+@example
+@{ja jb jc
+ jd je jf
+ jg jh ji@}
+@end example
+
+@end ifinfo
+@noindent
+where the arguments are given in half-integer units, @math{ja} =
+@var{two_ja}/2, @math{ma} = @var{two_ma}/2, etc.
+@comment Exceptional Return Values: GSL_EDOM, GSL_EOVRFLW
+@end deftypefun
+

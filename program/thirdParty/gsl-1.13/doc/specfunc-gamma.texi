@@ -1,0 +1,316 @@
+This following routines compute the gamma and beta functions in their
+full and incomplete forms, as well as various kinds of factorials.
+The functions described in this section are declared in the header
+file @file{gsl_sf_gamma.h}.
+
+@menu
+* Gamma Functions::             
+* Factorials::                  
+* Pochhammer Symbol::           
+* Incomplete Gamma Functions::  
+* Beta Functions::              
+* Incomplete Beta Function::    
+@end menu
+
+@node Gamma Functions
+@subsection Gamma Functions
+@cindex gamma functions
+
+The Gamma function is defined by the following integral,
+@tex
+\beforedisplay
+$$
+\Gamma(x) = \int_0^{\infty} dt \, t^{x-1} \exp(-t)
+$$
+\afterdisplay
+@end tex
+@ifinfo
+
+@example
+\Gamma(x) = \int_0^\infty dt  t^@{x-1@} \exp(-t)
+@end example
+
+@end ifinfo
+@noindent
+It is related to the factorial function by @math{\Gamma(n)=(n-1)!}
+for positive integer @math{n}.  Further information on the Gamma function
+can be found in Abramowitz & Stegun, Chapter 6.  
+
+@deftypefun double gsl_sf_gamma (double @var{x})
+@deftypefunx int gsl_sf_gamma_e (double @var{x}, gsl_sf_result * @var{result})
+These routines compute the Gamma function @math{\Gamma(x)}, subject to @math{x}
+not being a negative integer or zero.  The function is computed using the real
+Lanczos method. The maximum value of @math{x} such that @math{\Gamma(x)} is not
+considered an overflow is given by the macro @code{GSL_SF_GAMMA_XMAX}
+and is 171.0.
+@comment exceptions: GSL_EDOM, GSL_EOVRFLW, GSL_EROUND
+@end deftypefun
+
+@deftypefun double gsl_sf_lngamma (double @var{x})
+@deftypefunx int gsl_sf_lngamma_e (double @var{x}, gsl_sf_result * @var{result})
+@cindex logarithm of Gamma function
+These routines compute the logarithm of the Gamma function,
+@math{\log(\Gamma(x))}, subject to @math{x} not being a negative
+integer or zero.  For @math{x<0} the real part of @math{\log(\Gamma(x))} is
+returned, which is equivalent to @math{\log(|\Gamma(x)|)}.  The function
+is computed using the real Lanczos method.
+@comment exceptions: GSL_EDOM, GSL_EROUND
+@end deftypefun
+
+@deftypefun int gsl_sf_lngamma_sgn_e (double @var{x}, gsl_sf_result * @var{result_lg}, double * @var{sgn})
+This routine computes the sign of the gamma function and the logarithm of
+its magnitude, subject to @math{x} not being a negative integer or zero.  The
+function is computed using the real Lanczos method.  The value of the
+gamma function and its error can be reconstructed using the relation 
+@math{\Gamma(x) = sgn * \exp(result\_lg)}, taking into account the two 
+components of @var{result_lg}.
+@comment exceptions: GSL_EDOM, GSL_EROUND
+@end deftypefun
+
+@deftypefun double gsl_sf_gammastar (double @var{x})
+@deftypefunx int gsl_sf_gammastar_e (double @var{x}, gsl_sf_result * @var{result})
+@cindex Regulated Gamma function
+These routines compute the regulated Gamma Function @math{\Gamma^*(x)}
+for @math{x > 0}. The regulated gamma function is given by,
+@tex
+\beforedisplay
+$$
+\eqalign{
+\Gamma^*(x) &= \Gamma(x)/(\sqrt{2\pi} x^{(x-1/2)} \exp(-x))\cr
+            &= \left(1 + {1 \over 12x} + ...\right) \quad\hbox{for~} x\to \infty\cr
+}
+$$
+\afterdisplay
+@end tex
+@ifinfo
+
+@example
+\Gamma^*(x) = \Gamma(x)/(\sqrt@{2\pi@} x^@{(x-1/2)@} \exp(-x))
+            = (1 + (1/12x) + ...)  for x \to \infty
+@end example
+@end ifinfo
+and is a useful suggestion of Temme.
+@comment exceptions: GSL_EDOM
+@end deftypefun
+
+@deftypefun double gsl_sf_gammainv (double @var{x})
+@deftypefunx int gsl_sf_gammainv_e (double @var{x}, gsl_sf_result * @var{result})
+@cindex Reciprocal Gamma function
+These routines compute the reciprocal of the gamma function,
+@math{1/\Gamma(x)} using the real Lanczos method.
+@comment exceptions: GSL_EUNDRFLW, GSL_EROUND
+@end deftypefun
+
+@deftypefun int gsl_sf_lngamma_complex_e (double @var{zr}, double @var{zi}, gsl_sf_result * @var{lnr}, gsl_sf_result * @var{arg})
+@cindex Complex Gamma function
+This routine computes @math{\log(\Gamma(z))} for complex @math{z=z_r+i
+z_i} and @math{z} not a negative integer or zero, using the complex Lanczos
+method.  The returned parameters are @math{lnr = \log|\Gamma(z)|} and
+@math{arg = \arg(\Gamma(z))} in @math{(-\pi,\pi]}.  Note that the phase
+part (@var{arg}) is not well-determined when @math{|z|} is very large,
+due to inevitable roundoff in restricting to @math{(-\pi,\pi]}.  This
+will result in a @code{GSL_ELOSS} error when it occurs.  The absolute
+value part (@var{lnr}), however, never suffers from loss of precision.
+@comment exceptions: GSL_EDOM, GSL_ELOSS
+@end deftypefun
+
+@node Factorials
+@subsection Factorials
+@cindex factorial
+
+Although factorials can be computed from the Gamma function, using
+the relation @math{n! = \Gamma(n+1)} for non-negative integer @math{n},
+it is usually more efficient to call the functions in this section,
+particularly for small values of @math{n}, whose factorial values are
+maintained in hardcoded tables.
+
+@deftypefun double gsl_sf_fact (unsigned int @var{n})
+@deftypefunx int gsl_sf_fact_e (unsigned int @var{n}, gsl_sf_result * @var{result})
+@cindex factorial
+These routines compute the factorial @math{n!}.  The factorial is
+related to the Gamma function by @math{n! = \Gamma(n+1)}.
+The maximum value of @math{n} such that @math{n!} is not
+considered an overflow is given by the macro @code{GSL_SF_FACT_NMAX}
+and is 170.
+@comment exceptions: GSL_EDOM, GSL_OVRFLW
+@end deftypefun
+
+@deftypefun double gsl_sf_doublefact (unsigned int @var{n})
+@deftypefunx int gsl_sf_doublefact_e (unsigned int @var{n}, gsl_sf_result * @var{result})
+@cindex double factorial
+These routines compute the double factorial @math{n!! = n(n-2)(n-4) \dots}. 
+The maximum value of @math{n} such that @math{n!!} is not
+considered an overflow is given by the macro @code{GSL_SF_DOUBLEFACT_NMAX}
+and is 297.
+@comment exceptions: GSL_EDOM, GSL_OVRFLW
+@end deftypefun
+
+@deftypefun double gsl_sf_lnfact (unsigned int @var{n})
+@deftypefunx int gsl_sf_lnfact_e (unsigned int @var{n}, gsl_sf_result * @var{result})
+@cindex logarithm of factorial
+These routines compute the logarithm of the factorial of @var{n},
+@math{\log(n!)}.  The algorithm is faster than computing
+@math{\ln(\Gamma(n+1))} via @code{gsl_sf_lngamma} for @math{n < 170},
+but defers for larger @var{n}.
+@comment exceptions: none
+@end deftypefun
+
+@deftypefun double gsl_sf_lndoublefact (unsigned int @var{n})
+@deftypefunx int gsl_sf_lndoublefact_e (unsigned int @var{n}, gsl_sf_result * @var{result})
+@cindex logarithm of double factorial
+These routines compute the logarithm of the double factorial of @var{n},
+@math{\log(n!!)}.
+@comment exceptions: none
+@end deftypefun
+
+@deftypefun double gsl_sf_choose (unsigned int @var{n}, unsigned int @var{m})
+@deftypefunx int gsl_sf_choose_e (unsigned int @var{n}, unsigned int @var{m}, gsl_sf_result * @var{result})
+@cindex combinatorial factor C(m,n)
+These routines compute the combinatorial factor @code{n choose m}
+@math{= n!/(m!(n-m)!)}
+@comment exceptions: GSL_EDOM, GSL_EOVRFLW
+@end deftypefun
+
+
+@deftypefun double gsl_sf_lnchoose (unsigned int @var{n}, unsigned int @var{m})
+@deftypefunx int gsl_sf_lnchoose_e (unsigned int @var{n}, unsigned int @var{m}, gsl_sf_result * @var{result})
+@cindex logarithm of combinatorial factor C(m,n)
+These routines compute the logarithm of @code{n choose m}.  This is
+equivalent to the sum @math{\log(n!) - \log(m!) - \log((n-m)!)}.
+@comment exceptions: GSL_EDOM 
+@end deftypefun
+
+@deftypefun double gsl_sf_taylorcoeff (int @var{n}, double @var{x})
+@deftypefunx int gsl_sf_taylorcoeff_e (int @var{n}, double @var{x}, gsl_sf_result * @var{result})
+@cindex Taylor coefficients, computation of
+These routines compute the Taylor coefficient @math{x^n / n!} for 
+@c{$x \ge 0$}
+@math{x >= 0}, 
+@c{$n \ge 0$}
+@math{n >= 0}.
+@comment exceptions: GSL_EDOM, GSL_EOVRFLW, GSL_EUNDRFLW
+@end deftypefun
+
+@node Pochhammer Symbol
+@subsection Pochhammer Symbol
+
+@deftypefun double gsl_sf_poch (double @var{a}, double @var{x})
+@deftypefunx int gsl_sf_poch_e (double @var{a}, double @var{x}, gsl_sf_result * @var{result})
+@cindex Pochhammer symbol
+@cindex Apell symbol, see Pochammer symbol
+These routines compute the Pochhammer symbol @math{(a)_x = \Gamma(a +
+x)/\Gamma(a)}.  The Pochhammer symbol is also known as the Apell symbol and
+sometimes written as @math{(a,x)}.  When @math{a} and @math{a+x} 
+are negative integers or zero, the limiting value of the ratio is returned. 
+@comment exceptions:  GSL_EDOM, GSL_EOVRFLW
+@end deftypefun
+
+@deftypefun double gsl_sf_lnpoch (double @var{a}, double @var{x})
+@deftypefunx int gsl_sf_lnpoch_e (double @var{a}, double @var{x}, gsl_sf_result * @var{result})
+@cindex logarithm of Pochhammer symbol
+These routines compute the logarithm of the Pochhammer symbol,
+@math{\log((a)_x) = \log(\Gamma(a + x)/\Gamma(a))}.
+@comment exceptions:  GSL_EDOM
+@end deftypefun
+
+@deftypefun int gsl_sf_lnpoch_sgn_e (double @var{a}, double @var{x}, gsl_sf_result * @var{result}, double * @var{sgn})
+These routines compute the sign of the Pochhammer symbol and the
+logarithm of its magnitude.  The computed parameters are @math{result =
+\log(|(a)_x|)} with a corresponding error term,  
+and @math{sgn = \sgn((a)_x)} where @math{(a)_x =
+\Gamma(a + x)/\Gamma(a)}.
+@comment exceptions:  GSL_EDOM
+@end deftypefun
+
+@deftypefun double gsl_sf_pochrel (double @var{a}, double @var{x})
+@deftypefunx int gsl_sf_pochrel_e (double @var{a}, double @var{x}, gsl_sf_result * @var{result})
+@cindex relative Pochhammer symbol
+These routines compute the relative Pochhammer symbol @math{((a)_x -
+1)/x} where @math{(a)_x = \Gamma(a + x)/\Gamma(a)}.
+@comment exceptions:  GSL_EDOM
+@end deftypefun
+
+
+@node Incomplete Gamma Functions
+@subsection Incomplete Gamma Functions
+
+@deftypefun double gsl_sf_gamma_inc (double @var{a}, double @var{x})
+@deftypefunx int gsl_sf_gamma_inc_e (double @var{a}, double @var{x}, gsl_sf_result * @var{result})
+@cindex non-normalized incomplete Gamma function
+@cindex unnormalized incomplete Gamma function
+These functions compute the unnormalized incomplete Gamma Function
+@c{$\Gamma(a,x) = \int_x^\infty dt\, t^{(a-1)} \exp(-t)$}
+@math{\Gamma(a,x) = \int_x^\infty dt t^@{a-1@} \exp(-t)}
+for @math{a} real and @c{$x \ge 0$}
+@math{x >= 0}.
+@comment exceptions: GSL_EDOM
+@end deftypefun
+
+@deftypefun double gsl_sf_gamma_inc_Q (double @var{a}, double @var{x})
+@deftypefunx int gsl_sf_gamma_inc_Q_e (double @var{a}, double @var{x}, gsl_sf_result * @var{result})
+@cindex incomplete Gamma function
+These routines compute the normalized incomplete Gamma Function
+@c{$Q(a,x) = 1/\Gamma(a) \int_x^\infty dt\, t^{(a-1)} \exp(-t)$}
+@math{Q(a,x) = 1/\Gamma(a) \int_x^\infty dt t^@{a-1@} \exp(-t)}
+for @math{a > 0}, @c{$x \ge 0$}
+@math{x >= 0}.
+@comment exceptions: GSL_EDOM
+@end deftypefun
+
+@deftypefun double gsl_sf_gamma_inc_P (double @var{a}, double @var{x})
+@deftypefunx int gsl_sf_gamma_inc_P_e (double @var{a}, double @var{x}, gsl_sf_result * @var{result})
+@cindex complementary incomplete Gamma function
+These routines compute the complementary normalized incomplete Gamma Function
+@c{$P(a,x) = 1 - Q(a,x) = 1/\Gamma(a) \int_0^x dt\, t^{(a-1)} \exp(-t)$}
+@math{P(a,x) = 1 - Q(a,x) = 1/\Gamma(a) \int_0^x dt t^@{a-1@} \exp(-t)}
+for @math{a > 0}, @c{$x \ge 0$}
+@math{x >= 0}. 
+
+Note that Abramowitz & Stegun call @math{P(a,x)} the incomplete gamma
+function (section 6.5).
+@comment exceptions: GSL_EDOM
+@end deftypefun
+
+@node Beta Functions
+@subsection Beta Functions
+
+@deftypefun double gsl_sf_beta (double @var{a}, double @var{b})
+@deftypefunx int gsl_sf_beta_e (double @var{a}, double @var{b}, gsl_sf_result * @var{result})
+@cindex Beta function
+These routines compute the Beta Function, @math{B(a,b) =
+\Gamma(a)\Gamma(b)/\Gamma(a+b)} subject to @math{a} and @math{b} not
+being negative integers.
+@comment exceptions: GSL_EDOM, GSL_EOVRFLW, GSL_EUNDRFLW
+@end deftypefun
+
+@deftypefun double gsl_sf_lnbeta (double @var{a}, double @var{b})
+@deftypefunx int gsl_sf_lnbeta_e (double @var{a}, double @var{b}, gsl_sf_result * @var{result})
+@cindex logarithm of Beta function
+These routines compute the logarithm of the Beta Function, @math{\log(B(a,b))}
+subject to @math{a} and @math{b} not
+being negative integers.
+@comment exceptions: GSL_EDOM
+@end deftypefun
+
+@node Incomplete Beta Function
+@subsection Incomplete Beta Function
+
+@deftypefun double gsl_sf_beta_inc (double @var{a}, double @var{b}, double @var{x})
+@deftypefunx int gsl_sf_beta_inc_e (double @var{a}, double @var{b}, double @var{x}, gsl_sf_result * @var{result})
+@cindex incomplete Beta function, normalized
+@cindex normalized incomplete Beta function
+@cindex Beta function, incomplete normalized 
+These routines compute the normalized incomplete Beta function
+@math{I_x(a,b)=B_x(a,b)/B(a,b)} where @c{$B_x(a,b) = \int_0^x t^{a-1} (1-t)^{b-1} dt$}
+@math{B_x(a,b) = \int_0^x t^@{a-1@} (1-t)^@{b-1@} dt}
+for @c{$0 \le x \le 1$}
+@math{0 <= x <= 1}.   For @math{a > 0}, @math{b > 0} the value is computed using
+a continued fraction expansion.  For all other values it is computed using 
+the relation @c{$I_x(a,b,x) = (1/a) x^a {}_2F_1(a,1-b,a+1,x)/B(a,b)$}
+@math{I_x(a,b,x) = (1/a) x^a 2F1(a,1-b,a+1,x)/B(a,b)}.
+@end deftypefun
+
+
+
+
+

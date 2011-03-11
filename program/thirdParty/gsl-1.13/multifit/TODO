@@ -1,0 +1,7 @@
+The following would also be nice additions to the multifit function suite
+(see MS Excel regression output for example):
+
+1. Produce the correlation coefficient (r) and other statistics.
+2. Allow fit variable weighting (not observation weighting).
+3. Allow for principal factor computations.
+

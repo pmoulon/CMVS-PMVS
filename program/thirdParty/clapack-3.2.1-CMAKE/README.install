@@ -1,0 +1,223 @@
+                            ===================
+                            CLAPACK README FILE
+                            ===================
+
+============================================================================================
+          Version 3.2.1 (threadsafe)
+    Release date: June 2009
+ F2C translation of LAPACK 3.2.1
+To get revisions info about LAPACK 3.2.1, please see http://www.netlib.org/lapack/lapack-3.2.1.html 
+============================================================================================
+
+This README file describes how and how to install the ANSI C translation of the
+LAPACK library, called CLAPACK.  CLAPACK must be compiled with an ANSI Standard
+C compiler.  If the C compiler on your machine is an old-style C compiler, you
+will have to use gcc to compile the package.  
+
+IMPORTANT NOTE:
+
+   You *CANNOT* just go to www.netlib.org/clapack, download a routine like
+ sgesv.c and have it work unless you properly install and link to the
+ f2c and BLAS routines as described below.  If your linker complains about
+ missing functions, you have probably accidentally neglected this step.
+   Also, you will need the file "f2c.h" (included with the f2c libraries)
+in order to compile these routines. 
+ The default BLAS routines included with CLAPACK in the BLAS/SRC
+ subdirectory may also be used these will most likely be
+ slower than a BLAS library optimized for your machine. If you do
+ not have such an optimized BLAS library, you can get one at
+
+       http://www.netlib.org/atlas
+ 
+
+==============================================================================
+
+For a fast default installation, you will need to
+  - Untar clapack.tar and modify the make.inc file   (see step 1 below)
+  - Make the f2c libraries                           (see step 2 below)
+  - Make the BLAS library                            (see step 2 below)
+  - Make the main library, test it, and time it by simply typing
+      make
+
+If you encounter difficulties, you may find the installation manual for
+the FORTRAN version (INSTALL/lawn81.*) useful.
+
+
+                     Procedure for installing CLAPACK:
+==============================================================================
+
+(1) 'tar xvf clapack.tar' to build the following directory structure:
+    CLAPACK/README.install     this file
+    CLAPACK/BLAS/       C source for BLAS
+    CLAPACK/F2CLIBS/    f2c I/O functions (libI77) and math functions (libF77)
+    CLAPACK/INSTALL/    Testing functions and pre-tested make.inc files
+                        for various platforms.
+    CLAPACK/SRC/        C source of LAPACK routines
+    CLAPACK/TESTING/    driver routines to test correctness
+    CLAPACK/make.inc	compiler, compile flags and library definitions, 
+			included in all Makefiles.
+		        NOTE: It's better to use gcc compiler on some older
+			Sun systems.
+    CLAPACK/clapack.h   A header file including C prototypes of all the
+                        CLAPACK routines.
+    You should be sure to modify the make.inc file for your system.  Sample
+    make.inc files for several platforms are included in the INSTALL
+    subdirectory.
+
+(2) Build the f2c libraries by doing:
+      make f2clib
+
+##############################################################################
+WARNING: 1) If your system lacks onexit() and you are not using an ANSI C
+            compiler, then you should change your F2CCFLAGS line in 
+            make.inc to
+                F2CCFLAGS=$(CFLAGS) -DNO_ONEXIT
+            On at least some Sun systems, it is better to use
+                F2CCFLAGS=$(CFLAGS) -Donexit=on_exit
+         2) On at least some Sun systems, the type declaration in 
+            F2CLIBS/libI77/rawio.h: extern FILE *fdopen(int, char*)
+ 	    is not consistent with the one defined in stdio.h. In this case
+            you should comment out this line.
+            
+##############################################################################
+
+(3) To run CLAPACK, you need to create a BLAS library.
+    The performance of CLAPACK largely depends on the performance
+    of the BLAS library.
+
+    You can either use the reference BLAS library included with
+    this distribution, which is easy to install but not optimized to be
+    fast on any particular machine, or else find a version of the 
+    BLAS optimized for your machine.
+
+    If you want to use the reference BLAS library included with
+    this distribution, build it by doing
+      make blaslib
+    from the main directory.
+
+    If you want to find a BLAS library optimized for your machine,
+    see the note below for more details; 
+    see also the README in the BLAS/WRAP directory.
+
+(4) Compile and run the BLAS TESTING code by doing:
+      cd CLAPACK/BLAS/TESTING; make -f Makeblat2
+      cd CLAPACK/BLAS
+	xblat2s < sblat2.in
+	xblat2d < dblat2.in
+	xblat2c < cblat2.in
+	xblat2z < zblat2.in
+      cd CLAPACK/BLAS/TESTING; make -f Makeblat3
+      cd CLAPACK/BLAS
+	xblat3s < sblat3.in
+	xblat3d < dblat3.in
+	xblat3c < cblat3.in
+	xblat3z < zblat3.in
+
+    Inspect the output files *.SUMM to confirm that no errors occurred.
+
+{NOTE: If a compiling error involving _atexit appears then see information
+       within the WARNING above.}
+
+{NOTE: For the highest performance, it is best to use a version of the BLAS
+       optimized for your particular machine. This may be done by modifying
+       the line
+          BLASLIB      = ../../blas$(PLAT).a
+       in CLAPACK/make.inc to point to the optimized BLAS.
+
+{NOTE: There is a clapack.h file in INCLUDE directory which has all the routine 
+	   declaration. Users are recommended to include this file to compile their
+	   code. Some problem has been reported on 64-bit machine that is caused by
+	   not using the correct declaration.
+
+Link with BLAS which provides the standard CBLAS interface 
+==========================================================
+       If you are using a version of the BLAS which provides the standard 
+       CBLAS interface (e.g. ATLAS), you need to add the appropriate "wrapper" library.
+       you can make the wrapper library libcblaswr.a by typing 
+       "make cblaswrap" from the main directory.  For this setup
+       (ATLAS with the CBLAS wrapper), the BLASLIB line might look like
+Example:
+Modification to make.inc
+CC        = gcc
+BLASLIB     = ../../libcblaswr.a -lcblas -latlas
+Creation of libcblaswr.a : make cblaswrap
+
+Link with BLAS which Fortran calling interface
+===============================================
+Two possibilities:
+	- add -DNO_BLAS_WRAP to the CC variable to when compiling and no need of a "wrapper" library
+Example:
+CC        = gcc -DNO_BLAS_WRAP 
+BLASLIB = -lgoto -lpthread
+	
+ 	- add the sample Fortran calling interface (libfblaswr.a) for systems with
+       Sun-style Fortran calling conventions is also provided; however,
+       this interface will need modifications to work on other
+       architectures which have different Fortran calling convensions.
+       See the README in the BLAS/WRAP subdirectory for further information. 
+Example:
+CC        = gcc
+BLASLIB = ../../libfblaswr.a -lgoto -lpthread
+Creation of libfblaswr.a : make fblaswrap
+}
+
+(5) Build the archive containing lapack source code by doing:
+      cd CLAPACK/SRC; make
+
+(6) Compile the matrix generation software, the eigenroutine TESTING
+    code, the linear system TESTING code, and run the LAPACK tests 
+    by doing:
+      cd CLAPACK/TESTING/MATGEN; make
+      cd CLAPACK/TESTING; make
+
+    Inspect the output files *.out to confirm that no errors occurred.
+
+I.   Compile the matrix generation software, the eigenroutine TESTING code,
+     the linear system TESTING code, and run the LAPACK tests separately
+     by doing:
+	cd CLAPACK/TESTING/MATGEN; make
+	cd CLAPACK/TESTING/EIG; make
+	cd CLAPACK/TESTING/LIN; make
+	cd CLAPACK/TESTING; make
+II. After the executable files and libraries have been created for each
+     of the compiles, the object files should be removed by doing:
+	make clean
+III.  Each 'make' may be accomplished just for one or a subset of the 
+     precisions desired.  For example:
+	make single
+	make single complex
+	make single double complex complex16
+     Using make without any arguments will compile all four precisions.
+
+James Demmel
+Xiaoye Li		
+Chris Puscasiu
+Steve Timson
+
+UC Berkeley
+Sept 27 1993
+
+
+{Revised by Susan Ostrouchov and Jude Toth}
+ {The University of Tennessee at Knoxville}
+             {October 15, 1993}
+
+{Revised by Xiaoye Li and James Demmel}
+ {University of California at Berkeley}
+             {November 22, 1994}
+
+{Revised by David Bindel and James Demmel}
+ {University of California at Berkeley}
+             {July 19, 2000}
+
+{Revised by Julie Langou}
+ {University of Tennessee}
+             {February 2008}
+
+{Revised by Julie Langou}
+{University of Tennessee}
+			 {October 2008}
+
+{Revised by Peng Du}
+{University of Tennessee}
+			 {August 2009}

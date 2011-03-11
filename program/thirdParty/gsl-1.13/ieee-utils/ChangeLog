@@ -1,0 +1,225 @@
+2008-07-03  Brian Gough  <bjg@hp2.network-theory.co.uk>
+
+	* Makefile.am (INCLUDES): use top_srcdir instead of top_builddir
+
+2007-06-21  Brian Gough  <bjg@network-theory.co.uk>
+
+	* fp.c: allow universal binaries by checking __ppc__ and __i386__
+	preprocessor definitions on Darwin
+
+2007-04-23  Brian Gough  <bjg@network-theory.co.uk>
+
+	* fp-gnux86.c (gsl_ieee_set_mode): added support for MXCSR register
+
+2005-02-11  Brian Gough  <bjg@network-theory.co.uk>
+
+	* fp-gnuc99.c (gsl_ieee_set_mode): added an #ifdef for the default
+	round to nearest mode
+
+2003-12-20  Brian Gough  <bjg@network-theory.co.uk>
+
+	* fp-gnuc99.c (_GNU_SOURCE): define _GNU_SOURCE when including
+	fenv.h
+
+2003-07-21  Brian Gough  <bjg@network-theory.co.uk>
+
+	* read.c (gsl_ieee_read_mode_string): added missing
+	mask-division-by-zero to error message
+
+2003-06-14  Brian Gough  <bjg@network-theory.co.uk>
+
+	* fp-m68klinux.c fp-ppclinux.c fp-sparclinux.c fp-x86linux.c:
+	renamed to fp-gnum68k.c fp-gnuppc.c fp-gnusparc.c fp-gnux86.c
+	since they are dependent on the GNU C Library interface rather
+	than the kernel interface
+
+	* fp-gnuc99.c: added a fallback to the C99 exception functions for
+	cases where the operating system is not recognized
+
+Mon Aug 26 20:57:29 2002  Brian Gough  <bjg@network-theory.co.uk>
+
+	* test.c: use system values for FLT_MIN, FLT_MAX, DBL_MIN, DBL_MAX
+
+Sat May 11 22:30:43 2002  Brian Gough  <bjg@network-theory.co.uk>
+
+	* test.c (TEST_DENORMAL): test denormals only when available, as
+ 	tested in configure script
+
+Mon Sep 10 14:23:52 2001  Brian Gough  <bjg@network-theory.co.uk>
+
+	* fp-netbsd.c fp-openbsd.c (gsl_ieee_set_mode): tried to correct
+ 	the logic for the denormalized exception.
+
+Tue Jul 10 13:10:12 2001  Brian Gough  <bjg@network-theory.co.uk>
+
+	* env.c (gsl_ieee_env_setup): send GSL_IEEE_MODE output to stderr
+
+Tue Jun 26 10:44:13 2001  Brian Gough  <bjg@network-theory.co.uk>
+
+	* fp-netbsd.c (gsl_ieee_set_mode): simplified, patch from Jason Beegan
+
+	* fp-openbsd.c (gsl_ieee_set_mode): simplified
+
+Mon Jun 25 20:47:33 2001  Brian Gough  <bjg@network-theory.co.uk>
+
+	* fp-openbsd.c (gsl_ieee_set_mode): added support for openbsd
+
+Tue May  8 10:49:58 2001  Brian Gough  <bjg@network-theory.co.uk>
+
+	* fp-aix.c: changed macros from TRAP_ to TRP_..
+
+Fri Apr 13 15:07:10 2001  Brian Gough  <bjg@network-theory.co.uk>
+
+	* fp-darwin.c: added darwin support from Rodney Sparapani
+
+Wed Mar 28 13:12:20 2001  Brian Gough  <bjg@network-theory.co.uk>
+
+	* fp-netbsd.c: added netbsd support from Jason Beegan
+ 	<jasontd@indigo.ie>
+
+Thu Mar 15 14:11:29 2001  Brian Gough  <bjg@network-theory.co.uk>
+
+	* fp-hpux11.c: added support for HPUX11
+
+Fri Mar  2 16:58:36 2001  Brian Gough  <bjg@network-theory.co.uk>
+
+	* fp-os2emx.c: add ieee support for OS/2 from Henry Sobotka
+ 	<sobotka@axess.com>
+
+Thu Jul 20 19:41:56 2000  Brian Gough  <bjg@network-theory.co.uk>
+
+	* fp-freebsd.c (gsl_ieee_set_mode): added fp-freebsd.c from
+ 	Vladimir Kushnir
+
+Mon Jun 12 19:23:53 2000  Brian Gough  <bjg@network-theory.co.uk>
+
+	* Makefile.am (noinst_HEADERS): added aix and irix to makefile
+
+	* fp-x86linux.c (gsl_ieee_set_mode): Handle libc5, where
+ 	_FPU_SETCW is not available, by defining the macro. Suggested by
+ 	OKUJI Yoshinori <okuji@gnu.org>
+
+Wed Jun  7 19:18:15 2000  Brian Gough  <bjg@network-theory.co.uk>
+
+	* fp-ppclinux.c: added support for ppc linux 
+
+Tue Jun  6 19:59:50 2000  Brian Gough  <bjg@network-theory.co.uk>
+
+	* fp-x86linux.c: renamed from fp-linux.c
+
+Thu May 18 11:53:13 2000  Brian Gough  <bjg@network-theory.co.uk>
+
+	* test.c: turned off tests for denormals on irix, since they are
+ 	supported
+
+	* fp.c: added IRIX and AIX to the top-level fp.c file -- somehow
+ 	they had been forgotten!
+
+2000-05-14  Steve Robbins  <steve@nyongwa.montreal.qc.ca>
+
+	* fp-tru64.c: include `/usr/include/float.h', if necessary for
+	picking up FP_RND_RN and friends.
+
+Sun Apr  2 14:25:52 2000  Brian Gough  <bjg@network-theory.co.uk>
+
+	* fp-m68klinux.c: added file for m68k support (not complete, some
+ 	macros need to be checked)
+
+Thu Mar 16 15:34:08 2000  Brian Gough  <bjg@network-theory.co.uk>
+
+	* read.c (gsl_ieee_read_mode_string): changed token separator to ,
+ 	instead of ;
+
+Thu Feb 24 19:20:50 2000  Brian Gough  <bjg@network-theory.co.uk>
+
+	* fp-tru64.c (gsl_ieee_set_mode): added an #ifdef for
+ 	IEEE_TRAP_ENABLE_DNO, which may or may not be defined depending on
+ 	the version of Digital Unix.
+
+Mon Feb 14 14:03:22 2000  Brian Gough  <bjg@network-theory.co.uk>
+
+	* made internal functions static and removed redundant functions
+
+Fri Nov  5 15:01:55 1999  Brian Gough  <bjg@network-theory.co.uk>
+
+	* fp-sparclinux.c: added support for sparclinux
+
+Thu Oct  7 13:03:00 1999  Brian Gough  <bjg@network-theory.co.uk>
+
+	* make_rep.c: more careful conversion from unsigned to signed integer
+ 	for sign attribute to prevent warnings
+
+Sat Aug 21 01:05:01 1999  Tim Mooney <mooney@plains.NoDak.edu>
+ 
+    * fp-aix.c: added, based on fp-solaris.
+ 
+Fri Aug 20 12:17:53 1999  Brian Gough  <bjg@network-theory.co.uk>
+
+	* fp-tru64.c (gsl_ieee_set_mode): note that INEXACT is not easily
+ 	supported on Tru64, and give an error if anyone tries to use it
+
+Wed Aug 18 21:36:01 1999  Tim Mooney <mooney@plains.NoDak.edu>
+ 
+    * fp-irix.c: added, based on fp-solaris.  IRIX 6 has a rounding and
+    exception interface that is identical to Solaris, right down to the enums.
+
+Tue Aug 17 18:36:01 1999  Tim Mooney <mooney@plains.NoDak.edu>
+ 
+    * fp-tru64.c: added, based on solaris and HP-UX fp-* files.
+  	Rounding mode and trap control requires that the compiler be
+ 	passed special options, see the comments in fp-tru64.c.
+ 
+Fri Jul 23 19:00:51 1999  Brian Gough  <bjg@network-theory.co.uk>
+
+	* print.c: added fprintf versions of the printf functions
+
+Sat May  8 20:39:28 1999  Brian Gough  <bjg@network-theory.co.uk>
+
+	* fp-linux.c (gsl_ieee_set_mode): changed from using the function
+ 	__fput_setcw() to the macro _FPU_SETCW() since Khimenko Victor
+ 	<khim@sch57.msk.ru> reports that __setfpucw() is not in the shared
+ 	lib version of glibc-2.1.1
+
+Fri Apr  2 20:52:59 1999  Brian Gough  <bjg@netsci.freeserve.co.uk>
+
+	* endian.c (setup_dynamic_endianness): removed useless test,
+ 	u.c[i]<0 for unsigned
+
+Fri Aug 21 15:36:22 1998  Brian Gough  <bjg@vvv.lanl.gov>
+
+	* fp-unknown.c (gsl_ieee_set_mode): made return type int, as it
+ 	should be
+
+Mon Jun 15 22:02:00 1998  Brian Gough  <bjg@vvv.lanl.gov>
+
+	* renamed read-mode-string.c to read.c and print-ieee.c to print.c
+
+Tue Jun  2 19:29:34 1998  Brian Gough  <bjg@vvv.lanl.gov>
+
+	* gsl_ieee_utils.h: renamed GSL_IEEE_CATCH_INEXACT to
+ 	GSL_IEEE_TRAP_INEXACT, which is a better name
+
+Mon Jun  1 15:27:08 1998  Brian Gough  <bjg@vvv.lanl.gov>
+
+	* fp-sunos4.c: support for sunos4 IEEE interface
+
+	* fp-solaris.c: support for solaris IEEE interface
+
+	* renamed fp-mode-string.c to fp-env.c, in order to avoid short
+ 	filename problems
+
+	* added support for setting the IEEE mode from the environment
+	variable GSL_IEEE_MODE (only works for the Linux kernel so far)
+
+Mon May 18 16:20:17 1998  Brian Gough  <bjg@vvv.lanl.gov>
+
+	* The determination of endianness is now done on each call instead
+ 	of at configure time (autoconf complains about what would happen
+ 	to the test if it were cross compiling). Ok, so it's a bit slower
+	but this isn't a performance critical routine.
+
+Sat May 16 23:10:09 1998  Brian Gough  <bjg@vvv.lanl.gov>
+
+	* This directory contains some routines for examining IEEE format
+ 	numbers at the bit level
+

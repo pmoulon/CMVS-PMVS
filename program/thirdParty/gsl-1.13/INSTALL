@@ -1,0 +1,545 @@
+GSL - GNU Scientific Library
+============================
+
+Installation Instructions
+=========================
+
+GSL follows the standard GNU installation procedure.  To compile GSL
+you will need an ANSI C-compiler.  After unpacking the distribution
+the Makefiles can be prepared using the configure command,
+
+  ./configure
+
+You can then build the library by typing,
+
+  make
+
+Both static and shared versions of the libraries will be compiled by
+default.  Compilation of shared libraries can be turned off by
+specifying the `--disable-shared' option to `configure', e.g.
+  
+  ./configure --disable-shared
+
+If you encounter problems building the library try using the above
+option, because some platforms do not support shared libraries.  If
+you change any compilation options you will need to remove any
+existing compiled files with,
+
+  make clean
+
+before running "make" again, so the new settings take effect.
+
+For notes about problems with specific platforms and compilers see the
+next section of this file (below).
+
+An extensive test suite is available.  After compiling the library
+with "make", it can be invoked with "make check" at the top level.
+The test output should be directed to a file rather than a terminal,
+with the command,
+
+   make check > log 2>&1
+
+to allow any errors to be examined in detail.  By default, only test
+failures are shown.  To see the complete output, set the environment
+variable GSL_TEST_VERBOSE=1.  Use "make -k check" to continue running
+the remaining tests in the event of failures.
+
+If you run the tests and get some failures, please see the notes on
+platform specific problems below.  If you find failures that are not
+mentioned, please report them to bug-gsl@gnu.org.
+
+The library can be installed using the command,
+
+  make install
+
+The default installation directory prefix is /usr/local.  Installing
+in this directory will require root privileges on most systems (use
+"su" or "sudo").
+
+The installation directory can be changed with the --prefix option to
+configure.  Consult the "Further Information" section below for
+instructions on installing the library in another location or changing
+other default compilation options.
+
+                    ------------------------------
+
+Platform Specific Compilation Notes
+===================================
+
+This section documents any known issues with installing GSL on
+specific platforms.
+
+  * General hints for all platforms
+  * AIX
+  * Compaq/DEC Alpha
+  * HP-UX
+  * IRIX
+  * MacOS X / PowerPC
+  * Microsoft Windows
+  * OpenBSD
+  * OS/2
+  * Solaris
+
+Hints for any platform
+======================
+
+1) If there are problems building the library try using
+
+        ./configure --disable-shared
+
+This will turn off the compilation of shared libraries and may allow
+the build process to complete successfully.  
+
+If you get any problems try this first.
+
+2) If your compiler uses the C99-style inline keyword, use
+
+    ./configure CFLAGS="-DGSL_C99_INLINE -g -O2"
+
+to avoid problems with duplicate function definitions.  For gcc this
+is handled automatically.  See the file gsl_inline.h for the
+preprocessor definitions that are used.
+
+3) If you want to pass C++ functions with exceptions to GSL, the
+library needs to be compiled with the GCC option -fexceptions
+
+    ./confugire CFLAGS="-fexceptions ..."
+
+to allow C++ exceptions to be handled.
+
+4) With gcc-4.3.2 the tests in the poly/ directory fail due to a
+compiler optimization bug which is fixed in later versions of GCC
+(http://gcc.gnu.org/bugzilla/show_bug.cgi?id=38478).
+
+FAIL: y.real, gsl_complex_poly_complex_eval ({-2.31 + 0.44i, 4.21 - 3.19i, 0.93 + 1.04i, -0.42 + 0.68i}, 0.49 + 0.95i) (-1.68450788000000018 observed vs 1.82462012000000007 expected) [9]
+FAIL: y.imag, gsl_complex_poly_complex_eval ({-2.31 + 0.44i, 4.21 - 3.19i, 0.93 + 1.04i, -0.42 + 0.68i}, 0.49 + 0.95i) (-0.30943988 observed vs 2.30389411999999982 expected) [10]
+
+With gcc-2.95/2.96 the tests fail in the eigen/ directory.  This is
+due to a compiler optimization bug which causes errors in the
+manipulation of complex numbers.  
+
+If you encounter these problems, install a different version of gcc.
+
+5) Attempts to run 'strip' on the static library libgsl.a will probably
+produce a broken library (it is known to happen with GNU binutils
+strip, and probably affects others too). The libgsl.a ar archive made
+by libtool contains files with the same filenames from different
+directories, and this causes the strip program to overwrite these
+archive entries.  If you need to produce a compact version of the
+library compile without -g instead of using strip.
+
+make install-strip does not work, due to a minor problem with autoconf
+which is fixed in the 2.5 development version of autoconf.  In the
+meantime compile without -g instead if you need to reduce the file size.
+
+6) The configure script can fail with a segmentation fault on bash-2.01
+
+    $ ./configure
+    Segmentation fault
+
+This is due to a bug in bash, related to the MAIL environment
+variable.  To work around it use 
+
+    $ unset ENV MAIL MAILPATH
+    $ ./configure
+
+which should avoid the problem.
+
+Hints for AIX
+=============
+
+For compilation problems with the native compiler xlc, try disabling
+shared libraries,
+
+    setenv CC 'xlc'
+    setenv CFLAGS '-O -qmaxmem=8192'
+    ./configure --disable-shared
+    make
+
+If you compile with higher optimisation -O3 you will also need
+-qstrict.  The -O3 flag causes the -nostrict option to be
+enabled. This affects the accuracy of the results and causes some of
+the tests to fail.
+
+If you get the error,
+
+   ld: 0711-781 ERROR: TOC overflow. 
+
+you can try building the library with a larger linker
+table-of-contents by setting LDFLAGS before compilation,
+
+   ./configure LDFLAGS="-Wl,-bbigtoc" 
+
+On older versions of AIX (e.g. 4.2) the size of the command-line is
+limited to 24kb, which causes linking to fail (due to the large number
+of files to be linked). Unfortunately this limit cannot be increased.
+To link the library you may need to use a manual approach of
+incrementally combining the object files in smaller groups. 
+
+On more recent versions of AIX (e.g >= 5.1) use
+
+  chdev -l sys0 -a ncargs=NNN
+
+to increase the allowed number of arguments. NNN is the amount of
+space measured in 4k blocks (default 6, maximum 1024)
+
+If compiling with GCC the following error
+
+  fp-aix.c: In function `gsl_ieee_set_mode':
+  fp-aix.c:30: error: `fprnd_t' undeclared (first use in this function)
+
+can occur if /usr/includes/float.h is not used, and instead the
+float.h of the installed gcc is picked up instead -- it may be missing
+the necessary structs.  To work around it copy the missing parts
+(between #ifdef _ALL_SOURCE and its #endif) from /usr/includes/float.h
+into a new header file and #include that in fp-aix.c
+
+Hints for Compaq/DEC Alpha
+==========================
+
+When comping with GCC use the -mieee and -mfp-rounding-mode options 
+as appropriate, e.g.
+
+    ./configure CFLAGS="-mieee -mfp-rounding-mode=d -g -O2"
+
+The library should compile successfully with Compaq's C compiler on
+Tru64 Unix 'cc' using the -std, -ieee and -fprm options.  Use
+
+    ./configure CC=cc 
+    make CFLAGS="-std -ieee -fprm d"
+
+to build the library this way.
+
+Use GNU tar to unpack the tar file, as Tru64 tar gives an error
+halfway through.
+
+Hints for HP-UX
+===============
+
+The default mode of the HP-UX C compiler does not use ANSI C.
+
+To compile GSL you need to select ANSI C mode with the following
+configuration option:
+
+      ./configure CFLAGS="-Ae"  
+
+To switch on optimization use CFLAGS="-Ae -O".
+
+Hints for IRIX (SGI)
+====================
+
+The library should be compiled with the CFLAGS option
+-OPT:IEEE_NaN_inf=ON to ensure correct IEEE arithmetic.  The tests in
+sys/ will fail without this option.  The older deprecated option
+-OPT:IEEE_comparisons=ON will also work.
+
+The 32 bit IRIX compiler gives warnings about "long double" not being
+supported. These can be ignored or turned off with,
+
+   ./configure CFLAGS="-woff 728" 
+
+or 
+
+   make CFLAGS="-woff 728"
+
+The compiler also gives warnings about certain libraries that are "not
+used for resolving any symbol". This is harmless and the warnings can
+be ignored.
+
+You may get warnings about " /usr/bin/ld: arg list too long" when
+building shared libraries.  If so, try increasing the ncargs kernel
+parameter with the systune(1m) command.
+
+For 64-bit compilation use the following options,
+
+  ./configure CC=cc CFLAGS="-64" LDFLAGS="-64" 
+
+or for gcc
+
+  CFLAGS="-mabi-64" LDFLAGS="-mabi=64 -mips4 -L/usr/local/lib/mabi=64"
+
+Hints for MacOS X and PowerPC
+=============================
+
+To install in /usr/local on MacOS systems, do "sudo make install" to
+gain root privileges.
+
+Note that GSL contains files with filenames of 32 characters or more.
+Therefore you need to be careful in unpacking the tar file, as some
+MacOS applications such as Stuffit Expander will truncate filenames to
+31 characters.  Using GNU tar and gunzip directly is the safe way to
+unpack the distribution.
+
+There are problems with dynamic linker, so the library should be
+compiled with,
+
+  ./configure --disable-shared
+
+It has been reported that shared libraries can be built if MacOS X
+specific versions of libtool, automake and autoconf from
+http://fink.sourceforge.net/ are installed, and the GSL source is
+reconfigured from scratch (./autogen.sh; ./configure; make)
+
+To avoid warnings about long-double, use the flag
+
+  CFLAGS="-Wno-long-double ....(other options here)"
+
+in addition to the normal compilation options.
+
+The GCC 3.3 compiler shipped by Apple contains a bug which causes the
+wavelet tests to fail on "data untouched" tests at optimisation level
+-O2.  You may be able work around this by compiling with CFLAGS="-O1
+..." instead.
+
+F J Frankin <MEP95JFF@sheffield.ac.uk> reported that some early
+versions of GCC-2.95 have a problem with long argument lists on PPC
+architecture, and this prevents GSL from compiling correctly (e.g. the
+test program in the blas directory gives a segmentation fault when
+run).  This problem is fixed in more recent versions of GCC.
+
+
+Hints for Microsoft Windows
+===========================
+
+GSL should compile with GCC under Cygwin on Microsoft Windows.  
+There is a gsl package in the standard Cygwin distribution which
+contains any patches needed.
+
+With Mingw/MSYS some floating point issues have been reported which
+cause failures in the monte/ test directory.
+
+Hints for OpenBSD
+=================
+
+As of July 2001 the OpenBSD log1p() function on i386 causes failures
+in the gsl complex tests.  The configure script has been hardcoded to
+substitute gsl_log1p instead on OpenBSD.  The log1p() bug has been
+reported and so may be fixed in future versions of OpenBSD.
+
+Hints for OS/2
+==============
+
+The configure script fails to detect the function 'isnan', leading to
+a slew of errors 'isnan redefined'.
+
+To work around this problem, run configure and edit the resulting
+config.h file to comment out the line which defines HAVE_ISINF.
+
+Hints for Solaris
+=================
+
+If you are using the Sun compilers then the library should be compiled
+with the Sun C compiler 'cc', not 'CC' which is the C++ compiler.
+
+The Sun compiler tools are stored in non-standard directories -- make
+sure that all the compiler and linker tools (cc, ar, ranlib, ld) are
+on the PATH.  A typical PATH should include the directories
+/opt/SUNWspro/bin:/usr/ccs/bin:/usr/ucb in that order.
+
+For example,
+
+  $ PATH=/opt/SUNWspro/bin:/usr/ccs/bin:/usr/ucb:$PATH
+  $ ./configure CC=cc CFLAGS=-O
+
+If you see configure output 
+  
+   checking for ar... :
+
+it means that 'ar' has not been found, and the library will fail to
+build.
+
+If you use the Sun compiler you should use the Sun linker and
+assembler.  If you use GCC, you can use the GNU linker and assembler
+or the Sun linker and assembler.
+
+There may be some warnings about "end of loop code not reached". These
+can be ignored -- they come from the do { ... ; return ; } while(0)
+statement in the GSL_ERROR macro.
+
+If you get errors such as symbol `gsl_complex_rect' is	multiply-defined
+you will need to use ./configure CFLAGS="-DGSL_C99_INLINE -g -O2"
+
+                    ------------------------------
+
+Further information on the standard GNU installation procedure
+==============================================================
+
+The sections below describe the general features of the standard GNU
+installation procedure.
+
+Basic Installation
+==================
+
+   These are generic installation instructions.
+
+   The `configure' shell script attempts to guess correct values for
+various system-dependent variables used during compilation.  It uses
+those values to create a `Makefile' in each directory of the package.
+It may also create one or more `.h' files containing system-dependent
+definitions.  Finally, it creates a shell script `config.status' that
+you can run in the future to recreate the current configuration, a file
+`config.cache' that saves the results of its tests to speed up
+reconfiguring, and a file `config.log' containing compiler output
+(useful mainly for debugging `configure').
+
+   If you need to do unusual things to compile the package, please try
+to figure out how `configure' could check whether to do them, and mail
+diffs or instructions to the address given in the `README' so they can
+be considered for the next release.  If at some point `config.cache'
+contains results you don't want to keep, you may remove or edit it.
+
+   The file `configure.in' is used to create `configure' by a program
+called `autoconf'.  You only need `configure.in' if you want to change
+it or regenerate `configure' using a newer version of `autoconf'.
+
+The simplest way to compile this package is:
+
+  1. `cd' to the directory containing the package's source code and type
+     `./configure' to configure the package for your system.  If you're
+     using `csh' on an old version of System V, you might need to type
+     `sh ./configure' instead to prevent `csh' from trying to execute
+     `configure' itself.
+
+     Running `configure' takes a while.  While running, it prints some
+     messages telling which features it is checking for.
+
+  2. Type `make' to compile the package.
+
+  3. Optionally, type `make check' to run any self-tests that come with
+     the package.
+
+  4. Type `make install' to install the programs and any data files and
+     documentation.
+
+  5. You can remove the program binaries and object files from the
+     source code directory by typing `make clean'.  To also remove the
+     files that `configure' created (so you can compile the package for
+     a different kind of computer), type `make distclean'.  There is
+     also a `make maintainer-clean' target, but that is intended mainly
+     for the package's developers.  If you use it, you may have to get
+     all sorts of other programs in order to regenerate files that came
+     with the distribution.
+
+Compilers and Options
+=====================
+
+   Some systems require unusual options for compilation or linking that
+the `configure' script does not know about.  You can give `configure'
+initial values for variables by setting them in the environment.  Using
+a Bourne-compatible shell, you can do that on the command line like
+this:
+     CC=c89 CFLAGS=-O2 LIBS=-lposix ./configure
+
+Or on systems that have the `env' program, you can do it like this:
+     env CPPFLAGS=-I/usr/local/include LDFLAGS=-s ./configure
+
+Compiling For Multiple Architectures
+====================================
+
+   You can compile the package for more than one kind of computer at the
+same time, by placing the object files for each architecture in their
+own directory.  To do this, you must use a version of `make' that
+supports the `VPATH' variable, such as GNU `make'.  `cd' to the
+directory where you want the object files and executables to go and run
+the `configure' script.  `configure' automatically checks for the
+source code in the directory that `configure' is in and in `..'.
+
+   If you have to use a `make' that does not supports the `VPATH'
+variable, you have to compile the package for one architecture at a time
+in the source code directory.  After you have installed the package for
+one architecture, use `make distclean' before reconfiguring for another
+architecture.
+
+Installation Names
+==================
+
+   By default, `make install' will install the package's files in
+`/usr/local/bin', `/usr/local/man', etc.  You can specify an
+installation prefix other than `/usr/local' by giving `configure' the
+option `--prefix=PATH'.
+
+   You can specify separate installation prefixes for
+architecture-specific files and architecture-independent files.  If you
+give `configure' the option `--exec-prefix=PATH', the package will use
+PATH as the prefix for installing programs and libraries.
+Documentation and other data files will still use the regular prefix.
+
+   If the package supports it, you can cause programs to be installed
+with an extra prefix or suffix on their names by giving `configure' the
+option `--program-prefix=PREFIX' or `--program-suffix=SUFFIX'.
+
+Optional Features
+=================
+
+   Some packages pay attention to `--enable-FEATURE' options to
+`configure', where FEATURE indicates an optional part of the package.
+They may also pay attention to `--with-PACKAGE' options, where PACKAGE
+is something like `gnu-as' or `x' (for the X Window System).  The
+`README' should mention any `--enable-' and `--with-' options that the
+package recognizes.
+
+   For packages that use the X Window System, `configure' can usually
+find the X include and library files automatically, but if it doesn't,
+you can use the `configure' options `--x-includes=DIR' and
+`--x-libraries=DIR' to specify their locations.
+
+Specifying the System Type
+==========================
+
+   There may be some features `configure' can not figure out
+automatically, but needs to determine by the type of host the package
+will run on.  Usually `configure' can figure that out, but if it prints
+a message saying it can not guess the host type, give it the
+`--host=TYPE' option.  TYPE can either be a short name for the system
+type, such as `sun4', or a canonical name with three fields:
+     CPU-COMPANY-SYSTEM
+
+See the file `config.sub' for the possible values of each field.  If
+`config.sub' isn't included in this package, then this package doesn't
+need to know the host type.
+
+   If you are building compiler tools for cross-compiling, you can also
+use the `--target=TYPE' option to select the type of system they will
+produce code for and the `--build=TYPE' option to select the type of
+system on which you are compiling the package.
+
+Sharing Defaults
+================
+
+   If you want to set default values for `configure' scripts to share,
+you can create a site shell script called `config.site' that gives
+default values for variables like `CC', `cache_file', and `prefix'.
+`configure' looks for `PREFIX/share/config.site' if it exists, then
+`PREFIX/etc/config.site' if it exists.  Or, you can set the
+`CONFIG_SITE' environment variable to the location of the site script.
+A warning: not all `configure' scripts look for a site script.
+
+Operation Controls
+==================
+
+   `configure' recognizes the following options to control how it
+operates.
+
+`--cache-file=FILE'
+     Use and save the results of the tests in FILE instead of
+     `./config.cache'.  Set FILE to `/dev/null' to disable caching, for
+     debugging `configure'.
+
+`--help'
+     Print a summary of the options to `configure', and exit.
+
+`--quiet'
+`--silent'
+`-q'
+     Do not print messages saying which checks are being made.
+
+`--srcdir=DIR'
+     Look for the package's source code in directory DIR.  Usually
+     `configure' can determine that directory automatically.
+
+`--version'
+     Print the version of Autoconf used to generate the `configure'
+     script, and exit.
+
+`configure' also accepts some other, not widely useful, options.
+

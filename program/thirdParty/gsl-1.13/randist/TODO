@@ -1,0 +1,66 @@
+*   ACM Computing Surveys (CSUR)  
+   Volume 39 ,  Issue 4  (2007)                                                                     
+
+   Gaussian random number generators                                                                
+   David B. Thomas, Wayne Luk, Philip H.W. Leong, John D. Villasenor                                
+   Article No. 11                                                                                   
+                                                                                                    
+
+* add Erlang dist back in?
+
+* DONE, for mu. 
+  
+  Note that we need to get rid of mu when it is not the mean.
+
+  From: Brian Gough <bjg@network-theory.co.uk>
+  To: briggsk@info.bt.co.uk
+  Cc: gsl-discuss@sourceware.cygnus.com
+  Subject: Re: Pareto Distribution
+  Date: Sun, 9 Jul 2000 20:05:03 +0100 (BST)
+
+  Yes, we should adopt the conventions from a standard reference book --
+  the existing functions are drawn from a variety of sources, mostly
+  Devroye's book on Random Variates (which is public domain, but not
+  available electronically unfortunately).  Maybe the three volumes of
+  Johnson & Kotz on Univariate Distributions would do, for
+  example. Patches are welcome from anyone who wants sort this out.
+
+  Keith Briggs writes:
+   > Another thing to think about: some of the other distributions
+   > have a argument `mu' to the C function which is a parameter
+   > which is not the mean.   This is non-standard and confusing.
+   > (Also, in the Pareto function, `a' is normally called beta,
+   > `b' is normally called alpha.)
+   > 
+   > Keith
+   > 
+   > +-------------------------------------------------------------------+
+   > | Dr. Keith M. Briggs, Complexity Research Group, BT Research Labs. |
+   > | Adastral Park admin2 pp5, Martlesham Heath, IP5 3RE, Suffolk,  UK |
+   > | Tel. 01473 641 911  Fax. 01473 647 410.  Home tel:  01473 625 972 |
+   > | www.bt.com | personal homepage:  www.labs.bt.com/people/briggsk2/ |
+   > +-------------------------------------------------------------------+
+
+
+* The exponential power distribution method could be speeded up by
+using a rational function approximation for the rejection scaling
+parameter.
+
+* Do something about the possibility of the user providing invalid
+parameters (e.g. negative variance etc). Not sure what to do though,
+since returning an error code is not possible. Maybe just return zero.
+  We should return NAN in this case, and for the CDFs.
+
+* Add the triangular distribution.
+
+* Look at Marsaglia & Tsang, "The Monte Python Method for generating
+random variables", ACM TOMS Vol 24, No 3, p341 
+
+and the paper on the Ziggurat Method: Journal of Statistical Software,
+Volume 05 Issue 08. George Marsaglia and Wai Wan Tsang. "The ziggurat
+method for generating random variables"
+   
+* Should 0 be included in distributions such as the exponential
+distribution? If we want a consistent behaviour, is it included in
+others?  Note that 1-gsl_rng_uniform() can have a slight loss of
+precision when the random float is small.

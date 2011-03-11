@@ -1,0 +1,363 @@
+@cindex elementary functions
+@cindex mathematical functions, elementary
+
+This chapter describes basic mathematical functions.  Some of these
+functions are present in system libraries, but the alternative versions
+given here can be used as a substitute when the system functions are not
+available.
+
+The functions and macros described in this chapter are defined in the
+header file @file{gsl_math.h}.
+
+@menu
+* Mathematical Constants::      
+* Infinities and Not-a-number::  
+* Elementary Functions::        
+* Small integer powers::        
+* Testing the Sign of Numbers::  
+* Testing for Odd and Even Numbers::  
+* Maximum and Minimum functions::  
+* Approximate Comparison of Floating Point Numbers::  
+@end menu
+
+@node Mathematical Constants
+@section Mathematical Constants
+@cindex mathematical constants, defined as macros
+@cindex numerical constants, defined as macros
+@cindex constants, mathematical---defined as macros
+@cindex macros for mathematical constants
+The library ensures that the standard @sc{bsd} mathematical constants
+are defined. For reference, here is a list of the constants:
+
+@table @code
+@item M_E
+@cindex e, defined as a macro
+The base of exponentials, @math{e}
+
+@item M_LOG2E
+The base-2 logarithm of @math{e}, @math{\log_2 (e)}
+
+@item M_LOG10E
+The base-10 logarithm of @math{e}, @c{$\log_{10}(e)$}
+@math{\log_10 (e)}
+
+@item M_SQRT2
+The square root of two, @math{\sqrt 2}
+
+@item M_SQRT1_2
+The square root of one-half, @c{$\sqrt{1/2}$}
+@math{\sqrt@{1/2@}}
+
+@item M_SQRT3
+The square root of three, @math{\sqrt 3}
+
+@item M_PI
+@cindex pi, defined as a macro
+The constant pi, @math{\pi}
+
+@item M_PI_2
+Pi divided by two, @math{\pi/2}
+
+@item M_PI_4
+Pi divided by four, @math{\pi/4}
+
+@item M_SQRTPI
+The square root of pi, @math{\sqrt\pi}
+
+@item M_2_SQRTPI
+Two divided by the square root of pi, @math{2/\sqrt\pi}
+
+@item M_1_PI
+The reciprocal of pi, @math{1/\pi}
+
+@item M_2_PI
+Twice the reciprocal of pi, @math{2/\pi}
+
+@item M_LN10
+The natural logarithm of ten, @math{\ln(10)}
+
+@item M_LN2
+The natural logarithm of two, @math{\ln(2)}
+
+@item M_LNPI
+The natural logarithm of pi, @math{\ln(\pi)}
+
+@item M_EULER
+@cindex Euler's constant, defined as a macro
+Euler's constant, @math{\gamma}
+
+@end table
+
+@node Infinities and Not-a-number
+@section Infinities and Not-a-number
+
+@cindex infinity, defined as a macro
+@cindex IEEE infinity, defined as a macro
+@cindex NaN, defined as a macro
+@cindex Not-a-number, defined as a macro
+@cindex IEEE NaN, defined as a macro
+
+@defvr {Macro} GSL_POSINF
+This macro contains the IEEE representation of positive infinity,
+@math{+\infty}. It is computed from the expression @code{+1.0/0.0}.
+@end defvr
+
+@defvr {Macro} GSL_NEGINF
+This macro contains the IEEE representation of negative infinity,
+@math{-\infty}. It is computed from the expression @code{-1.0/0.0}.
+@end defvr
+
+@defvr {Macro} GSL_NAN
+This macro contains the IEEE representation of the Not-a-Number symbol,
+@code{NaN}. It is computed from the ratio @code{0.0/0.0}.
+@end defvr
+
+@deftypefun int gsl_isnan (const double @var{x})
+This function returns 1 if @var{x} is not-a-number.
+@end deftypefun
+
+@deftypefun int gsl_isinf (const double @var{x})
+This function returns @math{+1} if @var{x} is positive infinity,
+@math{-1} if @var{x} is negative infinity and 0
+otherwise.@footnote{Note that the C99 standard only requires the
+system @code{isinf} function to return a non-zero value, without the
+sign of the infinity.  The implementation in some earlier versions of
+GSL used the system @code{isinf} function and may have this behavior
+on some platforms.  Therefore, it is advisable to test the sign of
+@var{x} separately, if needed, rather than relying the sign of the
+return value from @code{gsl_isinf()}.}
+@end deftypefun
+
+@deftypefun int gsl_finite (const double @var{x})
+This function returns 1 if @var{x} is a real number, and 0 if it is
+infinite or not-a-number.
+@end deftypefun
+
+
+@node Elementary Functions
+@section Elementary Functions
+
+The following routines provide portable implementations of functions
+found in the BSD math library.  When native versions are not available
+the functions described here can be used instead.  The substitution can
+be made automatically if you use @code{autoconf} to compile your
+application (@pxref{Portability functions}).
+
+@deftypefun double gsl_log1p (const double @var{x})
+@cindex log1p
+@cindex logarithm, computed accurately near 1
+This function computes the value of @math{\log(1+x)} in a way that is
+accurate for small @var{x}. It provides an alternative to the BSD math
+function @code{log1p(x)}.
+@end deftypefun
+
+@deftypefun double gsl_expm1 (const double @var{x})
+@cindex expm1
+@cindex exponential, difference from 1 computed accurately
+This function computes the value of @math{\exp(x)-1} in a way that is
+accurate for small @var{x}. It provides an alternative to the BSD math
+function @code{expm1(x)}.
+@end deftypefun
+
+@deftypefun double gsl_hypot (const double @var{x}, const double @var{y})
+@cindex hypot
+@cindex euclidean distance function, hypot
+@cindex length, computed accurately using hypot
+This function computes the value of
+@c{$\sqrt{x^2 + y^2}$}
+@math{\sqrt@{x^2 + y^2@}} in a way that avoids overflow. It provides an
+alternative to the BSD math function @code{hypot(x,y)}.
+@end deftypefun
+
+@deftypefun double gsl_hypot3 (const double @var{x}, const double @var{y}, const double @var{z})
+@cindex euclidean distance function, hypot
+@cindex length, computed accurately using hypot
+This function computes the value of
+@c{$\sqrt{x^2 + y^2 + z^2}$}
+@math{\sqrt@{x^2 + y^2 + z^2@}} in a way that avoids overflow.
+@end deftypefun
+
+@deftypefun double gsl_acosh (const double @var{x})
+@cindex acosh
+@cindex hyperbolic cosine, inverse
+@cindex inverse hyperbolic cosine
+This function computes the value of @math{\arccosh(x)}. It provides an
+alternative to the standard math function @code{acosh(x)}.
+@end deftypefun
+
+@deftypefun double gsl_asinh (const double @var{x})
+@cindex asinh
+@cindex hyperbolic sine, inverse
+@cindex inverse hyperbolic sine
+This function computes the value of @math{\arcsinh(x)}. It provides an
+alternative to the standard math function @code{asinh(x)}.
+@end deftypefun
+
+@deftypefun double gsl_atanh (const double @var{x})
+@cindex atanh
+@cindex hyperbolic tangent, inverse
+@cindex inverse hyperbolic tangent
+This function computes the value of @math{\arctanh(x)}. It provides an
+alternative to the standard math function @code{atanh(x)}.
+@end deftypefun
+
+
+@deftypefun double gsl_ldexp (double @var{x}, int @var{e})
+@cindex ldexp
+This function computes the value of @math{x * 2^e}. It provides an
+alternative to the standard math function @code{ldexp(x,e)}.
+@end deftypefun
+
+@deftypefun double gsl_frexp (double @var{x}, int * @var{e})
+@cindex frexp
+This function splits the number @math{x} into its normalized fraction
+@math{f} and exponent @math{e}, such that @math{x = f * 2^e} and
+@c{$0.5 \le f < 1$}
+@math{0.5 <= f < 1}. The function returns @math{f} and stores the
+exponent in @math{e}. If @math{x} is zero, both @math{f} and @math{e}
+are set to zero. This function provides an alternative to the standard
+math function @code{frexp(x, e)}.
+@end deftypefun
+
+@node Small integer powers
+@section Small integer powers
+
+A common complaint about the standard C library is its lack of a
+function for calculating (small) integer powers.  GSL provides some simple
+functions to fill this gap.  For reasons of efficiency, these functions
+do not check for overflow or underflow conditions. 
+
+@deftypefun double gsl_pow_int (double @var{x}, int @var{n})
+This routine computes the power @math{x^n} for integer @var{n}.  The
+power is computed efficiently---for example, @math{x^8} is computed as
+@math{((x^2)^2)^2}, requiring only 3 multiplications.  A version of this
+function which also computes the numerical error in the result is
+available as @code{gsl_sf_pow_int_e}.
+@end deftypefun
+
+@deftypefun double gsl_pow_2 (const double @var{x})
+@deftypefunx double gsl_pow_3 (const double @var{x})
+@deftypefunx double gsl_pow_4 (const double @var{x})
+@deftypefunx double gsl_pow_5 (const double @var{x})
+@deftypefunx double gsl_pow_6 (const double @var{x})
+@deftypefunx double gsl_pow_7 (const double @var{x})
+@deftypefunx double gsl_pow_8 (const double @var{x})
+@deftypefunx double gsl_pow_9 (const double @var{x})
+These functions can be used to compute small integer powers @math{x^2},
+@math{x^3}, etc. efficiently. The functions will be inlined when 
+@code{HAVE_INLINE} is defined, so that use of these functions 
+should be as efficient as explicitly writing the corresponding 
+product expression.
+@end deftypefun
+
+@example
+#include <gsl/gsl_math.h>
+double y = gsl_pow_4 (3.141)  /* compute 3.141**4 */
+@end example
+
+@node Testing the Sign of Numbers
+@section Testing the Sign of Numbers
+
+@defmac GSL_SIGN (x)
+This macro returns the sign of @var{x}. It is defined as @code{((x) >= 0
+? 1 : -1)}. Note that with this definition the sign of zero is positive
+(regardless of its @sc{ieee} sign bit).
+@end defmac
+
+@node Testing for Odd and Even Numbers
+@section Testing for Odd and Even Numbers
+
+@defmac GSL_IS_ODD (n)
+This macro evaluates to 1 if @var{n} is odd and 0 if @var{n} is
+even. The argument @var{n} must be of integer type.
+@end defmac
+
+@defmac GSL_IS_EVEN (n)
+This macro is the opposite of @code{GSL_IS_ODD(n)}. It evaluates to 1 if
+@var{n} is even and 0 if @var{n} is odd. The argument @var{n} must be of
+integer type.
+@end defmac
+
+@node Maximum and Minimum functions
+@section Maximum and Minimum functions
+
+Note that the following macros perform multiple evaluations of their
+arguments, so they should not be used with arguments that have side
+effects (such as a call to a random number generator).
+
+@defmac GSL_MAX (a, b)
+@cindex maximum of two numbers
+This macro returns the maximum of @var{a} and @var{b}. It is defined
+as @code{((a) > (b) ? (a):(b))}.  
+@end defmac
+
+@defmac GSL_MIN (a, b)
+@cindex minimum of two numbers
+This macro returns the minimum of @var{a} and @var{b}. It is defined as 
+@code{((a) < (b) ? (a):(b))}.
+@end defmac
+
+@deftypefun {extern inline double} GSL_MAX_DBL (double @var{a}, double @var{b})
+This function returns the maximum of the double precision numbers
+@var{a} and @var{b} using an inline function. The use of a function
+allows for type checking of the arguments as an extra safety feature. On
+platforms where inline functions are not available the macro
+@code{GSL_MAX} will be automatically substituted.
+@end deftypefun
+
+@deftypefun {extern inline double} GSL_MIN_DBL (double @var{a}, double @var{b})
+This function returns the minimum of the double precision numbers
+@var{a} and @var{b} using an inline function. The use of a function
+allows for type checking of the arguments as an extra safety feature. On
+platforms where inline functions are not available the macro
+@code{GSL_MIN} will be automatically substituted.
+@end deftypefun
+
+@deftypefun {extern inline int} GSL_MAX_INT (int @var{a}, int @var{b})
+@deftypefunx {extern inline int} GSL_MIN_INT (int @var{a}, int @var{b})
+These functions return the maximum or minimum of the integers @var{a}
+and @var{b} using an inline function.  On platforms where inline
+functions are not available the macros @code{GSL_MAX} or @code{GSL_MIN}
+will be automatically substituted.
+@end deftypefun
+
+@deftypefun {extern inline long double} GSL_MAX_LDBL (long double @var{a}, long double @var{b})
+@deftypefunx {extern inline long double} GSL_MIN_LDBL (long double @var{a}, long double @var{b})
+These functions return the maximum or minimum of the long doubles @var{a}
+and @var{b} using an inline function.  On platforms where inline
+functions are not available the macros @code{GSL_MAX} or @code{GSL_MIN}
+will be automatically substituted.
+@end deftypefun
+
+@node Approximate Comparison of Floating Point Numbers
+@section Approximate Comparison of Floating Point Numbers
+
+It is sometimes useful to be able to compare two floating point numbers
+approximately, to allow for rounding and truncation errors.  The following
+function implements the approximate floating-point comparison algorithm
+proposed by D.E. Knuth in Section 4.2.2 of @cite{Seminumerical
+Algorithms} (3rd edition).
+
+@deftypefun int gsl_fcmp (double @var{x}, double @var{y}, double @var{epsilon})
+@cindex approximate comparison of floating point numbers
+@cindex safe comparison of floating point numbers
+@cindex floating point numbers, approximate comparison
+This function determines whether @math{x} and @math{y} are approximately
+equal to a relative accuracy @var{epsilon}.
+
+The relative accuracy is measured using an interval of size @math{2
+\delta}, where @math{\delta = 2^k \epsilon} and @math{k} is the
+maximum base-2 exponent of @math{x} and @math{y} as computed by the
+function @code{frexp}.  
+
+If @math{x} and @math{y} lie within this interval, they are considered
+approximately equal and the function returns 0. Otherwise if @math{x <
+y}, the function returns @math{-1}, or if @math{x > y}, the function returns
+@math{+1}.
+
+Note that @math{x} and @math{y} are compared to relative accuracy, so
+this function is not suitable for testing whether a value is
+approximately zero. 
+
+The implementation is based on the package @code{fcmp} by T.C. Belding.
+@end deftypefun

@@ -1,0 +1,127 @@
+2008-07-03  Brian Gough  <bjg@hp2.network-theory.co.uk>
+
+	* Makefile.am (INCLUDES): use top_srcdir instead of top_builddir
+
+2007-10-02  Brian Gough  <bjg@network-theory.co.uk>
+
+	* variance_source.c: added functions for sum of squares and
+	weighted sum of squares
+
+2006-01-07  Brian Gough  <bjg@network-theory.co.uk>
+
+	* test_float_source.c: additional tests for NaNs
+
+	* minmax_source.c: handle NaNs correctly, if any element is NaN
+	then the max and min are NaN
+
+Sat Jul 15 12:23:09 2000  Brian Gough  <bjg@network-theory.co.uk>
+
+	* test_nist.c: added url/reference to the original NIST datasets
+
+Thu May  4 15:11:11 2000  Brian Gough  <bjg@network-theory.co.uk>
+
+	* covariance.c: added covariance function
+
+Wed Mar  8 15:29:19 2000  Brian Gough  <bjg@network-theory.co.uk>
+
+	* Function Name Reorganization: The function suffix "_with_mean"
+ 	has been changed to "_m", the function suffix "_with_mean_and_sd"
+ 	has been changed to "_m_sd". The variance function est_variance
+ 	has been changed to simply _variance, (similarly for est_sd, which
+ 	is now _sd), while the function _variance is now
+ 	_variance_with_fixed_mean (and _sd is _sd_with_fixed_mean).
+
+Wed Mar  1 11:09:21 2000  Brian Gough  <bjg@network-theory.co.uk>
+
+	* wabsdev.c wabsdev_source.c wkurtosis.c wkurtosis_source.c
+ 	wmean.c wmean_source.c wskew.c wskew_source.c wvariance.c
+ 	wvariance_source.c:  added support for weighted statistics
+
+	* removed source.h (no longer used)
+
+Tue Feb 29 10:35:23 2000  Brian Gough  <bjg@network-theory.co.uk>
+
+	* changed arguments of pvariance and ttest to have consistent form
+ 	(DATA,STRIDE,SIZE)
+
+Mon Feb 28 20:29:08 2000  Brian Gough  <bjg@network-theory.co.uk>
+
+	* removed sort function since this is now available in the sort
+ 	directory.
+
+	* converted all functions to take a stride argument, in
+ 	preparation for supporting statistics on vectors
+
+1998-11-06    <bjg@ancho.lanl.gov>
+
+	* test.c: added prototype for memcpy using #include <string.h>
+
+Wed Aug 12 12:34:24 1998  Brian Gough  <bjg@vvv.lanl.gov>
+
+	* quantiles.c: Renamed percentile to quantile throughout. This is
+ 	the correct name for the quantity, mathematically speaking.
+
+Wed Aug  5 12:34:58 1998  Brian Gough  <bjg@vvv.lanl.gov>
+
+	* mkheaders.pl: script to generate all the headers from
+ 	gsl_statistics_int.h
+
+	* test.h: removed test.h, not needed
+
+	* test.c: added tests for all types
+
+	* converted functions to use 'long double' for internal calculations,
+	for extra range.
+
+	* converted all the functions to use templates_on.h and
+ 	templates_off.h
+
+Mon Jun  1 23:47:23 1998  Brian Gough  <bjg@vvv.lanl.gov>
+
+	* lag1_source.c: added a new function to compute the
+ 	lag1-autocorrelation
+
+	* test_nist.c: added some numerical accuracy tests from NIST
+
+Fri Apr 10 15:11:51 1998  Brian Gough  <bjg@vvv.lanl.gov>
+
+	* renamed pooled_variance.c, etc to p_variance to avoid linker
+ 	complaints about long filenames on some platforms
+
+Wed Apr  8 18:11:48 1998  Brian Gough  <bjg@vvv.lanl.gov>
+
+	* Added a new recurrence algorithm for the mean, variance, skew
+ 	and kurtosis. It uses a running value which is less likely to
+ 	overflow than a global sum.
+
+Mon Mar 30 22:18:59 1998  Brian Gough  <bjg@vvv.lanl.gov>
+
+	* completely reorganised the source system to use macros as
+	a primitive form of templates. 
+
+Sun Mar 29 16:25:24 1998  Brian Gough  <bjg@vvv.lanl.gov>
+
+	* make everything const where possible (to reduce the chance of errors)
+
+Sun Mar 22 23:34:05 1998  Brian Gough  <bjg@vvv.lanl.gov>
+
+	* skew.c: compute the skewness of a dataset
+
+	* percentiles.c: find a given percentile from a sorted dataset
+
+	* minmax.c: allow the user to find the indices of the max/min
+ 	data points, in addition to the max/min values
+
+	* median.c: compute the median of a sorted dataset
+
+	* kurtosis.c: compute the kurtosis
+
+	* absdev.c: compute absolute deviations
+
+	* split statistics functions into double versions (gsl_stats) and
+ 	integer versions (gsl_stats_int). There is a script
+ 	(convert_double_to_int.pl) to make the integer versions from the
+ 	double versions. 
+
+	
+
