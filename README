@@ -1,0 +1,16 @@
+This is a modified version of CMVS/PMVS.
+
+Main modification was done in order to compile Bundler on Linux,
+ Windows with CMake build system generator.
+
+Authors : 
+[Original code author]  Yasutaka Furukawa http://www.cs.washington.edu/homes/furukawa/
+
+[Initial Cmake multiplatform port ]	Pierre moulon pmoulon[AT]gmail.com
+
+--------------------
+- Web ressources : - 
+--------------------
+[CMVS/PMVS] http://http://grail.cs.washington.edu/software/cmvs/
+[CMake version] http://opensourcephotogrammetry.blogspot.com/
+				https://github.com/TheFrenchLeaf/CMVS-PMVS
