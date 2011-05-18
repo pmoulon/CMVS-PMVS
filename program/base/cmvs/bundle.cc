@@ -670,16 +670,7 @@ void Cbundle::mergeSfMPThread(void) {
       pid = m_jobs.front();
       m_jobs.pop_front();
     }
-    /*else
-    {pthread_rwlock_unlock(&m_lock);
-      break;
-    }*/
-    if (pid == -1)
-    {
-      pthread_rwlock_unlock(&m_lock);
-      break;
-    }
-    if (m_merged[pid])
+    if (pid != -1 && m_merged[pid])
       pid = -2;
     if (m_count % tenth == 0)
       cerr << '*' << flush;
