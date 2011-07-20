@@ -5,7 +5,7 @@ Authors :
 
 Special thanks to ASTRE Henri for the PTHREAD 64 bits lib and dll : http://www.visual-experiments.com/
 
-Date : 12 Oct 2010
+Date : 13 July 2011
 
 --------------------
 - Web ressources : - 
@@ -46,4 +46,8 @@ What have been done on native Yasutaka Furukawa source code :
 - Optimize a little bit JPEG image loading.
 
 - Update CMVS source code in order to compile.
+
+- Add changes from Nghia Ho http://nghiaho.com/
+  - memoize pow(2,X)
+  - Change GSL simplex to lmfit.
 

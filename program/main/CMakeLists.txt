@@ -2,9 +2,9 @@
 ADD_EXECUTABLE(pmvs2 pmvs2.cc)
 
 IF(WIN32)
-TARGET_LINK_LIBRARIES(pmvs2 pmvs_lib image_lib numeric_lib ${PRECOMPILED_LIBS} jpeg gsl cblas lapack)
+TARGET_LINK_LIBRARIES(pmvs2 pmvs_lib image_lib numeric_lib ${PRECOMPILED_LIBS} jpeg gsl cblas lapack lmfit)
 ELSE(WIN32)
-TARGET_LINK_LIBRARIES(pmvs2 pmvs_lib image_lib numeric_lib ${PRECOMPILED_LIBS})
+TARGET_LINK_LIBRARIES(pmvs2 pmvs_lib image_lib numeric_lib ${PRECOMPILED_LIBS} lmfit)
 ENDIF(WIN32)
 
 

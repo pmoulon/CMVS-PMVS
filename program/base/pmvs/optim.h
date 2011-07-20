@@ -2,6 +2,7 @@
 #define PMVS3_OPTIM_H
 
 #include <vector>
+#include <map>
 #include "patch.h"
 #include <gsl/gsl_multimin.h>
 
@@ -41,6 +42,8 @@ class Coptim {
   void refinePatchBFGS(Patch::Cpatch& patch, const int id, const int time);
   void refinePatchBFGS(Patch::Cpatch& patch, const int id, const int time,
                        const int ncc);
+  void refinePatchBFGS2(Patch::Cpatch& patch, const int id, const int time,
+                        const int ncc); // LM version
   void refineDepthBFGS(Patch::Cpatch& patch, const int id, const int time,
                        const int ncc);
   
@@ -73,7 +76,7 @@ class Coptim {
   
   int grabTex(const Vec4f& coord, const Vec4f& pxaxis, const Vec4f& pyaxis,
               const Vec4f& pzaxis, const int index, const int size,
-              std::vector<float>& tex) const;
+              std::vector<float>& tex);
   
   int grabSafe(const int index, const int size, const Vec3f& center,
                const Vec3f& dx, const Vec3f& dy, const int level) const;
@@ -106,6 +109,7 @@ class Coptim {
 
   //BFGS
   static double my_f(const gsl_vector *v, void *params);
+  static void my_f_lm(const double *par, int m_dat, const void *data, double *fvec, int *info); // LM version
   static void my_df(const gsl_vector *v, void *params,
                     gsl_vector *df);
   static void my_fdf(const gsl_vector *x, void *params, 
@@ -152,6 +156,7 @@ class Coptim {
                      const int robust);
   void getPAxes(const int index, const Vec4f& coord, const Vec4f& normal,
                 Vec4f& pxaxis, Vec4f& pyaxis) const;
+  
   static inline float robustincc(const float rhs) {
     return rhs / (1 + 3 * rhs);
   }
@@ -193,6 +198,9 @@ class Coptim {
   std::vector<std::vector<float> > m_weightsT;
   // Working array for levmar
   std::vector<std::vector<double> > m_worksT;
+
+  //-- pow(2,X) Memoize
+  std::map<int, float> m_map_pow2X_memoize;
   
 };
 };

@@ -8,4 +8,5 @@ Usage : Required library files for PMVS2/CMVS.
  - blas
  - f2c
  - Graclus
+ - lmfit (Levenberg-Marquardt library)
 

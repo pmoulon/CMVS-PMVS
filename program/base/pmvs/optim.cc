@@ -4,6 +4,8 @@
 #include <gsl/gsl_deriv.h>
 #include "findMatch.h"
 #include "optim.h"
+#include <cstdio>
+#include <lmmin.h>
 
 using namespace Patch;
 using namespace PMVS3;
@@ -519,8 +521,9 @@ void Coptim::computeUnits(const Patch::Cpatch& patch,
 
 void Coptim::refinePatch(Cpatch& patch, const int id,
                          const int time) {
-  refinePatchBFGS(patch, id, 1000, 1);
+  //refinePatchBFGS(patch, id, 1000, 1);
 
+  refinePatchBFGS2(patch, id, 1000, 1);
   // WORKED REALLY WELL
   if (patch.m_images.empty())
     return;
@@ -529,6 +532,91 @@ void Coptim::refinePatch(Cpatch& patch, const int id,
 //----------------------------------------------------------------------
 // BFGS functions
 //----------------------------------------------------------------------
+void Coptim::my_f_lm(const double *par, int m_dat, const void *data, double *fvec, int *info) {
+  double xs[3] = {par[0], par[1], par[2]};
+  const int id = *((int*)data);
+
+  //const float sigma = M_PI / 16.0f;//4.0f * M_PI;
+  //const float sigma2 = 2 * sigma * sigma;
+  const float angle1 = xs[1] * m_one->m_ascalesT[id];
+  const float angle2 = xs[2] * m_one->m_ascalesT[id];
+
+  double ret = 0.0;
+
+  if (angle1 <= - M_PI / 2.0f || M_PI / 2.0f <= angle1 ||
+      angle2 <= - M_PI / 2.0f || M_PI / 2.0f <= angle2) {
+		
+		
+    ret = 2.0f;      
+ }
+  
+  //?????
+  const double bias = 0.0f;//2.0 - exp(- angle1 * angle1 / sigma2) - exp(- angle2 * angle2 / sigma2);
+  
+  Vec4f coord, normal;
+  m_one->decode(coord, normal, xs, id);
+  
+  const int index = m_one->m_indexesT[id][0];
+  Vec4f pxaxis, pyaxis;
+  m_one->getPAxes(index, coord, normal, pxaxis, pyaxis);
+  
+  const int size = min(m_one->m_fm.m_tau, (int)m_one->m_indexesT[id].size());
+  const int mininum = min(m_one->m_fm.m_minImageNumThreshold, size);
+
+  for (int i = 0; i < size; ++i) {
+    int flag;
+    flag = m_one->grabTex(coord, pxaxis, pyaxis, normal, m_one->m_indexesT[id][i],
+                          m_one->m_fm.m_wsize, m_one->m_texsT[id][i]);
+
+    if (flag == 0)
+      m_one->normalize(m_one->m_texsT[id][i]);
+  }
+
+  const int pairwise = 0;
+  if (pairwise) {
+    double ans = 0.0f;
+    int denom = 0;
+    for (int i = 0; i < size; ++i) {
+      for (int j = i+1; j < size; ++j) {
+        if (m_one->m_texsT[id][i].empty() || m_one->m_texsT[id][j].empty())
+          continue;
+        
+        ans += robustincc(1.0 - m_one->dot(m_one->m_texsT[id][i], m_one->m_texsT[id][j]));
+        denom++;
+      }
+    }
+    if (denom <
+        //m_one->m_fm.m_minImageNumThreshold *
+        //(m_one->m_fm.m_minImageNumThreshold - 1) / 2)
+        mininum * (mininum - 1) / 2)
+      ret = 2.0f;
+    else
+      ret = ans / denom + bias;
+  }
+  else {
+    if (m_one->m_texsT[id][0].empty())
+      ret = 2.0f;
+      
+    double ans = 0.0f;
+    int denom = 0;
+    for (int i = 1; i < size; ++i) {
+      if (m_one->m_texsT[id][i].empty())
+        continue;
+      ans +=
+        robustincc(1.0 - m_one->dot(m_one->m_texsT[id][0], m_one->m_texsT[id][i]));
+      denom++;
+    }
+    //if (denom < m_one->m_fm.m_minImageNumThreshold - 1)
+    if (denom < mininum - 1)
+      ret = 2.0f;
+    else
+      ret = ans / denom + bias;
+  }
+
+  fvec[0] = ret;
+  fvec[1] = ret;
+  fvec[2] = ret;
+}
 double Coptim::my_f(const gsl_vector *v, void *params) {
   double xs[3] = {gsl_vector_get(v, 0),
                   gsl_vector_get(v, 1),
@@ -1089,6 +1177,61 @@ void Coptim::refinePatchBFGS(Cpatch& patch, const int id,
   gsl_vector_free (ss);
 }
 
+void Coptim::refinePatchBFGS2(Cpatch& patch, const int id,
+                             const int time, const int ncc) {
+  int idtmp = id;
+  
+  m_centersT[id] = patch.m_coord;
+  m_raysT[id] = patch.m_coord - m_fm.m_pss.m_photos[patch.m_images[0]].m_center;
+  unitize(m_raysT[id]);
+  m_indexesT[id] = patch.m_images;
+  
+  m_dscalesT[id] = patch.m_dscale;
+  m_ascalesT[id] = M_PI / 48.0f;//patch.m_ascale;
+  
+  computeUnits(patch, m_weightsT[id]);
+  for (int i = 1; i < (int)m_weightsT[id].size(); ++i)
+    m_weightsT[id][i] = min(1.0f, m_weightsT[id][0] / m_weightsT[id][i]);  
+  m_weightsT[id][0] = 1.0f;
+  
+  double p[3];
+  encode(patch.m_coord, patch.m_normal, p, id);
+  
+  double x[3] = {p[0], p[1], p[2]};
+  
+  lm_control_struct control = lm_control_float;
+  lm_status_struct status;
+
+  control.printflags = 0;
+
+  int iter = 0;
+  do {
+    ++iter;
+    
+	lmmin(3, x, 3, (void *)&idtmp, my_f_lm, &control, &status, lm_printout_std);
+
+    if (status.info >= 0)
+      break;
+  
+  } while ( iter < time);
+
+  p[0] = x[0];
+  p[1] = x[1];
+  p[2] = x[2];
+  
+  if (status.info >= 0) {
+    decode(patch.m_coord, patch.m_normal, p, id);
+    
+    patch.m_ncc = 1.0 -
+      unrobustincc(computeINCC(patch.m_coord,
+                               patch.m_normal, patch.m_images, id, 1));
+  }
+  else
+    patch.m_images.clear();   
+  
+  //++m_status[status + 2];
+}
+
 void Coptim::encode(const Vec4f& coord,
 		    double* const vect, const int id) const {
   vect[0] = (coord - m_centersT[id]) * m_raysT[id] / m_dscalesT[id];
@@ -1243,9 +1386,11 @@ int Coptim::grabSafe(const int index, const int size, const Vec3f& center,
   return 1;
 }
 
+static float Log2 = log(2.0f);
+
 int Coptim::grabTex(const Vec4f& coord, const Vec4f& pxaxis, const Vec4f& pyaxis,
 		    const Vec4f& pzaxis, const int index, const int size,
-                    std::vector<float>& tex) const {
+                    std::vector<float>& tex) {
   tex.clear();
 
   Vec4f ray = m_fm.m_pss.m_photos[index].m_center - coord;
@@ -1264,12 +1409,22 @@ int Coptim::grabTex(const Vec4f& coord, const Vec4f& pxaxis, const Vec4f& pyaxis
   Vec3f dy = m_fm.m_pss.project(index, coord + pyaxis, m_fm.m_level) - center;
   
   const float ratio = (norm(dx) + norm(dy)) / 2.0f;
-  int leveldif = (int)floor(log(ratio) / log(2.0f) + 0.5f);
+  //int leveldif = (int)floor(log(ratio) / log(2.0f) + 0.5f);
+  int leveldif = (int)floor(log(ratio) / Log2 + 0.5f);
 
   // Upper limit is 2
   leveldif = max(-m_fm.m_level, min(2, leveldif));
 
-  const float scale = pow(2.0f, (float)leveldif);
+  float scale = 0.0f;
+  //const float scale = pow(2.0f, (float)leveldif);
+  std::map<int,float>::const_iterator iter = m_map_pow2X_memoize.find( leveldif );
+  if( iter != m_map_pow2X_memoize.end() )
+    scale = iter->second;
+  else  {
+    scale = pow(2.0f, (float)leveldif);
+    m_map_pow2X_memoize.insert( pair<int, float>(leveldif, scale) );
+  }
+
   const int newlevel = m_fm.m_level + leveldif;
 
   center /= scale;  dx /= scale;  dy /= scale;

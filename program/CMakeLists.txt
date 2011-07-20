@@ -24,6 +24,7 @@ INCLUDE_DIRECTORIES(
 ./thirdParty/gsl-1.13/include
 #http://eris.liralab.it/iCub/downloads/packages/windows/msvc9/
 ./thirdParty/graclus1.2/metisLib
+./thirdParty/lmfit-3.2/lib
 ${ADDITIONAL_WIN_INCLUDES}
 )
 
