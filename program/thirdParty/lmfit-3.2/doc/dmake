@@ -1,0 +1,12 @@
+#!/bin/sh
+
+# convert pod documentation into man page and into html
+# (only needed by the maintainer; output files are part of the distribution)
+
+pod2man -s 3 -c "lmfit manual" lmfit.pod > lmfit.3
+pod2man -s 3 -c "lmfit manual" -n "lmmin" lmfit.pod > lmmin.3
+pod2man -s 3 -c "lmfit manual" -n "lmcurve_fit" lmfit.pod > lmcurve_fit.3
+
+pod2html --title="Levenberg-Marquardt least-squares minimization and curve fitting in C/C++" --noindex lmfit.pod > lmfit.html
+
+rm *.tmp

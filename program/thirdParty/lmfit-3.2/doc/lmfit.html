@@ -1,0 +1,245 @@
+<?xml version="1.0" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Levenberg-Marquardt least-squares minimization and curve fitting in C/C++</title>
+<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+<link rev="made" href="mailto:root@localhost" />
+</head>
+
+<body style="background-color: white">
+
+
+<!-- INDEX BEGIN -->
+<div name="index">
+<p><a name="__index__"></a></p>
+<!--
+
+<ul>
+
+	<li><a href="#name">NAME</a></li>
+	<li><a href="#synopsis">SYNOPSIS</a></li>
+	<ul>
+
+		<li><a href="#generic_minimization_">Generic minimization:</a></li>
+		<li><a href="#simplified_interface_for_one_dimensional_curve_fitting_">Simplified interface for one-dimensional curve fitting:</a></li>
+	</ul>
+
+	<li><a href="#news">NEWS</a></li>
+	<ul>
+
+		<li><a href="#api_change_in_version_3_0">API change in version 3.0</a></li>
+	</ul>
+
+	<li><a href="#description"><strong>DESCRIPTION</strong></a></li>
+	<ul>
+
+		<li><a href="#purpose_">Purpose:</a></li>
+		<li><a href="#algorithm_">Algorithm:</a></li>
+		<li><a href="#generic_minimization_routine_">Generic minimization routine:</a></li>
+		<li><a href="#one_dimensional_curve_fitting_">One-dimensional curve fitting:</a></li>
+		<li><a href="#fitting_a_function_of_a_vectorial_argument_">Fitting a function of a vectorial argument:</a></li>
+		<li><a href="#minimize_the_norm_of_a_vectorial_function_">Minimize the norm of a vectorial function:</a></li>
+	</ul>
+
+	<li><a href="#ressources">RESSOURCES</a></li>
+	<li><a href="#faq">FAQ</a></li>
+	<ul>
+
+		<li><a href="#is_it_possible_to_impose_constraints_on_the_fit_parameters__like_p0__0_or__10_p1_10__">Is it possible to impose constraints on the fit parameters (like p0&gt;=0 or -10&lt;p1&lt;10) ?</a></li>
+		<li><a href="#is_there_a_way_to_obtain_error_estimates_for_fit_parameters_">Is there a way to obtain error estimates for fit parameters ?</a></li>
+		<li><a href="#how_should_i_cite_lmfit_in_scientific_publications_">How should I cite lmfit in scientific publications ?</a></li>
+	</ul>
+
+	<li><a href="#bugs">BUGS</a></li>
+	<li><a href="#references">REFERENCES</a></li>
+	<li><a href="#author">AUTHOR</a></li>
+	<li><a href="#copying">COPYING</a></li>
+</ul>
+
+-->
+
+
+</div>
+<!-- INDEX END -->
+
+<link rel="stylesheet" href="podstyle.css" type="text/css" /><p>
+</p>
+<hr />
+<h1><a name="name">NAME</a></h1>
+<p>lmfit - C/C++ library for Levenberg-Marquardt least-squares minimization and curve fitting</p>
+<p>
+</p>
+<hr />
+<h1><a name="synopsis">SYNOPSIS</a></h1>
+<p>
+</p>
+<h2><a name="generic_minimization_">Generic minimization:</a></h2>
+<p><strong>#include &lt;lmmin.h</strong>&gt;</p>
+<p><strong>void lmmin( int</strong> <em>n_par</em><strong>, double *</strong><em>par</em><strong>, int</strong> <em>m_dat</em><strong>, const&nbsp;void *</strong><em>data</em><strong>,
+            void (*</strong><em>evaluate</em><strong>)(...), const&nbsp;lm_control_struct *</strong><em>control</em><strong>,
+            lm_status_struct *</strong><em>status</em><strong>, void (*</strong><em>printout</em><strong>)(...) );</strong></p>
+<p>The user must supply the following callback routines:</p>
+<p><strong>void (*</strong><em>evaluate</em><strong>)( const&nbsp;double *</strong><em>par</em><strong>, int</strong> <em>m_dat</em><strong>, const&nbsp;void *</strong><em>data</em><strong>,
+                  double *</strong><em>fvec</em><strong>, int *</strong><em>info</em><strong> );</strong></p>
+<p><strong>void (*</strong><em>printout</em><strong>)( int</strong> <em>n_par</em><strong>, const&nbsp;double *</strong><em>par</em><strong>, int</strong> <em>m_dat</em><strong>,
+                  const&nbsp;void *</strong><em>data</em><strong>, const&nbsp;double *</strong><em>fvec</em><strong>,
+                  int</strong> <em>printflags</em><strong>, int</strong> <em>iflag</em><strong>, int</strong> <em>iter</em><strong>, int</strong> <em>nfev</em><strong> );</strong></p>
+<p>For the latter, a default implementation is available:</p>
+<p><strong>void </strong><em>lm_printout_std</em><strong>(...);</strong></p>
+<p>Furthermore, the user must supply a record with control parameters</p>
+<p><strong>typedef struct { double</strong> <em>ftol</em><strong>; double</strong> <em>xtol</em><strong>; double</strong> <em>gtol</em><strong>;
+                 double</strong> <em>epsilon</em><strong>; double</strong> <em>stepbound</em><strong>; int</strong> <em>maxcall</em><strong>;
+               } lm_control_struct;</strong></p>
+<p>and a record to receive status information</p>
+<p><strong>typedef struct { double</strong> <em>fnorm</em><strong>; int</strong> <em>nfev</em><strong>; int</strong> <em>info</em><strong>; } lm_status_struct;</strong></p>
+<p>The <em>control</em> record should be initialized from one of</p>
+<p><strong>extern const lm_control_struct</strong> <em>lm_control_float</em><strong>,</strong> <em>lm_control_double</em><strong>;</strong></p>
+<p>Status messages, indexed by <em>status.info</em>) are available through</p>
+<p><strong>extern const char *lm_infmsg[];</strong></p>
+<p>
+</p>
+<h2><a name="simplified_interface_for_one_dimensional_curve_fitting_">Simplified interface for one-dimensional curve fitting:</a></h2>
+<p><strong>#include &lt;lmcurve.h</strong>&gt;</p>
+<p><strong>void lmcurve_fit( int</strong> <em>n_par</em><strong>, double *</strong><em>par</em><strong>, int</strong> <em>m_dat</em><strong>, 
+                  const&nbsp;double *</strong><em>t</em><strong>, const&nbsp;double *</strong><em>y</em><strong>, double (*</strong><em>f</em><strong>)(...),
+                  const&nbsp;lm_control_struct *</strong><em>control</em><strong>,
+                  lm_status_struct *</strong><em>status</em><strong>);</strong></p>
+<p>The user must supply the function</p>
+<p><strong>double</strong> <em>f</em><strong>( double</strong> <em>t</em><strong>, const&nbsp;double *</strong><em>par</em><strong> );</strong></p>
+<p>
+</p>
+<hr />
+<h1><a name="news">NEWS</a></h1>
+<p>
+</p>
+<h2><a name="api_change_in_version_3_0">API change in version 3.0</a></h2>
+<p>With version 3.0, the application programming interface has changed substantially.</p>
+<p>Generic minimization and one-dimensional curve fitting have been separated more clearly, and the interface for the latter has been greatly simplified (see <em class="file">lmcurve.h</em> and <em class="file">demo/curve1.c</em>). Furthermore, control (input) and monitoring variables (output) parameters are now stored in two different records. For better readability of the code, even the innermost function declarations of <em>evaluate</em> and <em>printout</em> have been changed.</p>
+<p>
+</p>
+<hr />
+<h1><a name="description"><strong>DESCRIPTION</strong></a></h1>
+<p>
+</p>
+<h2><a name="purpose_">Purpose:</a></h2>
+<p>Determine a parameter vector <em>par</em> (of dimension <em>n_par</em>) that minimizes the Euclidean norm of a vectorial function <em>fvec</em>(<em>par</em>) (of dimension <em>m_dat</em> &gt;= <em>n_par</em>).</p>
+<p>The most important application is curve fitting: to approximate data <em>y</em>(<em>t</em>) by a function <em>f</em>(<em>t</em>;<em>par</em>), minimize the norm of the residual vector <em>fvec</em> = <em>y</em>(<em>t</em>) - <em>f</em>(<em>t</em>;<em>par</em>).</p>
+<p>
+</p>
+<h2><a name="algorithm_">Algorithm:</a></h2>
+<p>The Levenberg-Marquardt minimization starts with a steepest-descent exploration of the parameter space, and achieves rapid convergence by crossing over into the Newton-Gauss method. For more background, see Mor&eacute; 1978, Madsen et al. 2004, and comments in the source code.</p>
+<p>
+</p>
+<h2><a name="generic_minimization_routine_">Generic minimization routine:</a></h2>
+<p>The minimization routine <strong>lm_minimize</strong> requires the following arguments:</p>
+<p><em>n_par</em>: dimension of parameter vector <em>par</em>;</p>
+<p><em>par</em>: parameter vector. On input, it must contain a reasonable guess; on output, it contains the solution found to minimize ||<em>fvec</em>||;</p>
+<p><em>m_dat</em>: dimension of residue vector <em>fvec</em>;</p>
+<p><em>data</em>: <strong>lm_minimize</strong> does not care about this pointer; it just forwards it to <em>evaluate</em> and <em>printout</em>;</p>
+<p><em>evaluate</em>: a routine that calculates the residue vector <em>fvec</em> for given parameter vector <em>par</em>; setting *<em>info</em> to a negative value causes <strong>lm_minimize</strong> to terminate;</p>
+<p><em>control</em>: a record holding numeric limits and other auxiliary parameters;
+it should always be initialized from provided default records
+to ensure upward compatibility;
+available default records: <em>lm_control_float</em>, <em>lm_control_double</em>
+(for <em>fvec</em> computed to single or double precision, respectively);</p>
+<p><strong>double</strong> <em>control.ftol</em>: relative error desired in the sum of squares;</p>
+<p><strong>double</strong> <em>control.xtol</em>: relative error between last two approximations;</p>
+<p><strong>double</strong> <em>control.gtol</em>: orthogonality desired between fvec and its derivs;</p>
+<p><strong>double</strong> <em>control.epsilon</em>: step used to calculate the Jacobian;</p>
+<p><strong>double</strong> <em>control.stepbound</em>: initial bound to steps in the outer loop;</p>
+<p><strong>int</strong> <em>control.maxcall</em>: maximum number of iterations;</p>
+<p><strong>int</strong> <em>control.printflags</em>: OR'ed bits to print (1) status, (2) parameters and norm, (4) residues at end of fit, (8) residues at every step;</p>
+<p><em>status</em>: a record describing the status of the minimization process.</p>
+<p><strong>double</strong> <em>status.fnorm</em>: norm of the residue vector fvec;</p>
+<p><strong>int</strong> <em>status.nfev</em>: actual number of iterations;</p>
+<p><strong>int</strong> <em>status.info</em>: status of minimization; for explanation print <em>lm_infmsg</em><strong>[</strong><em>status.info</em><strong>]</strong>;</p>
+<p><em>printout</em>: a routine that can be used to inform about the progress of the minimization (<em>iflag</em>: location of call within <strong>lm_minimize</strong>, <em>iter</em>: outer loop counter, <em>nfev</em>: number of calls to <em>evaluate</em>);
+if no monitoring is desired, <strong>lm_minimize</strong>
+may be called with <em>printout</em> or <em>control.printflags</em> set to 0.</p>
+<p>
+</p>
+<h2><a name="one_dimensional_curve_fitting_">One-dimensional curve fitting:</a></h2>
+<p>See application sample <em class="file">demo/curve1.c</em>.</p>
+<p>
+</p>
+<h2><a name="fitting_a_function_of_a_vectorial_argument_">Fitting a function of a vectorial argument:</a></h2>
+<p>See application sample <em class="file">demo/surface1.c</em>.</p>
+<p>
+</p>
+<h2><a name="minimize_the_norm_of_a_vectorial_function_">Minimize the norm of a vectorial function:</a></h2>
+<p>Several application samples are provided;
+they also serve as test suite to ascertain that the fit algorithm
+overcomes well-known numerical problems:</p>
+<p><em class="file">demo/morobropro.c</em>: <em>m</em>=3, <em>n</em>=2, modified Rosenbrock problem, testing robustness for widely different vectorial components.</p>
+<p><em class="file">demo/powell.c</em>: <em>m</em>=2, <em>n</em>=2, Powell 1970, with singular Jacobian at the solution par=0.</p>
+<p><em class="file">demo/hat.c</em>: <em>m</em>=2, <em>n</em>=1, asymetric mexican hat function ||<em>F</em>(<em>p</em>)||. Fit result depends on starting value - lmfit does not strive to overcome the limitation to local optimisation.</p>
+<p>
+</p>
+<hr />
+<h1><a name="ressources">RESSOURCES</a></h1>
+<p>lmfit is ready for use with C or C++ code. The implementation is self-contained; it does not require external libraries.</p>
+<p>Main web site: <a href="http://www.messen-und-deuten.de/lmfit/">http://www.messen-und-deuten.de/lmfit/</a></p>
+<p>Download location: <a href="http://www.messen-und-deuten.de/lmfit/src/">http://www.messen-und-deuten.de/lmfit/src/</a></p>
+<p>Installation with the usual sequence (<strong>./configure; make; sudo make install</strong>).
+After installation, this documentation is available through <strong>man lmfit</strong>.</p>
+<p>The old download location at sourceforge.net is no longer maintained (too much advertising there, too slow, too complicated)</p>
+<p>
+</p>
+<hr />
+<h1><a name="faq">FAQ</a></h1>
+<p>
+</p>
+<h2><a name="is_it_possible_to_impose_constraints_on_the_fit_parameters__like_p0__0_or__10_p1_10__">Is it possible to impose constraints on the fit parameters (like p0&gt;=0 or -10&lt;p1&lt;10) ?</a></h2>
+<p>There is no mechanism to impose constraints within the Levenberg-Marquardt algorithm.</p>
+<p>According to my experience, no such mechanism is needed. Constraints can be imposed by variable transform or by adding a penalty to the sum of squares.
+Variable transform seems to be the better solution.
+In the above examples: use p0^2 and 10*tanh(p1) instead of p0 and p1.</p>
+<p>If you think your problem cannot be handled in such a way, I would be interested to learn why. Please send me one data set (plain ASCII, two columns, blank separated) along with the fit function and a brief explanation of the application context.</p>
+<p>
+</p>
+<h2><a name="is_there_a_way_to_obtain_error_estimates_for_fit_parameters_">Is there a way to obtain error estimates for fit parameters ?</a></h2>
+<p>The problem is only well posed if the covariance matrix of the input data is known. In this case, the error propagation towards the output parameters can be calculated in linear approximation (<a href="http://en.wikipedia.org/wiki/Linear_least_squares">http://en.wikipedia.org/wiki/Linear_least_squares</a>). Note that fit parameters are correlated with each other even if the input covariance matrix is diagonal.</p>
+<p>In linear approximation, the output covariance matrix depends mainly on the Jacobian of the fit function (evaluated for all data points) versus the fit parameters (at their optimum values). It seems not advisable to use the Jacobian <em>fjac</em> that is calculated in the beginning of the main iteration in <strong>lm_lmdif(...)</strong>, as it is only returned after some transformations.</p>
+<p>I would be glad to include code for the calculation of parameter covariances in this distribution; contributions would be highly welcome.</p>
+<p>
+</p>
+<h2><a name="how_should_i_cite_lmfit_in_scientific_publications_">How should I cite lmfit in scientific publications ?</a></h2>
+<p>If fit results are robust, it does not matter by which implementation they have been obtained. If the results are not robust, they should not be published anyway. Therefore, in publishing fit results obtained with lmfit it is generally not necessary to cite the software.</p>
+<p>However, in methodological publications that describe software and data analysis procedures based on lmfit, it might be appropriate to provide a reference. The preferred form of citation is:</p>
+<p>Joachim Wuttke: lmfit - a C/C++ routine for Levenberg-Marquardt minimization with wrapper for least-squares curve fitting, based on work by B. S. Garbow, K. E. Hillstrom, J. J. Mor&eacute;, and S. Moshier. Version &lt;..&gt;, retrieved on &lt;..&gt; from <a href="http://www.messen-und-deuten.de/lmfit/.">http://www.messen-und-deuten.de/lmfit/.</a></p>
+<p>
+</p>
+<hr />
+<h1><a name="bugs">BUGS</a></h1>
+<p>The code contained in version 2.6 has been stable for several years,
+and it has been used by hundreds of researchers.
+There is a fair chance that it is free of bugs.</p>
+<p>With series 3.x, a new round of improvements is starting.
+The code is better than ever,
+but not yet as thoroughly tested as the old one.</p>
+<p>
+</p>
+<hr />
+<h1><a name="references">REFERENCES</a></h1>
+<p>K Levenberg: A method for the solution of certain nonlinear problems in least squares. Quart. Appl. Math. 2, 164-168 (1944).</p>
+<p>D W Marquardt: An algorithm for least squares estimation of nonlinear parameters. SIAM J. Appl. Math. 11, 431-441 (1963).</p>
+<p>J M Mor&eacute;: The Levenberg-Marquardt algorithm: Implementation and theory. Lect. Notes Math. 630, 105-116 (1978).</p>
+<p>K Madsen, H B Nielsen, O Tingleff: Methods for non-linear least squares problems. <a href="http://www.imm.dtu.dk/pubdb/views/edoc_download.php/3215/pdf/imm3215.pdf">http://www.imm.dtu.dk/pubdb/views/edoc_download.php/3215/pdf/imm3215.pdf</a> (2004).</p>
+<p>
+</p>
+<hr />
+<h1><a name="author">AUTHOR</a></h1>
+<p>Joachim Wuttke &lt;<a href="mailto:j.wuttke@fz-juelich.de">j.wuttke@fz-juelich.de</a>&gt;</p>
+<p>
+</p>
+<hr />
+<h1><a name="copying">COPYING</a></h1>
+<p>Copyright (C) 2009-10 Joachim Wuttke.</p>
+<p>Software: Public Domain. If you think this work is worth it, you can
+drink a beer in my honor.</p>
+<p>Documentation: Creative Commons Attribution Share Alike.</p>
+
+</body>
+
+</html>

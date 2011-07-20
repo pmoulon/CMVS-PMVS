@@ -1,0 +1,35 @@
+body {
+  color: black;
+  font-family: sans-serif,arial;
+  margin: 1em 5% 1em 5%;
+  padding: 1ex;
+}
+
+a:link {
+  color: #006699;
+}
+
+a:visited {
+  color: fuchsia;
+}
+
+h1 {
+  background: transparent;
+  color: #006699;
+  font-size: large;
+}
+
+h2  {
+  background: transparent;
+  color: #006699;
+  font-size: medium;
+}
+
+p {
+  margin-left: 5%;
+}
+
+hr {
+  border: 1px solid silver;
+}
+  
