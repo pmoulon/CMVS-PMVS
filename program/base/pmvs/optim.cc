@@ -523,7 +523,11 @@ void Coptim::refinePatch(Cpatch& patch, const int id,
                          const int time) {
   //refinePatchBFGS(patch, id, 1000, 1);
 
-  refinePatchBFGS2(patch, id, 1000, 1);
+  // Try the faster version, if that fails try the slower one
+  if(!refinePatchBFGS2(patch, id, 1000, 1)) {
+	refinePatchBFGS(patch, id, 1000, 1);
+  }
+
   // WORKED REALLY WELL
   if (patch.m_images.empty())
     return;
@@ -545,9 +549,13 @@ void Coptim::my_f_lm(const double *par, int m_dat, const void *data, double *fve
 
   if (angle1 <= - M_PI / 2.0f || M_PI / 2.0f <= angle1 ||
       angle2 <= - M_PI / 2.0f || M_PI / 2.0f <= angle2) {
-		
-		
-    ret = 2.0f;      
+    ret = 2.0f;
+
+    fvec[0] = ret;
+    fvec[1] = ret;
+    fvec[2] = ret;
+
+    return;
  }
   
   //?????
@@ -1138,8 +1146,8 @@ void Coptim::refinePatchBFGS(Cpatch& patch, const int id,
   gsl_vector_set(x, 2, p[2]);
   
   gsl_vector* ss = gsl_vector_alloc (3);
-  gsl_vector_set_all(ss, 1.0);
-  
+  gsl_vector_set_all(ss, 1.5);
+
   T = gsl_multimin_fminimizer_nmsimplex;
   s = gsl_multimin_fminimizer_alloc (T, 3);
   gsl_multimin_fminimizer_set (s, &my_func, x, ss);
@@ -1177,7 +1185,7 @@ void Coptim::refinePatchBFGS(Cpatch& patch, const int id,
   gsl_vector_free (ss);
 }
 
-void Coptim::refinePatchBFGS2(Cpatch& patch, const int id,
+bool Coptim::refinePatchBFGS2(Cpatch& patch, const int id,
                              const int time, const int ncc) {
   int idtmp = id;
   
@@ -1200,36 +1208,31 @@ void Coptim::refinePatchBFGS2(Cpatch& patch, const int id,
   double x[3] = {p[0], p[1], p[2]};
   
   lm_control_struct control = lm_control_float;
-  lm_status_struct status;
-
+  control.epsilon = 1e-5; // default step size is too small for floats
   control.printflags = 0;
 
-  int iter = 0;
-  do {
-    ++iter;
-    
-	lmmin(3, x, 3, (void *)&idtmp, my_f_lm, &control, &status, lm_printout_std);
+  lm_status_struct status;
 
-    if (status.info >= 0)
-      break;
-  
-  } while ( iter < time);
+  // this function requires data >= params, so the later 3 is a fudge
+  lmmin(3, x, 3, (void *)&idtmp, my_f_lm, &control, &status, lm_printout_std);
 
   p[0] = x[0];
   p[1] = x[1];
   p[2] = x[2];
-  
-  if (status.info >= 0) {
+
+  // status.info 0 to 3 are "good", the rest are bad
+  if (status.info >= 0 && status.info <= 3) {
     decode(patch.m_coord, patch.m_normal, p, id);
     
     patch.m_ncc = 1.0 -
       unrobustincc(computeINCC(patch.m_coord,
                                patch.m_normal, patch.m_images, id, 1));
   }
-  else
-    patch.m_images.clear();   
-  
-  //++m_status[status + 2];
+  else {
+    return false;
+  }
+
+  return true;
 }
 
 void Coptim::encode(const Vec4f& coord,
@@ -1242,7 +1245,7 @@ void Coptim::encode(const Vec4f& coord, const Vec4f& normal,
   encode(coord, vect, id);
   
   const int image = m_indexesT[id][0];
-  const float fx = m_xaxes[image] * proj(normal);
+  const float fx = m_xaxes[image] * proj(normal); // projects from 4D to 3D, divide by last value
   const float fy = m_yaxes[image] * proj(normal);
   const float fz = m_zaxes[image] * proj(normal);
 
@@ -1386,11 +1389,19 @@ int Coptim::grabSafe(const int index, const int size, const Vec3f& center,
   return 1;
 }
 
+// My own optimisaton
+float MyPow2(int x)
+{
+	const float answers[] = {0.0625, 0.125, 0.25, 0.5, 1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024};
+
+	return answers[x + 4];
+}
+
 static float Log2 = log(2.0f);
 
 int Coptim::grabTex(const Vec4f& coord, const Vec4f& pxaxis, const Vec4f& pyaxis,
 		    const Vec4f& pzaxis, const int index, const int size,
-                    std::vector<float>& tex) {
+                    std::vector<float>& tex) const {
   tex.clear();
 
   Vec4f ray = m_fm.m_pss.m_photos[index].m_center - coord;
@@ -1415,16 +1426,9 @@ int Coptim::grabTex(const Vec4f& coord, const Vec4f& pxaxis, const Vec4f& pyaxis
   // Upper limit is 2
   leveldif = max(-m_fm.m_level, min(2, leveldif));
 
-  float scale = 0.0f;
   //const float scale = pow(2.0f, (float)leveldif);
-  std::map<int,float>::const_iterator iter = m_map_pow2X_memoize.find( leveldif );
-  if( iter != m_map_pow2X_memoize.end() )
-    scale = iter->second;
-  else  {
-    scale = pow(2.0f, (float)leveldif);
-    m_map_pow2X_memoize.insert( pair<int, float>(leveldif, scale) );
-  }
 
+  const float scale = MyPow2(leveldif);
   const int newlevel = m_fm.m_level + leveldif;
 
   center /= scale;  dx /= scale;  dy /= scale;

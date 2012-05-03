@@ -2,7 +2,6 @@
 #define PMVS3_OPTIM_H
 
 #include <vector>
-#include <map>
 #include "patch.h"
 #include <gsl/gsl_multimin.h>
 
@@ -42,7 +41,7 @@ class Coptim {
   void refinePatchBFGS(Patch::Cpatch& patch, const int id, const int time);
   void refinePatchBFGS(Patch::Cpatch& patch, const int id, const int time,
                        const int ncc);
-  void refinePatchBFGS2(Patch::Cpatch& patch, const int id, const int time,
+  bool refinePatchBFGS2(Patch::Cpatch& patch, const int id, const int time,
                         const int ncc); // LM version
   void refineDepthBFGS(Patch::Cpatch& patch, const int id, const int time,
                        const int ncc);
@@ -76,7 +75,7 @@ class Coptim {
   
   int grabTex(const Vec4f& coord, const Vec4f& pxaxis, const Vec4f& pyaxis,
               const Vec4f& pzaxis, const int index, const int size,
-              std::vector<float>& tex);
+              std::vector<float>& tex) const;
   
   int grabSafe(const int index, const int size, const Vec3f& center,
                const Vec3f& dx, const Vec3f& dy, const int level) const;
@@ -193,14 +192,11 @@ class Coptim {
   std::vector<Vec3f> m_paramsT;
   
   // Grabbed texture
-  std::vector<std::vector<std::vector<float> > > m_texsT;
+  std::vector<std::vector<std::vector<float> > > m_texsT; // last is 7x7x3 patch
   // weights for refineDepthOrientationWeighed
   std::vector<std::vector<float> > m_weightsT;
   // Working array for levmar
   std::vector<std::vector<double> > m_worksT;
-
-  //-- pow(2,X) Memoize
-  std::map<int, float> m_map_pow2X_memoize;
   
 };
 };

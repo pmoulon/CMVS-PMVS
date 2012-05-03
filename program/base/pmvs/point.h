@@ -31,6 +31,8 @@ class Cpoint {
   friend std::ostream& operator <<(std::ostream& ostr, const Cpoint& rhs);
 };
 
+bool SortCpoint(const Cpoint& a, const Cpoint& b);
+
 std::istream& operator >>(std::istream& istr, Cpoint& rhs);
 std::ostream& operator <<(std::ostream& ostr, const Cpoint& rhs);
 };

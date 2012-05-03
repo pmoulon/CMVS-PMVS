@@ -28,3 +28,8 @@ std::ostream& PMVS3::operator <<(std::ostream& ostr, const Cpoint& rhs) {
        << rhs.m_type;
   return ostr;
 }
+
+bool SortCpoint(const Cpoint& a, const Cpoint& b)
+{
+    return a.m_response < b.m_response;
+}
