@@ -3,6 +3,7 @@
 # First draft the 4 june 2010
 # Second draft 24 sept 2010
 # Third draft (linux) 12 oct 2010 
+# 28 july 2014 Make VisualStudio Win32/Win64 detection automatic
 
 CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
 
@@ -30,10 +31,13 @@ INCLUDE_DIRECTORIES(
   ${ADDITIONAL_WIN_INCLUDES}
 )
 
-#if you build on win64 you have to set to true the following variable
-SET(WIN64_PTHREAD false)
-
 IF(WIN32)
+
+  IF (${CMAKE_CL_64})
+    SET(WIN64_PTHREAD true)
+  ELSE (${CMAKE_CL_64})
+    SET(WIN64_PTHREAD false)
+  ENDIF (${CMAKE_CL_64})
 
   IF(WIN64_PTHREAD)
     SET(PTHREAD_LIB ${CMAKE_SOURCE_DIR}/thirdParty/pthreadVC2.lib)
