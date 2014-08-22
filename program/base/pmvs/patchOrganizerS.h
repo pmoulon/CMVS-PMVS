@@ -29,8 +29,7 @@ class CpatchOrganizerS {
                       P_compare>& pqpatches);
   void collectNonFixPatches(const int index, std::vector<Patch::Ppatch>& ppatches);
   
-  void writePatches(void);
-  void writePatches2(const std::string prefix);
+  void writePatches2(const std::string prefix, bool bExportPLY, bool bExportPatch, bool bExportPSet);
   
   void writePLY(const std::vector<Patch::Ppatch>& patches,
                 const std::string filename);

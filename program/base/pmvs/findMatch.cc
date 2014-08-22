@@ -225,6 +225,6 @@ void CfindMatch::run(void) {
   cerr << "---- Total: " << (tv - curtime)/CLOCKS_PER_SEC << " secs ----" << endl;
 }
 
-void CfindMatch::write(const std::string prefix) {
-  m_pos.writePatches2(prefix);
+void CfindMatch::write(const std::string prefix, bool bExportPLY, bool bExportPatch, bool bExportPSet) {
+  m_pos.writePatches2(prefix, bExportPLY, bExportPatch, bExportPSet);
 }

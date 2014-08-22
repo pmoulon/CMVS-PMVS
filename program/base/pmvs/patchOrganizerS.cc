@@ -24,7 +24,7 @@ void CpatchOrganizerS::image2index(Cpatch& patch) {
   
   patch.m_images.swap(newimages);  
 
-  // make sure that the reference image is the tagetting image
+  // make sure that the reference image is the targeting image
   int exist = -1;
   for (int j = 0; j < (int)patch.m_images.size(); ++j) {
     if (patch.m_images[j] < m_fm.m_tnum) {
@@ -72,50 +72,17 @@ void CpatchOrganizerS::init(void) {
   }
 }
 
-//----------------------------------------------------------------------
-void CpatchOrganizerS::writePatches(void) {
-  for (int index = 0; index < m_fm.m_tnum; ++index) {
-    const int image = m_fm.m_timages[index];
-    vector<Ppatch> ppatches;
-    collectNonFixPatches(index, ppatches);
-
-    if (ppatches.empty())
-      continue;
-
-    char buffer[1024];
-    sprintf(buffer, "%smodels/%08d.patc%d", m_fm.m_prefix.c_str(), image, m_fm.m_level);
-    
-    ofstream ofstr;
-    ofstr.open(buffer);
-    ofstr << "PATCHES" << endl
-          << (int)ppatches.size() << endl;
-
-    for (int p = 0; p < (int)ppatches.size(); ++p) {
-      Cpatch patch = *ppatches[p];
-      index2image(patch);
-      ofstr << patch << endl;
-    }
-    ofstr.close();
-    
-    sprintf(buffer, "%smodels/%08d-%d.ply", m_fm.m_prefix.c_str(), image, m_fm.m_level);
-    writePLY(ppatches, buffer);
-  }
-
+void CpatchOrganizerS::writePatches2(const std::string prefix, bool bExportPLY, bool bExportPatch, bool bExportPSet) {
   collectPatches(1);
-  char buffer[1024];
-  sprintf(buffer, "%smodels/m-%08d-%d.ply", m_fm.m_prefix.c_str(),
-          m_fm.m_pss.m_images[0], m_fm.m_level);
-  writePLY(m_ppatches, buffer);  
-}
-
-void CpatchOrganizerS::writePatches2(const std::string prefix) {
-  collectPatches(1);
+  
+  if (bExportPLY)
   {
     char buffer[1024];
     sprintf(buffer, "%s.ply", prefix.c_str());
     writePLY(m_ppatches, buffer);
   }
 
+  if (bExportPatch)
   {
     char buffer[1024];
     sprintf(buffer, "%s.patch", prefix.c_str());
@@ -126,11 +93,12 @@ void CpatchOrganizerS::writePatches2(const std::string prefix) {
     for (int p = 0; p < (int)m_ppatches.size(); ++p) {
       Cpatch patch = *m_ppatches[p];
       index2image(patch);
-      ofstr << patch << endl;
+      ofstr << patch << "\n";
     }
     ofstr.close();
   }
 
+  if (bExportPSet)
   {
     char buffer[1024];
     sprintf(buffer, "%s.pset", prefix.c_str());
@@ -142,13 +110,13 @@ void CpatchOrganizerS::writePatches2(const std::string prefix) {
             << m_ppatches[p]->m_coord[2] << ' '
             << m_ppatches[p]->m_normal[0] << ' '
             << m_ppatches[p]->m_normal[1] << ' '
-            << m_ppatches[p]->m_normal[2] << endl;
+            << m_ppatches[p]->m_normal[2] << "\n";
     ofstr.close();
   }
 }
 
 void CpatchOrganizerS::readPatches(void) {
-  // Read-in existing reconstructed points. set m_fix to one for non-targetting images
+  // Read-in existing reconstructed points. set m_fix to one for non-targeting images
   for (int i = 0; i < m_fm.m_tnum; ++i) {
     const int image = m_fm.m_images[i];
     char buffer[1024];
@@ -172,12 +140,12 @@ void CpatchOrganizerS::readPatches(void) {
       if (ppatch->m_images.empty())
         continue;
       
-      // m_vimages must be targetting images
+      // m_vimages must be targeting images
 #ifdef DEBUG
       for (int j = 0; j < (int)ppatch->m_vimages.size(); ++j)
         if (m_fm.m_tnum <= ppatch->m_vimages[j]) {
-          cerr << "Impossible in readPatches. m_vimages must be targetting images" << endl
-               << "for patches stored in targetting images, if visdata2 have been consistent" << endl;
+          cerr << "Impossible in readPatches. m_vimages must be targeting images" << endl
+               << "for patches stored in targeting images, if visdata2 have been consistent" << endl;
           exit (1);
         }
 #endif
@@ -188,7 +156,7 @@ void CpatchOrganizerS::readPatches(void) {
     ifstr.close();
   }
 
-  // For patches in non-targetting images
+  // For patches in non-targeting images
   for (int i = m_fm.m_tnum; i < m_fm.m_num; ++i) {
     const int image = m_fm.m_images[i];
     char buffer[1024];
@@ -725,19 +693,19 @@ void CpatchOrganizerS::writePLY(const std::vector<Ppatch>& patches,
                                 const std::string filename) {
   ofstream ofstr;
   ofstr.open(filename.c_str());
-  ofstr << "ply" << endl
-       << "format ascii 1.0" << endl
-       << "element vertex " << (int)patches.size() << endl
-       << "property float x" << endl
-       << "property float y" << endl
-       << "property float z" << endl
-       << "property float nx" << endl
-       << "property float ny" << endl
-       << "property float nz" << endl
-       << "property uchar diffuse_red" << endl
-       << "property uchar diffuse_green" << endl
-       << "property uchar diffuse_blue" << endl
-       << "end_header" << endl;
+  ofstr << "ply" << '\n'
+       << "format ascii 1.0" << '\n'
+       << "element vertex " << (int)patches.size() << '\n'
+       << "property float x" << '\n'
+       << "property float y" << '\n'
+       << "property float z" << '\n'
+       << "property float nx" << '\n'
+       << "property float ny" << '\n'
+       << "property float nz" << '\n'
+       << "property uchar diffuse_red" << '\n'
+       << "property uchar diffuse_green" << '\n'
+       << "property uchar diffuse_blue" << '\n'
+       << "end_header" << '\n';
 
   vector<Ppatch>::const_iterator bpatch = patches.begin();
   vector<Ppatch>::const_iterator bend = patches.end();
@@ -804,7 +772,7 @@ void CpatchOrganizerS::writePLY(const std::vector<Ppatch>& patches,
           << (*bpatch)->m_normal[0] << ' '
           << (*bpatch)->m_normal[1] << ' '
           << (*bpatch)->m_normal[2] << ' '
-          << color[0] << ' ' << color[1] << ' ' << color[2] << endl;
+          << color[0] << ' ' << color[1] << ' ' << color[2] << '\n';
       ++bpatch;
   }
   ofstr.close();  
@@ -815,19 +783,19 @@ void CpatchOrganizerS::writePLY(const std::vector<Ppatch>& patches,
                                 const std::vector<Vec3i>& colors) {
   ofstream ofstr;
   ofstr.open(filename.c_str());
-  ofstr << "ply" << endl
-       << "format ascii 1.0" << endl
-       << "element vertex " << (int)patches.size() << endl
-       << "property float x" << endl
-       << "property float y" << endl
-       << "property float z" << endl
-       << "property float nx" << endl
-       << "property float ny" << endl
-       << "property float nz" << endl
-       << "property uchar diffuse_red" << endl
-       << "property uchar diffuse_green" << endl
-       << "property uchar diffuse_blue" << endl
-       << "end_header" << endl;
+  ofstr << "ply" << '\n'
+       << "format ascii 1.0" << '\n'
+       << "element vertex " << (int)patches.size() << '\n'
+       << "property float x" << '\n'
+       << "property float y" << '\n'
+       << "property float z" << '\n'
+       << "property float nx" << '\n'
+       << "property float ny" << '\n'
+       << "property float nz" << '\n'
+       << "property uchar diffuse_red" << '\n'
+       << "property uchar diffuse_green" << '\n'
+       << "property uchar diffuse_blue" << '\n'
+       << "end_header" << '\n';
 
   vector<Ppatch>::const_iterator bpatch = patches.begin();
   vector<Ppatch>::const_iterator bend = patches.end();
@@ -840,7 +808,7 @@ void CpatchOrganizerS::writePLY(const std::vector<Ppatch>& patches,
           << (*bpatch)->m_normal[0] << ' '
           << (*bpatch)->m_normal[1] << ' '
           << (*bpatch)->m_normal[2] << ' '
-          << *colorb << endl;
+          << *colorb << '\n';
     ++bpatch;
     ++colorb;
   }

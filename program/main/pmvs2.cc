@@ -8,7 +8,7 @@ using namespace std;
 
 int main(int argc, char* argv[]) {
   if (argc < 3) {
-    cerr << "Usage: " << argv[0] << " prefix option_file" << endl
+    cerr << "Usage: " << argv[0] << " prefix option_file [Optional export]" << endl
          << endl
          << "--------------------------------------------------" << endl
          << "level       1    csize    2" << endl
@@ -23,7 +23,11 @@ int main(int argc, char* argv[]) {
          << "--------------------------------------------------" << endl
          << "4 ways to specify other images" << endl
          << "oimages  5  0 2 4 6 8 (enumeration)" << endl
-         << "        -1  24 48 (range specification)" << endl;
+         << "        -1  24 48 (range specification)" << endl
+         << endl
+         << "[Optional export] PATCH PSET" << endl
+         << " i.e export patch and pset: prefix option_file PATCH PSET"
+         << " i.e export patch only: prefix option_file PATCH" <<endl;
     exit (1);
   }
 
@@ -31,15 +35,29 @@ int main(int argc, char* argv[]) {
   {
 	  cout << endl << argv[i];
   }
+  cout << std::endl;
   
   PMVS3::Soption option;
-  option.init(argv[1], argv[2]);  
-  
+  option.init(argv[1], argv[2]);
+
   PMVS3::CfindMatch findMatch;
   findMatch.init(option);
   findMatch.run();
-  
+
+  bool bExportPLY = true;
+  bool bExportPatch = false;
+  bool bExportPSet = false;
+
+  for (int i=3; i < argc; ++i)
+  {
+    std::string option(argv[i]);
+    if (option == "PATCH")
+      bExportPatch = true;
+    if (option == "PSET")
+      bExportPSet = true;
+  }
+
   char buffer[1024];
   sprintf(buffer, "%smodels/%s", argv[1], argv[2]);
-  findMatch.write(buffer);
+  findMatch.write(buffer, bExportPLY, bExportPatch, bExportPSet);
 }

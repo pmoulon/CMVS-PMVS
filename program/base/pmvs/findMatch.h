@@ -28,7 +28,7 @@ class CfindMatch {
 
   void init(const PMVS3::Soption& option);
   void run(void);
-  void write(const std::string prefix);
+  void write(const std::string prefix, bool bExportPLY, bool bExportPatch, bool bExportPSet);
   
   int insideBimages(const Vec4f& coord) const;
 
