@@ -1,7 +1,9 @@
 This is a modified version of CMVS/PMVS.
 
-Main modification was done in order to compile Bundler on Linux,
- Windows with CMake build system generator.
+Main modification:
+ - cross platform compilation Linux, Windows => CMake build system generator.
+ - added bug fix from Nghia Ho.
+ - make PLY, PSET, PATCH export faster and optional.
 
 Authors : 
 [Original code author]  Yasutaka Furukawa http://www.cs.washington.edu/homes/furukawa/
@@ -12,5 +14,4 @@ Authors :
 - Web ressources : - 
 --------------------
 [CMVS/PMVS] http://http://grail.cs.washington.edu/software/cmvs/
-[CMake version] http://opensourcephotogrammetry.blogspot.com/
-				https://github.com/TheFrenchLeaf/CMVS-PMVS
+[CMake version] http://opensourcephotogrammetry.blogspot.com/ https://github.com/pmoulon/CMVS-PMVS
