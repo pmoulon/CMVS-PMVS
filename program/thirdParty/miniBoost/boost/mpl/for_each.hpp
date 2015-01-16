@@ -10,9 +10,9 @@
 //
 // See http://www.boost.org/libs/mpl for documentation.
 
-// $Source$
-// $Date: 2008-07-21 04:00:06 -0400 (Mon, 21 Jul 2008) $
-// $Revision: 47650 $
+// $Id$
+// $Date$
+// $Revision$
 
 #include <boost/mpl/is_sequence.hpp>
 #include <boost/mpl/begin_end.hpp>
@@ -22,6 +22,7 @@
 #include <boost/mpl/deref.hpp>
 #include <boost/mpl/identity.hpp>
 #include <boost/mpl/assert.hpp>
+#include <boost/mpl/aux_/config/gpu.hpp>
 #include <boost/mpl/aux_/unwrap.hpp>
 
 #include <boost/type_traits/is_same.hpp>
@@ -40,6 +41,7 @@ struct for_each_impl
         , typename TransformFunc
         , typename F
         >
+    BOOST_MPL_CFG_GPU_ENABLED
     static void execute(
           Iterator*
         , LastIterator*
@@ -59,6 +61,7 @@ struct for_each_impl<false>
         , typename TransformFunc
         , typename F
         >
+    BOOST_MPL_CFG_GPU_ENABLED
     static void execute(
           Iterator*
         , LastIterator*
@@ -76,7 +79,7 @@ struct for_each_impl<false>
         
         typedef typename mpl::next<Iterator>::type iter;
         for_each_impl<boost::is_same<iter,LastIterator>::value>
-            ::execute((iter*)0, (LastIterator*)0, (TransformFunc*)0, f);
+            ::execute( static_cast<iter*>(0), static_cast<LastIterator*>(0), static_cast<TransformFunc*>(0), f);
     }
 };
 
@@ -89,6 +92,7 @@ template<
     , typename TransformOp
     , typename F
     >
+BOOST_MPL_CFG_GPU_ENABLED
 inline
 void for_each(F f, Sequence* = 0, TransformOp* = 0)
 {
@@ -98,17 +102,20 @@ void for_each(F f, Sequence* = 0, TransformOp* = 0)
     typedef typename end<Sequence>::type last;
 
     aux::for_each_impl< boost::is_same<first,last>::value >
-        ::execute((first*)0, (last*)0, (TransformOp*)0, f);
+        ::execute(static_cast<first*>(0), static_cast<last*>(0), static_cast<TransformOp*>(0), f);
 }
 
 template<
       typename Sequence
     , typename F
     >
+BOOST_MPL_CFG_GPU_ENABLED
 inline
 void for_each(F f, Sequence* = 0)
 {
-    for_each<Sequence, identity<> >(f);
+  // jfalcou: fully qualifying this call so it doesnt clash with phoenix::for_each
+  // ons ome compilers -- done on 02/28/2011
+  boost::mpl::for_each<Sequence, identity<> >(f);
 }
 
 }}

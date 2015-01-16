@@ -11,9 +11,9 @@
 //
 // See http://www.boost.org/libs/mpl for documentation.
 
-// $Source$
-// $Date: 2004-09-07 17:37:24 -0400 (Tue, 07 Sep 2004) $
-// $Revision: 24963 $
+// $Id$
+// $Date$
+// $Revision$
 
 #include <boost/mpl/aux_/arity.hpp>
 #include <boost/mpl/aux_/config/dtp.hpp>

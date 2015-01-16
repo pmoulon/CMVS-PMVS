@@ -11,9 +11,9 @@
 //
 // See http://www.boost.org/libs/mpl for documentation.
 
-// $Source$
-// $Date: 2004-10-13 14:25:11 -0400 (Wed, 13 Oct 2004) $
-// $Revision: 25712 $
+// $Id$
+// $Date$
+// $Revision$
 
 #include <boost/mpl/set/aux_/tag.hpp>
 #include <boost/mpl/has_key_fwd.hpp>

@@ -10,9 +10,9 @@
 //
 // See http://www.boost.org/libs/mpl for documentation.
 
-// $Source$
-// $Date: 2006-11-08 16:44:30 -0500 (Wed, 08 Nov 2006) $
-// $Revision: 35926 $
+// $Id$
+// $Date$
+// $Revision$
 
 #include <boost/mpl/aux_/config/workaround.hpp>
 #include <boost/mpl/aux_/adl_barrier.hpp>

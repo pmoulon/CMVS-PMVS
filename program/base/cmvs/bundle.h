@@ -15,7 +15,7 @@
 #include "../stann/sfcnn.hpp"
 #include "../numeric/mat3.h"
 #include "../image/photoSetS.h"
-#include <pthread.h>
+#include "tinycthread.h"
 
 namespace CMVS {
 
@@ -152,7 +152,7 @@ class Cbundle {
   void mergeSfM(void);
   void mergeSfMP(void);
   void mergeSfMPThread(void);
-  static void* mergeSfMPThreadTmp(void* arg); 
+  static int mergeSfMPThreadTmp(void* arg); 
     
   std::vector<char> m_merged;
   
@@ -259,7 +259,7 @@ class Cbundle {
   //----------------------------------------------------------------------
   // Threads
   int m_CPU;
-  pthread_rwlock_t m_lock;
+  mtx_t m_lock;
   std::list<int> m_jobs;
   int m_junit;
   int m_thread;

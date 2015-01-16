@@ -11,9 +11,9 @@
 //
 // See http://www.boost.org/libs/mpl for documentation.
 
-// $Source$
-// $Date: 2008-03-26 13:13:05 -0400 (Wed, 26 Mar 2008) $
-// $Revision: 43872 $
+// $Id$
+// $Date$
+// $Revision$
 
 #include <boost/preprocessor/seq/size.hpp>
 #include <boost/preprocessor/arithmetic/dec.hpp>

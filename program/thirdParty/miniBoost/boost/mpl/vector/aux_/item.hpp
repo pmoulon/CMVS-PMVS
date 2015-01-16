@@ -10,9 +10,9 @@
 //
 // See http://www.boost.org/libs/mpl for documentation.
 
-// $Source$
-// $Date: 2005-05-14 20:39:04 -0400 (Sat, 14 May 2005) $
-// $Revision: 28913 $
+// $Id$
+// $Date$
+// $Revision$
 
 #include <boost/mpl/long.hpp>
 #include <boost/mpl/void.hpp>

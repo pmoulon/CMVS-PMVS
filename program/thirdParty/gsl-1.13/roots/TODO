@@ -1,9 +1,0 @@
-* Add an inline version of the iterate method for speed? Perhaps not,
-the time taken for each iteration surely dominated by the convergence
-test.
-
-* Numerical derivatives? Maybe have a function to manufacture an fdf
-from an f and optionally a df. (We'll need to approximate the
-derivative if it is not provided; this is something which should be
-done outside the root finding package.)
-

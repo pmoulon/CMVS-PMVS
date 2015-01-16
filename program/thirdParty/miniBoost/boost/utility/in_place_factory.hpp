@@ -5,7 +5,7 @@
 // License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 //
-// See http://www.boost.org/lib/optional for documentation.
+// See http://www.boost.org/libs/optional for documentation.
 //
 // You are welcome to contact the author at:
 //  fernando_cacciola@hotmail.com
@@ -48,15 +48,13 @@ public:
   {}
 
   template<class T>
-  void* apply(void* address
-      BOOST_APPEND_EXPLICIT_TEMPLATE_TYPE(T)) const
+  void* apply(void* address) const
   {
     return new(address) T( BOOST_PP_ENUM_PARAMS(N, m_a) );
   }
 
   template<class T>
-  void* apply(void* address, std::size_t n
-      BOOST_APPEND_EXPLICIT_TEMPLATE_TYPE(T)) const
+  void* apply(void* address, std::size_t n) const
   {
     for(char* next = address = this->BOOST_NESTED_TEMPLATE apply<T>(address);
         !! --n;)

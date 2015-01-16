@@ -1,7 +1,7 @@
 /*
  * transupp.h
  *
- * Copyright (C) 1997-2001, Thomas G. Lane.
+ * Copyright (C) 1997-2013, Thomas G. Lane, Guido Vollbeding.
  * This file is part of the Independent JPEG Group's software.
  * For conditions of distribution and use, see the accompanying README file.
  *
@@ -51,16 +51,25 @@
  *
  * We also offer a lossless-crop option, which discards data outside a given
  * image region but losslessly preserves what is inside.  Like the rotate and
- * flip transforms, lossless crop is restricted by the JPEG format: the upper
- * left corner of the selected region must fall on an iMCU boundary.  If this
- * does not hold for the given crop parameters, we silently move the upper left
- * corner up and/or left to make it so, simultaneously increasing the region
- * dimensions to keep the lower right crop corner unchanged.  (Thus, the
+ * flip transforms, lossless crop is restricted by the current JPEG format: the
+ * upper left corner of the selected region must fall on an iMCU boundary.  If
+ * this does not hold for the given crop parameters, we silently move the upper
+ * left corner up and/or left to make it so, simultaneously increasing the
+ * region dimensions to keep the lower right crop corner unchanged.  (Thus, the
  * output image covers at least the requested region, but may cover more.)
+ * The adjustment of the region dimensions may be optionally disabled.
  *
- * If both crop and a rotate/flip transform are requested, the crop is applied
- * last --- that is, the crop region is specified in terms of the destination
- * image.
+ * A complementary lossless-wipe option is provided to discard (gray out) data
+ * inside a given image region while losslessly preserving what is outside.
+ *
+ * We also provide a lossless-resize option, which is kind of a lossless-crop
+ * operation in the DCT coefficient block domain - it discards higher-order
+ * coefficients and losslessly preserves lower-order coefficients of a
+ * sub-block.
+ *
+ * Rotate/flip transform, resize, and crop can be requested together in a
+ * single invocation.  The crop is applied last --- that is, the crop region
+ * is specified in terms of the destination image after transform/resize.
  *
  * We also offer a "force to grayscale" option, which simply discards the
  * chrominance channels of a YCbCr image.  This is lossless in the sense that
@@ -96,18 +105,21 @@ typedef enum {
 	JXFORM_TRANSVERSE,	/* transpose across UR-to-LL axis */
 	JXFORM_ROT_90,		/* 90-degree clockwise rotation */
 	JXFORM_ROT_180,		/* 180-degree rotation */
-	JXFORM_ROT_270		/* 270-degree clockwise (or 90 ccw) */
+	JXFORM_ROT_270,		/* 270-degree clockwise (or 90 ccw) */
+	JXFORM_WIPE		/* wipe */
 } JXFORM_CODE;
 
 /*
  * Codes for crop parameters, which can individually be unspecified,
- * positive, or negative.  (Negative width or height makes no sense, though.)
+ * positive or negative for xoffset or yoffset,
+ * positive or forced for width or height.
  */
 
 typedef enum {
-	JCROP_UNSET,
-	JCROP_POS,
-	JCROP_NEG
+        JCROP_UNSET,
+        JCROP_POS,
+        JCROP_NEG,
+        JCROP_FORCE
 } JCROP_CODE;
 
 /*
@@ -122,15 +134,15 @@ typedef struct {
   boolean perfect;		/* if TRUE, fail if partial MCUs are requested */
   boolean trim;			/* if TRUE, trim partial MCUs as needed */
   boolean force_grayscale;	/* if TRUE, convert color image to grayscale */
-  boolean crop;			/* if TRUE, crop source image */
+  boolean crop;			/* if TRUE, crop or wipe source image */
 
   /* Crop parameters: application need not set these unless crop is TRUE.
    * These can be filled in by jtransform_parse_crop_spec().
    */
   JDIMENSION crop_width;	/* Width of selected region */
-  JCROP_CODE crop_width_set;
+  JCROP_CODE crop_width_set;	/* (forced disables adjustment) */
   JDIMENSION crop_height;	/* Height of selected region */
-  JCROP_CODE crop_height_set;
+  JCROP_CODE crop_height_set;	/* (forced disables adjustment) */
   JDIMENSION crop_xoffset;	/* X offset of selected region */
   JCROP_CODE crop_xoffset_set;	/* (negative measures from right edge) */
   JDIMENSION crop_yoffset;	/* Y offset of selected region */
@@ -143,8 +155,10 @@ typedef struct {
   JDIMENSION output_height;
   JDIMENSION x_crop_offset;	/* destination crop offsets measured in iMCUs */
   JDIMENSION y_crop_offset;
-  int max_h_samp_factor;	/* destination iMCU size */
-  int max_v_samp_factor;
+  JDIMENSION drop_width;	/* drop/wipe dimensions measured in iMCUs */
+  JDIMENSION drop_height;
+  int iMCU_sample_width;	/* destination iMCU size */
+  int iMCU_sample_height;
 } jpeg_transform_info;
 
 
@@ -154,7 +168,7 @@ typedef struct {
 EXTERN(boolean) jtransform_parse_crop_spec
 	JPP((jpeg_transform_info *info, const char *spec));
 /* Request any required workspace */
-EXTERN(void) jtransform_request_workspace
+EXTERN(boolean) jtransform_request_workspace
 	JPP((j_decompress_ptr srcinfo, jpeg_transform_info *info));
 /* Adjust output image parameters */
 EXTERN(jvirt_barray_ptr *) jtransform_adjust_parameters

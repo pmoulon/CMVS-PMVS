@@ -1,3 +1,4 @@
+#include <algorithm>
 #include "harris.h"
 
 using namespace PMVS3;

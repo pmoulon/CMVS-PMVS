@@ -8,13 +8,13 @@
 #if defined(__sgi) && !defined(__GNUC__)
 # include <math.h>
 #else
-# include <cmath>
+# include <boost/config/no_tr1/cmath.hpp>
 #endif
 #include <iosfwd>
 #include <vector>
 #include <functional>
 #include <boost/config.hpp>
-#include <boost/property_map.hpp>
+#include <boost/property_map/property_map.hpp>
 
 //
 // An adaptation of Knuth's Fibonacci heap implementation
@@ -193,7 +193,7 @@ public:
         }
         if (_mark[p] == false) {
           _mark[p] = true;
-	  --_degree[p];
+          --_degree[p];
           break;
         } else
           --_degree[p];

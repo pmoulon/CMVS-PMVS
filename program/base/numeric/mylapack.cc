@@ -1,14 +1,22 @@
+
 #include "mylapack.h"
 #include <cstdlib>
 #include <iostream>
 
+// Use Eigen library or LAPACK
+//#define PMVS_USE_LAPACK
+#include <Eigen/Dense>
+
+#if defined(PMVS_USE_LAPACK)
 extern "C" {
 #include <clapack/f2c.h>
 #include <clapack/clapack.h>
 };
+#endif
 
 using namespace std;
 
+/*
 // Solve Ax = 0.
 // Values contain singular values stored in an increasing order
 void Cmylapack::hlls(const std::vector<std::vector<float> >& A,
@@ -93,13 +101,16 @@ void Cmylapack::hlls(const std::vector<std::vector<double> >& A,
   delete [] S;
   delete []C;
 }
+*/
 
 void Cmylapack::lls(const std::vector<std::vector<float> >& A,
                     const std::vector<float>& b,
                     std::vector<float>& ans) {
+  int m = static_cast<int>(A.size());
+  int n = static_cast<int>(A[0].size());
+
+#if defined(PMVS_USE_LAPACK)
   char trans = 'N';
-  integer m = (int)A.size();
-  integer n = (int)A[0].size();
   integer nrhs = 1;
   vector<float> a;
   a.resize(m * n);
@@ -125,8 +136,22 @@ void Cmylapack::lls(const std::vector<std::vector<float> >& A,
   ans.resize(n);
   for (int i = 0; i < n; ++i)
     ans[i] = b2[i];
-}
+#else
+  // Eigen implementation
+  Eigen::MatrixXd matA(m, n);
+  Eigen::VectorXd vecb(m);
+  for (int x = 0; x < n; ++x)
+    for (int y = 0; y < m; ++y)
+      matA(y, x) = static_cast<double>(A[y][x]);
+  for (int i = 0; i < m; ++i)
+    vecb(i) = static_cast<double>(b[i]);
+  Eigen::VectorXd vecx = matA.jacobiSvd(Eigen::ComputeThinU | Eigen::ComputeThinV).solve(vecb);
 
+  for (int i = 0; i < n; ++i)
+    ans[i] = static_cast<float>(vecx(i));
+#endif
+}
+/*
 void Cmylapack::lls(const std::vector<std::vector<double> >& A,
                     const std::vector<double>& b,
                     std::vector<double>& ans) {
@@ -246,3 +271,4 @@ void Cmylapack::svd(const std::vector<std::vector<float> >& A,
   delete [] S2;
   delete [] C;
 }
+*/

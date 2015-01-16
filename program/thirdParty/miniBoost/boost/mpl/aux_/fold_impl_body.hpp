@@ -11,9 +11,9 @@
 //
 // See http://www.boost.org/libs/mpl for documentation.
 
-// $Source$
-// $Date: 2004-10-24 04:18:08 -0400 (Sun, 24 Oct 2004) $
-// $Revision: 25850 $
+// $Id$
+// $Date$
+// $Revision$
 
 #   include <boost/mpl/limits/unrolling.hpp>
 #   include <boost/mpl/aux_/preprocessor/repeat.hpp>

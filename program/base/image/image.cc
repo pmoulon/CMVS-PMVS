@@ -1,14 +1,29 @@
 #include <list>
 #include <fstream>
+#include <algorithm>
 #include "../numeric/mat4.h"
 #include "image.h"
 #include <setjmp.h>
 #define _USE_MATH_DEFINES
 #include <math.h>
 
-extern "C" {
-#include <jpeglib.h>
-};
+// CImg
+#define cimg_display 0
+#if defined(PMVS_HAVE_PNG)		// See CMakeLists.txt
+#	define cimg_use_png
+#endif
+#define cimg_use_jpeg
+#if defined(PMVS_HAVE_TIFF)		// See CMakeLists.txt
+#	define cimg_use_tiff
+#endif
+//#define cimg_use_zlib
+#if defined(_DEBUG)
+#	define cimg_verbosity 2
+#else
+#	define cimg_verbosity 0
+#endif
+#define WIN32_LEAN_AND_MEAN
+#include <CImg.h>
 
 using namespace std;
 using namespace Image;
@@ -35,11 +50,20 @@ void Cimage::completeName(const std::string& lhs, std::string& rhs,
   // ppm jpg
   if (color) {
     string stmp0 = lhs + ".ppm";    string stmp1 = lhs + ".jpg";
+    string stmp2 = lhs + ".png";    string stmp3 = lhs + ".tiff";
 
     if (ifstream(stmp0.c_str()))
       rhs = stmp0;
     else if (ifstream(stmp1.c_str()))
       rhs = stmp1;
+#if defined(PMVS_HAVE_PNG)
+    else if (ifstream(stmp2.c_str()))
+      rhs = stmp2;
+#endif
+#if defined(PMVS_HAVE_TIFF)
+    else if (ifstream(stmp3.c_str()))
+      rhs = stmp3;
+#endif
     else
       rhs = lhs;
   }
@@ -96,9 +120,8 @@ void Cimage::alloc(const int fast, const int filter) {
   m_edges.resize(m_maxLevel);   m_widths.resize(m_maxLevel);
   m_heights.resize(m_maxLevel);
 
-  if (readJpegImage(m_name, m_images[0], m_widths[0], m_heights[0], fast) == 0 &&
-      readPPMImage(m_name, m_images[0], m_widths[0], m_heights[0], fast) == 0) {
-    cerr << "Only jpeg and ppm formats are allowed. Stop allocation: "
+  if (readAnyImage(m_name, m_images[0], m_widths[0], m_heights[0], fast) == 0) {
+    cerr << "Unsupported iamge format found. Stop allocation: "
 	 << m_name << endl;
     return;
   }
@@ -468,6 +491,49 @@ void Cimage::setEdge(const float threshold) {
   buildEdge();
 }
 
+int Cimage::readAnyImage(const std::string file,
+                        std::vector<unsigned char>& image,
+                        int& width, int& height, const int fast)
+{
+  // Use CImg for image loading
+  cimg_library::CImg<unsigned char> cimage;
+  try
+  {
+    cimage.load(file.c_str());	// CImg determines the file type by extension
+    if(!cimage.is_empty())
+    {
+      if(cimage.spectrum() < 3)
+      {
+        cerr << "Unsufficient components (not a color image). Component num is " << cimage.spectrum() << endl;
+        return 1;
+      }
+      width = cimage.width();
+      height = cimage.height();
+      image.resize( cimage.size() );
+
+      // CImg holds the image internally in a different order, so we need to reorder it here
+      int i = 0;
+      for(int y = 0; y < cimage.height(); y++)
+      {
+        for(int x = 0; x < cimage.width(); x++)
+        {
+          for(int c = 0; c < 3; c++)
+		  {
+            image[i] = cimage(x, y, 0, c);
+            i++;
+		  }
+		}
+	  }
+    }
+  }
+  catch(cimg_library::CImgException &e)
+  {
+    std::cerr << "Couldn't read image " << file.c_str() << std::endl;
+	return 0;
+  }
+  return 1;
+}
+
 int Cimage::readPBMImage(const std::string file,
                          std::vector<unsigned char>& image,
                          int& width, int& height, const int fast) {
@@ -645,51 +711,43 @@ int Cimage::readPPMImage(const std::string file,
   if (file.substr(file.length() - 3, file.length()) != "ppm")
     return 0;
 
-  ifstream ifstr;
-  ifstr.open(file.c_str());
-  if (!ifstr.is_open()) {
-    //cerr << "Cannot open a file: " << file << endl;
-    return 0;
-    //exit (1);
-  }
-  string header;  unsigned char uctmp;  int itmp;
-
-  ifstr >> header;
-  ifstr.read((char*)&uctmp, sizeof(unsigned char));
-  if (header != "P6") {
-    cerr << "Only accept binary ppm format: " << file << endl;
-    return 0;
-  }
-
-  while (1) {
-    ifstr.read((char*)&uctmp, sizeof(unsigned char));
-    ifstr.putback(uctmp);
-    if (uctmp == '#') {
-      char buffer[1024];
-      ifstr.getline(buffer, 1024);
-    }
-    else
-      break;
-  }
-  ifstr >> width >> height >> itmp;
-  ifstr.read((char*)&uctmp, sizeof(unsigned char));
-
-  image.clear();
-  if (fast) {
-    ifstr.close();
-    return 1;
-  }
-
-  for (int y = 0; y < height; ++y) {
-    for (int x = 0; x < width; ++x) {
-      for (int i = 0; i < 3; ++i) {
-	ifstr.read((char*)&uctmp, sizeof(unsigned char));
-	image.push_back(uctmp);
+  // Use CImg for image loading
+  cimg_library::CImg<unsigned char> cimage;
+  try
+  {
+    cimage.load_pnm(file.c_str());
+    if(!cimage.is_empty())
+    {
+      if(cimage.spectrum() != 1
+        && cimage.spectrum() != 3)
+      {
+        cerr << "Cannot handle this component. Component num is " << cimage.spectrum() << endl;
+        return 1;
       }
+      width = cimage.width();
+      height = cimage.height();
+      image.resize( cimage.size() );
+
+      // CImg holds the image internally in a different order, so we need to reorder it here
+      int i = 0;
+      for(int y = 0; y < cimage.height(); y++)
+      {
+        for(int x = 0; x < cimage.width(); x++)
+        {
+          for(int c = 0; c < cimage.spectrum(); c++)
+		  {
+            image[i] = cimage(x, y, 0, c);
+            i++;
+		  }
+		}
+	  }
     }
   }
-
-  ifstr.close();
+  catch(cimg_library::CImgException &e)
+  {
+    std::cerr << "Couldn't read image " << file.c_str() << std::endl;
+	return 0;
+  }
   return 1;
 }
 
@@ -746,85 +804,44 @@ int Cimage::readJpegImage(const std::string file,
   if (file.substr(file.length() - 3, file.length()) != "jpg")
     return 0;
 
-  //======================================================================
-
-  struct jpeg_decompress_struct cinfo;
-  struct my_error_mgr jerr;
-  FILE * infile;		/* source file */
-  JSAMPARRAY buffer;		/* Output row buffer */
-  int row_stride;		/* physical row width in output buffer */
-
-  if ((infile = fopen(file.c_str(), "rb")) == NULL) {
-    fprintf(stderr, "can't open %s\n", file.c_str());
-    return 0;
-  }
-
-  cinfo.err = jpeg_std_error(&jerr.pub);
-  jerr.pub.error_exit = my_error_exit;
-
-  //Establish the setjmp return context for my_error_exit to use.
-  if (setjmp(jerr.setjmp_buffer)) {
-    jpeg_destroy_decompress(&cinfo);
-    fclose(infile);
-    return 0;
-  }
-
-  jpeg_create_decompress(&cinfo);
-  jpeg_stdio_src(&cinfo, infile);
-  (void) jpeg_read_header(&cinfo, TRUE);
-  (void) jpeg_start_decompress(&cinfo);
-
-  /* We may need to do some setup of our own at this point before reading
-   * the data.  After jpeg_start_decompress() we have the correct scaled
-   * output image dimensions available, as well as the output colormap
-   * if we asked for color quantization.
-   * In this example, we need to make an output work buffer of the right size.
-   */
-  /* JSAMPLEs per row in output buffer */
-  row_stride = cinfo.output_width * cinfo.output_components;
-  const int component = cinfo.output_components;
-
-  buffer = (*cinfo.mem->alloc_sarray)
-    ((j_common_ptr) &cinfo, JPOOL_IMAGE, row_stride, 1);
-
-  width = cinfo.output_width;
-  height = cinfo.output_height;
-
-  if (fast) {
-    image.clear();
-    //(void) jpeg_finish_decompress(&cinfo);
-    jpeg_destroy_decompress(&cinfo);
-    fclose(infile);
-    return 1;
-  }
-
-  std::vector<unsigned char> imagetmp;
-  imagetmp.resize(height * row_stride);
-  while (cinfo.output_scanline < cinfo.output_height) {
-    /* jpeg_read_scanlines expects an array of pointers to scanlines.
-     * Here the array is only one element long, but you could ask for
-     * more than one scanline at a time if that's more convenient.
-     */
-    (void) jpeg_read_scanlines(&cinfo, buffer, 1);
-
-    for (int i = 0; i < row_stride; ++i)
-      imagetmp[(cinfo.output_scanline - 1) * row_stride + i] = (unsigned char)buffer[0][i];
-  }
-  (void) jpeg_finish_decompress(&cinfo);
-  jpeg_destroy_decompress(&cinfo);
-  fclose(infile);
-
-  int count = 0;
-  image.clear();
-  // Pierre Moulon (Optimize JPEG data copy to internal image structure)
-  if ( component == 3 || component == 1)  {
-    image = imagetmp;
-  }
-  else
+  // Use CImg for image loading
+  cimg_library::CImg<unsigned char> cimage;
+  try
   {
-    cerr << "Cannot handle this component. Component num is " << component << endl;
-    exit (1);
+    cimage.load_jpeg(file.c_str());
+    if(!cimage.is_empty())
+    {
+      if(cimage.spectrum() != 1
+        && cimage.spectrum() != 3)
+      {
+        cerr << "Cannot handle this component. Component num is " << cimage.spectrum() << endl;
+        return 1;
+      }
+      width = cimage.width();
+      height = cimage.height();
+      image.resize( cimage.size() );
+
+      // CImg holds the image internally in a different order, so we need to reorder it here
+      int i = 0;
+      for(int y = 0; y < cimage.height(); y++)
+      {
+        for(int x = 0; x < cimage.width(); x++)
+        {
+          for(int c = 0; c < cimage.spectrum(); c++)
+		  {
+            image[i] = cimage(x, y, 0, c);
+            i++;
+		  }
+		}
+	  }
+    }
   }
+  catch(cimg_library::CImgException &e)
+  {
+    std::cerr << "Couldn't read image " << file.c_str() << std::endl;
+	return 0;
+  }
+
   return 1;
 }
 

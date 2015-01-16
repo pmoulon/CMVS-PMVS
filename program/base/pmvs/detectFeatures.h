@@ -7,7 +7,7 @@
 
 #include <string>
 #include <list>
-#include <pthread.h>
+#include "tinycthread.h"
 #include "../image/photoSetS.h"
 #include "point.h"
 
@@ -36,13 +36,13 @@ class CdetectFeatures {
   //----------------------------------------------------------------------
   // thread related
   //----------------------------------------------------------------------  
-  pthread_rwlock_t m_rwlock;
+  mtx_t m_rwlock;
   int m_CPU;
 
   std::list<int> m_jobs;
   
   void runThread(void);
-  static void* runThreadTmp(void*arg);
+  static int runThreadTmp(void*arg);
 };
 };
 

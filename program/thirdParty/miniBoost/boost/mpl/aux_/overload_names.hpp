@@ -10,9 +10,9 @@
 //
 // See http://www.boost.org/libs/mpl for documentation.
 
-// $Source$
-// $Date: 2004-10-13 14:25:11 -0400 (Wed, 13 Oct 2004) $
-// $Revision: 25712 $
+// $Id$
+// $Date$
+// $Revision$
 
 #include <boost/mpl/aux_/ptr_to_ref.hpp>
 #include <boost/mpl/aux_/config/operators.hpp>

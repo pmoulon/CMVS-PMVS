@@ -1,9 +1,0 @@
-
-* We need a test suite for this directory!
-
-* Verify that we support the full CBLAS interface and that the GSL
-CBLAS library can be used standalone
-
-* Check that substituting the Reference Blas, ATLAS, and Intel BLAS
-all work correctly
-

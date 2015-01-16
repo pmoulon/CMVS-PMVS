@@ -22,7 +22,7 @@
 #include <vector>
 #include <queue>
 #include <algorithm>
-#include <pthread.h>
+#include "tinycthread.h"
 #include <limits>
 using namespace std;
 

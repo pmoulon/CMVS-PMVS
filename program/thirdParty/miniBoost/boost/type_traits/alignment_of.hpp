@@ -56,7 +56,18 @@ struct alignment_logic
 template< typename T >
 struct alignment_of_impl
 {
-#ifndef BOOST_ALIGNMENT_OF
+#if defined(BOOST_MSVC) && (BOOST_MSVC >= 1400)
+    //
+    // With MSVC both the native __alignof operator
+    // and our own logic gets things wrong from time to time :-(
+    // Using a combination of the two seems to make the most of a bad job:
+    //
+    BOOST_STATIC_CONSTANT(std::size_t, value =
+        (::boost::detail::alignment_logic<
+            sizeof(::boost::detail::alignment_of_hack<T>) - sizeof(T),
+            __alignof(T)
+        >::value));
+#elif !defined(BOOST_ALIGNMENT_OF)
     BOOST_STATIC_CONSTANT(std::size_t, value =
         (::boost::detail::alignment_logic<
             sizeof(::boost::detail::alignment_of_hack<T>) - sizeof(T),
@@ -79,13 +90,11 @@ BOOST_TT_AUX_SIZE_T_TRAIT_DEF1(alignment_of,T,::boost::detail::alignment_of_impl
 
 // references have to be treated specially, assume
 // that a reference is just a special pointer:
-#ifndef BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION
 template <typename T>
 struct alignment_of<T&>
-    : alignment_of<T*>
+    : public alignment_of<T*>
 {
 };
-#endif
 #ifdef __BORLANDC__
 // long double gives an incorrect value of 10 (!)
 // unless we do this...

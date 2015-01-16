@@ -13,7 +13,7 @@
 
 #include <vector>
 #include <boost/config.hpp>
-#include <boost/property_map.hpp>
+#include <boost/property_map/property_map.hpp>
 #include <boost/graph/tree_traits.hpp>
 #include <boost/graph/graph_traits.hpp>
 #include <boost/graph/breadth_first_search.hpp>
@@ -50,13 +50,9 @@ namespace boost {
   
   template <class Graph, class ParentMap
           , class Node 
-#if !defined BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION
              = typename graph_traits<Graph>::vertex_descriptor
-#endif
           , class ChIt
-#if !defined BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION
               = typename graph_traits<Graph>::adjacency_iterator
-#endif
            >
   class graph_as_tree
     : public graph_as_tree_base<Graph, Node, ChIt, 

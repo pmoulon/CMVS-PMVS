@@ -1,1 +1,0 @@
-include("@CLAPACK_BINARY_DIR@/clapack-targets.cmake")

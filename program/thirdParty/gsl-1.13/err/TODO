@@ -1,3 +1,0 @@
-* Add a GSL_ERROR_MODE environment variable for choosing error
-behavior at runtime (???).
-

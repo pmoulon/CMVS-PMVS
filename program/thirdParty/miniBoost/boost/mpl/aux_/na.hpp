@@ -10,9 +10,9 @@
 //
 // See http://www.boost.org/libs/mpl for documentation.
 
-// $Source$
-// $Date: 2004-11-27 20:39:23 -0500 (Sat, 27 Nov 2004) $
-// $Revision: 26324 $
+// $Id$
+// $Date$
+// $Revision$
 
 #include <boost/mpl/bool.hpp>
 #include <boost/mpl/aux_/na_fwd.hpp>

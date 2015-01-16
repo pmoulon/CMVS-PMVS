@@ -11,9 +11,9 @@
 //
 // See http://www.boost.org/libs/mpl for documentation.
 
-// $Source$
-// $Date: 2005-06-18 18:03:09 -0400 (Sat, 18 Jun 2005) $
-// $Revision: 29681 $
+// $Id$
+// $Date$
+// $Revision$
 
 #include <boost/preprocessor/enum_params.hpp>
 #include <boost/preprocessor/dec.hpp>

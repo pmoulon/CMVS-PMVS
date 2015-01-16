@@ -2,7 +2,7 @@
 #ifndef BOOST_MPL_ZIP_VIEW_HPP_INCLUDED
 #define BOOST_MPL_ZIP_VIEW_HPP_INCLUDED
 
-// Copyright Aleksey Gurtovoy 2000-2002
+// Copyright Aleksey Gurtovoy 2000-2010
 // Copyright David Abrahams 2000-2002
 //
 // Distributed under the Boost Software License, Version 1.0.
@@ -11,9 +11,9 @@
 //
 // See http://www.boost.org/libs/mpl for documentation.
 
-// $Source$
-// $Date: 2008-07-21 04:00:06 -0400 (Mon, 21 Jul 2008) $
-// $Revision: 47650 $
+// $Id$
+// $Date$
+// $Revision$
 
 #include <boost/mpl/transform.hpp>
 #include <boost/mpl/begin_end.hpp>
@@ -53,6 +53,7 @@ struct zip_view
     
  public:
     typedef nested_begin_end_tag tag;
+    typedef zip_view type;
     typedef zip_iterator<first_ones_> begin;
     typedef zip_iterator<last_ones_> end;
 };

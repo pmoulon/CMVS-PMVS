@@ -27,10 +27,11 @@
 #   include <boost/type_traits/is_function.hpp>
 #endif
 
+#endif // BOOST_IS_CLASS
+
 #ifdef __EDG_VERSION__
 #   include <boost/type_traits/remove_cv.hpp>
 #endif
-#endif // BOOST_IS_CLASS
 
 // should be the last #include
 #include <boost/type_traits/detail/bool_trait_def.hpp>
@@ -92,7 +93,6 @@ struct is_class_impl
 template <typename T>
 struct is_class_impl
 {
-#   ifndef BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION
     BOOST_STATIC_CONSTANT(bool, value =
     (::boost::type_traits::ice_and<
         ::boost::type_traits::ice_not< ::boost::is_union<T>::value >::value,
@@ -102,16 +102,6 @@ struct is_class_impl
         ::boost::type_traits::ice_not< ::boost::is_void<T>::value >::value,
         ::boost::type_traits::ice_not< ::boost::is_function<T>::value >::value
         >::value));
-#   else
-    BOOST_STATIC_CONSTANT(bool, value =
-    (::boost::type_traits::ice_and<
-        ::boost::type_traits::ice_not< ::boost::is_union<T>::value >::value,
-        ::boost::type_traits::ice_not< ::boost::is_scalar<T>::value >::value,
-        ::boost::type_traits::ice_not< ::boost::is_array<T>::value >::value,
-        ::boost::type_traits::ice_not< ::boost::is_reference<T>::value>::value,
-        ::boost::type_traits::ice_not< ::boost::is_void<T>::value >::value
-        >::value));
-#   endif
 };
 
 # endif // BOOST_TT_HAS_CONFORMING_IS_CLASS_IMPLEMENTATION

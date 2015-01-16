@@ -10,9 +10,9 @@
 //
 // See http://www.boost.org/libs/mpl for documentation.
 
-// $Source$
-// $Date: 2004-09-17 02:09:38 -0400 (Fri, 17 Sep 2004) $
-// $Revision: 25163 $
+// $Id$
+// $Date$
+// $Revision$
 
 #include <boost/mpl/aux_/common_name_wknd.hpp>
 #include <boost/mpl/aux_/na_spec.hpp>

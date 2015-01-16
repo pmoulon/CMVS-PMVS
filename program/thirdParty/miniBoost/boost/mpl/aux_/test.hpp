@@ -10,9 +10,9 @@
 //
 // See http://www.boost.org/libs/mpl for documentation.
 
-// $Source$
-// $Date: 2006-02-28 17:56:33 -0500 (Tue, 28 Feb 2006) $
-// $Revision: 33181 $
+// $Id$
+// $Date$
+// $Revision$
 
 #include <boost/mpl/aux_/test/test_case.hpp>
 #include <boost/mpl/aux_/test/data.hpp>

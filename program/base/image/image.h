@@ -66,6 +66,10 @@ class Cimage {
   // free memory below the specified level
   void free(const int freeLevel);
 
+  static int readAnyImage(const std::string file,
+                          std::vector<unsigned char>& image,
+                          int& width, int& height, const int fast);
+
   static int readPBMImage(const std::string file,
                           std::vector<unsigned char>& image,
                           int& width, int& height, const int fast);
@@ -504,13 +508,13 @@ Vec3f Cimage::getColor(const float x, const float y, const int level) const{
   return Vec3f(r, g, b);
 #else
   // Bilinear case
-  const int lx = (int)floor(x);
-  const int ly = (int)floor(y);
+  const int lx = static_cast<int>(x);
+  const int ly = static_cast<int>(y);
   const int index = 3 * (ly * m_widths[level] + lx);
 
   const float dx1 = x - lx;  const float dx0 = 1.0f - dx1;
   const float dy1 = y - ly;  const float dy0 = 1.0f - dy1;
-  
+
   const float f00 = dx0 * dy0;  const float f01 = dx0 * dy1;
   const float f10 = dx1 * dy0;  const float f11 = dx1 * dy1;
   const int index2 = index + 3 * m_widths[level];

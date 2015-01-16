@@ -10,11 +10,11 @@
 //
 // See http://www.boost.org/libs/mpl for documentation.
 
-// $Source$
-// $Date: 2004-09-02 11:41:37 -0400 (Thu, 02 Sep 2004) $
-// $Revision: 24874 $
+// $Id$
+// $Date$
+// $Revision$
 
-#include <boost/mpl/aux_/preprocessor/def_params_tail.hpp>
+#include <boost/mpl/aux_/preprocessor/default_params.hpp>
 #include <boost/mpl/aux_/na.hpp>
 #include <boost/mpl/aux_/arity_spec.hpp>
 
@@ -23,8 +23,7 @@ namespace boost { namespace mpl {
 template< typename Value > struct always
 {
     template<
-          typename T
-        BOOST_MPL_PP_NESTED_DEF_PARAMS_TAIL(1, typename T, na)
+        BOOST_MPL_PP_DEFAULT_PARAMS(BOOST_MPL_LIMIT_METAFUNCTION_ARITY, typename T, na)
         >
     struct apply
     {
@@ -32,7 +31,7 @@ template< typename Value > struct always
     };
 };
 
-BOOST_MPL_AUX_ARITY_SPEC(1, always)
+BOOST_MPL_AUX_ARITY_SPEC(0, always)
 
 }}
 
