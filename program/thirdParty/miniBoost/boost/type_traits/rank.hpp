@@ -15,6 +15,8 @@
 
 namespace boost {
 
+#if !defined( __CODEGEARC__ )
+
 namespace detail{
 
 template <class T, std::size_t N>
@@ -22,7 +24,7 @@ struct rank_imp
 {
    BOOST_STATIC_CONSTANT(std::size_t, value = N);
 };
-#if !defined(BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION) && !defined(BOOST_NO_ARRAY_TYPE_SPECIALIZATIONS)
+#if !defined(BOOST_NO_ARRAY_TYPE_SPECIALIZATIONS)
 template <class T, std::size_t R, std::size_t N>
 struct rank_imp<T[R], N>
 {
@@ -72,7 +74,13 @@ struct rank_imp<T const volatile[], N>
 #endif
 }
 
+#endif // !defined( __CODEGEARC__ )
+
+#if defined( __CODEGEARC__ )
+BOOST_TT_AUX_SIZE_T_TRAIT_DEF1(rank,T,__array_rank(T))
+#else
 BOOST_TT_AUX_SIZE_T_TRAIT_DEF1(rank,T,(::boost::detail::rank_imp<T,0>::value))
+#endif
 
 } // namespace boost
 

@@ -11,9 +11,9 @@
 //
 // See http://www.boost.org/libs/mpl for documentation.
 
-// $Source$
-// $Date: 2008-03-22 17:45:55 -0400 (Sat, 22 Mar 2008) $
-// $Revision: 43798 $
+// $Id$
+// $Date$
+// $Revision$
 
 #include <boost/mpl/value_type_fwd.hpp>
 #include <boost/mpl/set/aux_/tag.hpp>

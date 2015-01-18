@@ -10,9 +10,9 @@
 //
 // See http://www.boost.org/libs/mpl for documentation.
 
-// $Source$
-// $Date: 2004-11-27 21:04:02 -0500 (Sat, 27 Nov 2004) $
-// $Revision: 26326 $
+// $Id$
+// $Date$
+// $Revision$
 
 #include <boost/mpl/int.hpp>
 #include <boost/mpl/limits/arity.hpp>

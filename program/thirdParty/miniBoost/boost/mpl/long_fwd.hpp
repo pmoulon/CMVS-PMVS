@@ -10,9 +10,9 @@
 //
 // See http://www.boost.org/libs/mpl for documentation.
 
-// $Source$
-// $Date: 2004-09-28 09:56:59 -0400 (Tue, 28 Sep 2004) $
-// $Revision: 25453 $
+// $Id$
+// $Date$
+// $Revision$
 
 #include <boost/mpl/aux_/adl_barrier.hpp>
 #include <boost/mpl/aux_/nttp_decl.hpp>

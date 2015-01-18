@@ -1,7 +1,0 @@
-Add functions:
-
-gsl_bspline_smooth to fit smoothing splines to data more efficiently
-than the standard least squares inversion (see pppack l2appr and
-smooth.spline() from GNU R)
-
-+ any other useful functions from pppack

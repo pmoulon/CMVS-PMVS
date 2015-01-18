@@ -4,6 +4,7 @@
 #include <vector>
 #include <string>
 #include <climits>
+#include <algorithm>
 #include "../numeric/vec4.h"
 #include "../numeric/mat4.h"
 #include "../numeric/mat3.h"

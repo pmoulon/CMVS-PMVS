@@ -17,12 +17,21 @@ namespace boost {
 
 namespace detail{
 
+#if defined( __CODEGEARC__ )
+    // wrap the impl as main trait provides additional MPL lambda support
+    template < typename T, std::size_t N >
+    struct extent_imp {
+        static const std::size_t value = __array_extent(T, N);
+    };
+
+#else
+
 template <class T, std::size_t N>
 struct extent_imp
 {
    BOOST_STATIC_CONSTANT(std::size_t, value = 0);
 };
-#if !defined(BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION) && !defined(BOOST_NO_ARRAY_TYPE_SPECIALIZATIONS)
+#if !defined(BOOST_NO_ARRAY_TYPE_SPECIALIZATIONS)
 template <class T, std::size_t R, std::size_t N>
 struct extent_imp<T[R], N>
 {
@@ -114,16 +123,14 @@ struct extent_imp<T const volatile[], 0>
 };
 #endif
 #endif
-}
+
+#endif  // non-CodeGear implementation
+}   // ::boost::detail
 
 template <class T, std::size_t N = 0>
 struct extent
    : public ::boost::integral_constant<std::size_t, ::boost::detail::extent_imp<T,N>::value>
 {
-#if BOOST_WORKAROUND(BOOST_MSVC, < 1300) 
-   typedef ::boost::integral_constant<std::size_t, ::boost::detail::extent_imp<T,N>::value> base_; 
-   using base_::value;
-#endif
     BOOST_MPL_AUX_LAMBDA_SUPPORT(1,extent,(T))
 };
 

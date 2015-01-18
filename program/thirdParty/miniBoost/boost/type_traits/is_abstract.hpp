@@ -1,7 +1,7 @@
 #ifndef BOOST_TT_IS_ABSTRACT_CLASS_HPP
 #define BOOST_TT_IS_ABSTRACT_CLASS_HPP
 
-#if defined(_MSC_VER) && (_MSC_VER >= 1020)
+#if defined(_MSC_VER)
 # pragma once
 #endif
 
@@ -19,7 +19,7 @@
 // Compile type discovery whether given type is abstract class or not.
 //
 //   Requires DR 337 to be supported by compiler
-//   (http://anubis.dkuug.dk/jtc1/sc22/wg21/docs/cwg_active.html#337).
+//   (http://www.open-std.org/jtc1/sc22/wg21/docs/cwg_active.html#337).
 //
 //
 // Believed (Jan 2004) to work on:
@@ -39,7 +39,7 @@
 //    At this time supported by EDG (Intel C++ 7, Comeau 4.3.2) and VC7.1.
 //  - Adapted and added into Boost.Serialization library by Robert Ramey 
 //    (starting with submission #10).
-//  - Jan 2004: GCC 3.4 fixed to suport DR337 (Giovanni Bajo).
+//  - Jan 2004: GCC 3.4 fixed to support DR337 (Giovanni Bajo).
 //  - Jan 2004: modified to be part of Boost.TypeTraits (Pavel Vozenilek).
 //  - Nov 2004: Christoph Ludwig found that the implementation did not work with
 //              template types and gcc-3.4 or VC7.1, fix due to Christoph Ludwig
@@ -92,14 +92,14 @@ struct is_abstract_imp2
    // GCC2 won't even parse this template if we embed the computation
    // of s1 in the computation of value.
 #ifdef __GNUC__
-   BOOST_STATIC_CONSTANT(unsigned, s1 = sizeof(is_abstract_imp2<T>::template check_sig<T>(0)));
+   BOOST_STATIC_CONSTANT(std::size_t, s1 = sizeof(is_abstract_imp2<T>::template check_sig<T>(0)));
 #else
-#if BOOST_WORKAROUND(_MSC_FULL_VER, >= 140050000)
+#if BOOST_WORKAROUND(BOOST_MSVC_FULL_VER, >= 140050000)
 #pragma warning(push)
 #pragma warning(disable:6334)
 #endif
-   BOOST_STATIC_CONSTANT(unsigned, s1 = sizeof(check_sig<T>(0)));
-#if BOOST_WORKAROUND(_MSC_FULL_VER, >= 140050000)
+   BOOST_STATIC_CONSTANT(std::size_t, s1 = sizeof(check_sig<T>(0)));
+#if BOOST_WORKAROUND(BOOST_MSVC_FULL_VER, >= 140050000)
 #pragma warning(pop)
 #endif
 #endif

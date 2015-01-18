@@ -11,9 +11,9 @@
 //
 // See http://www.boost.org/libs/mpl for documentation.
 
-// $Source$
-// $Date: 2007-11-25 13:07:19 -0500 (Sun, 25 Nov 2007) $
-// $Revision: 41369 $
+// $Id$
+// $Date$
+// $Revision$
 
 #include <boost/mpl/insert_fwd.hpp>
 #include <boost/mpl/set/aux_/has_key_impl.hpp>

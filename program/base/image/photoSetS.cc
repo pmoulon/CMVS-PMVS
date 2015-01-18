@@ -30,9 +30,19 @@ void CphotoSetS::init(const std::vector<int>& images, const std::string prefix,
     const int image = m_images[index];
 
     char test0[1024], test1[1024];
+    char test2[1024], test3[1024];
     sprintf(test0, "%svisualize/%08d.ppm", prefix.c_str(), image);
     sprintf(test1, "%svisualize/%08d.jpg", prefix.c_str(), image);
-    if (ifstream(test0) || ifstream(test1)) {
+    sprintf(test2, "%svisualize/%08d.png", prefix.c_str(), image);
+    sprintf(test3, "%svisualize/%08d.tiff", prefix.c_str(), image);
+    if (ifstream(test0) || ifstream(test1)
+#if defined(PMVS_HAVE_PNG)
+      || ifstream(test2)
+#endif
+#if defined(PMVS_HAVE_TIFF)
+      || ifstream(test3)
+#endif
+                          ) {
       char name[1024], mname[1024], ename[1024], cname[1024];    
       
       // Set name

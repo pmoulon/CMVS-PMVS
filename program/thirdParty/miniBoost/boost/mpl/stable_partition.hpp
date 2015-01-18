@@ -11,9 +11,9 @@
 //
 // See http://www.boost.org/libs/mpl for documentation.
 
-// $Source$
-// $Date: 2004-11-27 20:58:27 -0500 (Sat, 27 Nov 2004) $
-// $Revision: 26325 $
+// $Id$
+// $Date$
+// $Revision$
 
 #include <boost/mpl/fold.hpp>
 #include <boost/mpl/reverse_fold.hpp>

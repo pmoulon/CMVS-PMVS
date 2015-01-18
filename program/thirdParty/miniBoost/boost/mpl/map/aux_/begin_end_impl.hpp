@@ -11,9 +11,9 @@
 //
 // See http://www.boost.org/libs/mpl for documentation.
 
-// $Source$
-// $Date: 2004-09-05 05:45:19 -0400 (Sun, 05 Sep 2004) $
-// $Revision: 24912 $
+// $Id$
+// $Date$
+// $Revision$
 
 #include <boost/mpl/begin_end_fwd.hpp>
 #include <boost/mpl/next_prior.hpp>

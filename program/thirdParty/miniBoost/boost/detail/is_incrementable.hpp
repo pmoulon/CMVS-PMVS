@@ -55,20 +55,24 @@ namespace is_incrementable_
   
 # endif 
 
-# if BOOST_WORKAROUND(__MWERKS__, BOOST_TESTED_AT(0x3202)) \
-    || BOOST_WORKAROUND(BOOST_MSVC, <= 1300)
+# if BOOST_WORKAROUND(__MWERKS__, BOOST_TESTED_AT(0x3202)) 
 #  define BOOST_comma(a,b) (a)
 # else 
   // In case an operator++ is found that returns void, we'll use ++x,0
   tag operator,(tag,int);  
 #  define BOOST_comma(a,b) (a,b)
 # endif 
-  
+
+# if defined(BOOST_MSVC)
+#  pragma warning(push)
+#  pragma warning(disable:4913) // Warning about operator,
+# endif 
+
   // two check overloads help us identify which operator++ was picked
-  char (& check(tag) )[2];
+  char (& check_(tag) )[2];
   
   template <class T>
-  char check(T const&);
+  char check_(T const&);
   
 
   template <class T>
@@ -78,7 +82,7 @@ namespace is_incrementable_
 
       BOOST_STATIC_CONSTANT(
           bool
-        , value = sizeof(is_incrementable_::check(BOOST_comma(++x,0))) == 1
+        , value = sizeof(is_incrementable_::check_(BOOST_comma(++x,0))) == 1
       );
   };
 
@@ -89,9 +93,14 @@ namespace is_incrementable_
 
       BOOST_STATIC_CONSTANT(
           bool
-        , value = sizeof(is_incrementable_::check(BOOST_comma(x++,0))) == 1
+        , value = sizeof(is_incrementable_::check_(BOOST_comma(x++,0))) == 1
       );
   };
+
+# if defined(BOOST_MSVC)
+#  pragma warning(pop)
+# endif 
+
 }
 
 # undef BOOST_comma

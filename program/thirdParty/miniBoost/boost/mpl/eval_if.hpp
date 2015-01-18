@@ -4,15 +4,15 @@
 
 // Copyright Aleksey Gurtovoy 2000-2004
 //
-// Distributed under the Boost Software License, Version 1.0. 
-// (See accompanying file LICENSE_1_0.txt or copy at 
+// Distributed under the Boost Software License, Version 1.0.
+// (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 //
 // See http://www.boost.org/libs/mpl for documentation.
 
-// $Source$
-// $Date: 2008-03-22 17:45:55 -0400 (Sat, 22 Mar 2008) $
-// $Revision: 43798 $
+// $Id$
+// $Date$
+// $Revision$
 
 #include <boost/mpl/if.hpp>
 #include <boost/mpl/aux_/na_spec.hpp>
@@ -43,7 +43,7 @@ struct eval_if
     BOOST_MPL_AUX_LAMBDA_SUPPORT(3,eval_if,(C,F1,F2))
 };
 
-// (almost) copy & paste in order to save one more 
+// (almost) copy & paste in order to save one more
 // recursively nested template instantiation to user
 template<
       bool C

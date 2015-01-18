@@ -14,8 +14,7 @@
 #include <boost/type_traits/config.hpp>
 #include <boost/detail/workaround.hpp>
 
-#if !defined(BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION) \
-   && !BOOST_WORKAROUND(__BORLANDC__, < 0x600) && !defined(BOOST_TT_TEST_MS_FUNC_SIGS)
+#if !BOOST_WORKAROUND(__BORLANDC__, < 0x600) && !defined(BOOST_TT_TEST_MS_FUNC_SIGS)
    //
    // Note: we use the "workaround" version for MSVC because it works for 
    // __stdcall etc function types, where as the partial specialisation
@@ -37,7 +36,9 @@
 
 namespace boost {
 
-#if !defined(BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION) && !BOOST_WORKAROUND(__BORLANDC__, < 0x600) && !defined(BOOST_TT_TEST_MS_FUNC_SIGS)
+#if defined( __CODEGEARC__ )
+BOOST_TT_AUX_BOOL_TRAIT_DEF1(is_member_function_pointer,T,__is_member_function_pointer( T ))
+#elif !BOOST_WORKAROUND(__BORLANDC__, < 0x600) && !defined(BOOST_TT_TEST_MS_FUNC_SIGS)
 
 BOOST_TT_AUX_BOOL_TRAIT_DEF1(
       is_member_function_pointer
@@ -53,7 +54,7 @@ namespace detail {
 
 template <bool>
 struct is_mem_fun_pointer_select
-    : ::boost::type_traits::false_result
+    : public ::boost::type_traits::false_result
 {
 };
 
@@ -62,7 +63,7 @@ struct is_mem_fun_pointer_select<false>
 {
     template <typename T> struct result_
     {
-#if BOOST_WORKAROUND(_MSC_FULL_VER, >= 140050000)
+#if BOOST_WORKAROUND(BOOST_MSVC_FULL_VER, >= 140050000)
 #pragma warning(push)
 #pragma warning(disable:6334)
 #endif
@@ -73,7 +74,7 @@ struct is_mem_fun_pointer_select<false>
             bool, value = (
                 1 == sizeof(::boost::type_traits::is_mem_fun_pointer_tester(self_type::make_t))
             ));
-#if BOOST_WORKAROUND(_MSC_FULL_VER, >= 140050000)
+#if BOOST_WORKAROUND(BOOST_MSVC_FULL_VER, >= 140050000)
 #pragma warning(pop)
 #endif
     };
@@ -81,7 +82,7 @@ struct is_mem_fun_pointer_select<false>
 
 template <typename T>
 struct is_member_function_pointer_impl
-    : is_mem_fun_pointer_select<
+    : public is_mem_fun_pointer_select<
           ::boost::type_traits::ice_or<
               ::boost::is_reference<T>::value
             , ::boost::is_array<T>::value
@@ -90,10 +91,8 @@ struct is_member_function_pointer_impl
 {
 };
 
-#ifndef BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION
 template <typename T>
 struct is_member_function_pointer_impl<T&> : public false_type{};
-#endif
 
 #else // Borland C++
 
@@ -125,7 +124,7 @@ BOOST_TT_AUX_BOOL_TRAIT_IMPL_SPEC1(is_member_function_pointer,void const volatil
 
 BOOST_TT_AUX_BOOL_TRAIT_DEF1(is_member_function_pointer,T,::boost::detail::is_member_function_pointer_impl<T>::value)
 
-#endif // BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION
+#endif
 
 } // namespace boost
 

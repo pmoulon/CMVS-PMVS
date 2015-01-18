@@ -14,19 +14,18 @@
 
 #define WEIGHT1 1               //default weight for the distance in the Sloan algorithm
 #define WEIGHT2 2               //default weight for the degree in the Sloan algorithm
-#define MAXINT 2147483647       //Maximum value for a 32bit integer
 
 #include <boost/config.hpp>
 #include <vector>
 #include <queue>
+#include <algorithm>
+#include <limits>
 #include <boost/pending/queue.hpp>
 #include <boost/graph/graph_traits.hpp>
 #include <boost/graph/breadth_first_search.hpp>
 #include <boost/graph/properties.hpp>
 #include <boost/pending/indirect_cmp.hpp>
-#include <boost/property_map.hpp>
-#include <algorithm>
-#include <utility>
+#include <boost/property_map/property_map.hpp>
 #include <boost/graph/visitors.hpp>
 #include <boost/graph/adjacency_list.hpp>
 #include <boost/graph/cuthill_mckee_ordering.hpp>
@@ -47,9 +46,9 @@ namespace boost {
   //
   /////////////////////////////////////////////////////////////////////////
   template<class Distance>
-  unsigned RLS_depth(Distance& d)
+  typename Distance::value_type RLS_depth(Distance& d)
   {
-    unsigned h_s = 0;
+    typename Distance::value_type h_s = 0;
     typename Distance::iterator iter;
     
     for (iter = d.begin(); iter != d.end(); ++iter)
@@ -71,14 +70,16 @@ namespace boost {
   //
   /////////////////////////////////////////////////////////////////////////
   template<class Distance, class my_int>
-  unsigned RLS_max_width(Distance& d, my_int depth)
+  typename Distance::value_type RLS_max_width(Distance& d, my_int depth)
   {
+
+      typedef typename Distance::value_type Degree;
     
       //Searching for the maximum width of a level
-      std::vector<unsigned> dummy_width(depth+1, 0);
-      std::vector<unsigned>::iterator my_it;
+      std::vector<Degree> dummy_width(depth+1, 0);
+      typename std::vector<Degree>::iterator my_it;
       typename Distance::iterator iter;
-      unsigned w_max = 0;
+      Degree w_max = 0;
       
       for (iter = d.begin(); iter != d.end(); ++iter)
       {
@@ -118,10 +119,10 @@ namespace boost {
     s = *(vertices(G).first);
     Vertex e = s;
     Vertex i;
-    unsigned my_degree = get(degree, s ); 
-    unsigned dummy, h_i, h_s, w_i, w_e;
+    Degree my_degree = get(degree, s ); 
+    Degree dummy, h_i, h_s, w_i, w_e;
     bool new_start = true;
-    unsigned maximum_degree = 0;
+    Degree maximum_degree = 0;
     
     //Creating a std-vector for storing the distance from the start vertex in dist
     std::vector<typename graph_traits<Graph>::vertices_size_type> dist(num_vertices(G), 0);
@@ -140,7 +141,7 @@ namespace boost {
     //step 1
     //Scan for the vertex with the smallest degree and the maximum degree
     typename graph_traits<Graph>::vertex_iterator ui, ui_end;
-    for (tie(ui, ui_end) = vertices(G); ui != ui_end; ++ui)
+    for (boost::tie(ui, ui_end) = vertices(G); ui != ui_end; ++ui)
     {
       dummy = get(degree, *ui);
       
@@ -181,7 +182,7 @@ namespace boost {
       //step 4
       //pushing one node of each degree in an ascending manner into degree_queue
       std::vector<bool> shrink_trace(maximum_degree, false);
-      for (tie(ui, ui_end) = vertices(G); ui != ui_end; ++ui)
+      for (boost::tie(ui, ui_end) = vertices(G); ui != ui_end; ++ui)
       {
         dummy = get(degree, *ui);
         
@@ -195,9 +196,9 @@ namespace boost {
       //end 3 & 4
 
       
-      //step 5
-      //Initializing w
-      w_e = MAXINT;
+      // step 5
+      // Initializing w
+      w_e = (std::numeric_limits<Degree>::max)();
       //end 5
       
       
@@ -291,9 +292,9 @@ namespace boost {
     typename property_map<Graph, vertex_index_t>::type index_map = get(vertex_index, g);
     
     //Sets the color and priority to their initial status
-    unsigned cdeg;    
+    Degree cdeg;    
     typename graph_traits<Graph>::vertex_iterator ui, ui_end;
-    for (tie(ui, ui_end) = vertices(g); ui != ui_end; ++ui)
+    for (boost::tie(ui, ui_end) = vertices(g); ui != ui_end; ++ui)
     {
         put(color, *ui, Color::white());
         cdeg=get(degree, *ui)+1;
@@ -322,7 +323,7 @@ namespace boost {
       if(get(color, u) == Color::green() )
       {
         //for-loop over all out-edges of vertex u
-        for (tie(ei, ei_end) = out_edges(u, g); ei != ei_end; ++ei) 
+        for (boost::tie(ei, ei_end) = out_edges(u, g); ei != ei_end; ++ei) 
         {
           v = target(*ei, g);
           
@@ -341,7 +342,7 @@ namespace boost {
       put(color, u, Color::black() );          //Gives u an inactive status
       
       //for loop over all the adjacent vertices of u
-      for (tie(ei, ei_end) = out_edges(u, g); ei != ei_end; ++ei) {
+      for (boost::tie(ei, ei_end) = out_edges(u, g); ei != ei_end; ++ei) {
         
         v = target(*ei, g);     
         
@@ -351,7 +352,7 @@ namespace boost {
           put(priority, v, get(priority, v)+W2);  //updates the priority        
           
           //for loop over alll adjacent vertices of v
-          for (tie(ei2, ei2_end) = out_edges(v, g); ei2 != ei2_end; ++ei2) {
+          for (boost::tie(ei2, ei2_end) = out_edges(v, g); ei2 != ei2_end; ++ei2) {
             w = target(*ei2, g);
             
             if(get(color, w) != Color::black() ) {     //tests if vertex is postactive

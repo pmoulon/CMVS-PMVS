@@ -26,7 +26,7 @@ using namespace CMVS;
 Cbundle::Cbundle(void) {
   m_CPU = 8;
   m_junit = 100;
-  pthread_rwlock_init(&m_lock, NULL);
+  mtx_init(&m_lock, mtx_plain | mtx_recursive);
   m_debug = 0;
   m_puf = NULL;
   m_ptree = NULL;
@@ -665,7 +665,7 @@ void Cbundle::mergeSfMPThread(void) {
   const int tenth = (int)m_coords.size() / 10;
   while (1) {
     int pid = -1;
-    pthread_rwlock_wrlock(&m_lock);
+    mtx_lock(&m_lock);
     if (!m_jobs.empty()) {
       pid = m_jobs.front();
       m_jobs.pop_front();
@@ -675,7 +675,7 @@ void Cbundle::mergeSfMPThread(void) {
     if (m_count % tenth == 0)
       cerr << '*' << flush;
     ++m_count;
-    pthread_rwlock_unlock(&m_lock);
+    mtx_unlock(&m_lock);
     if (pid == -2)
       continue;
     if (pid == -1)
@@ -704,7 +704,7 @@ void Cbundle::mergeSfMPThread(void) {
     }
     
     // Now lock and try to register
-    pthread_rwlock_wrlock(&m_lock);
+    mtx_lock(&m_lock);
     // If the main one is removed, over... waste.
     if (m_merged[pid] == 0) {
       m_merged[pid] = 1;
@@ -716,13 +716,13 @@ void Cbundle::mergeSfMPThread(void) {
         }
       }
     }
-    pthread_rwlock_unlock(&m_lock);
+    mtx_unlock(&m_lock);
   }
 }
 
-void* Cbundle::mergeSfMPThreadTmp(void* arg) {
+int Cbundle::mergeSfMPThreadTmp(void* arg) {
   ((Cbundle*)arg)->mergeSfMPThread();
-  return NULL;
+  return 0;
 }
 
 void Cbundle::mergeSfMP(void) {
@@ -764,12 +764,11 @@ void Cbundle::mergeSfMP(void) {
       m_jobs.push_back(order[p]);
     
     m_count = 0;
-    vector<pthread_t> threads(m_CPU);
+    vector<thrd_t> threads(m_CPU);
     for (int c = 0; c < m_CPU; ++c)
-      pthread_create(&threads[c], NULL,
-                     mergeSfMPThreadTmp, (void*)this);
+      thrd_create(&threads[c], &mergeSfMPThreadTmp, (void*)this);
     for (int c = 0; c < m_CPU; ++c)
-      pthread_join(threads[c], NULL);
+      thrd_join(threads[c], NULL);
 
     int newpnum = 0;
     // Mapping from m_pnum to new id for reps
@@ -920,12 +919,12 @@ void Cbundle::setCluster(const int p) {
     m_sfms2[p].m_satisfied = 1;
 
     //  update m_lacks
-    pthread_rwlock_wrlock(&m_lock);    
+    mtx_lock(&m_lock);    
     for (int i = 0; i < (int)m_visibles[p].size(); ++i) {
       const int image = m_visibles[p][i];
       --m_lacks[image];
     }
-    pthread_rwlock_unlock(&m_lock);
+    mtx_unlock(&m_lock);
   }
 }
 

@@ -20,49 +20,32 @@ namespace boost {
 
 namespace detail {
 
-#if defined(BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION) && defined(BOOST_MSVC6_MEMBER_TEMPLATES)
-
-template <bool x>
-struct reference_adder
-{
-    template <typename T> struct result_
-    {
-        typedef T& type;
-    };
-};
-
-template <>
-struct reference_adder<true>
-{
-    template <typename T> struct result_
-    {
-        typedef T type;
-    };
-};
+//
+// We can't filter out rvalue_references at the same level as
+// references or we get ambiguities from msvc:
+//
 
 template <typename T>
-struct add_reference_impl
-{
-    typedef typename reference_adder<
-          ::boost::is_reference<T>::value
-        >::template result_<T> result;
-
-    typedef typename result::type type;
-};
-
-#else
-
-template <typename T>
-struct add_reference_impl
+struct add_reference_rvalue_layer
 {
     typedef T& type;
 };
 
-#ifndef BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION
-BOOST_TT_AUX_TYPE_TRAIT_IMPL_PARTIAL_SPEC1_1(typename T,add_reference,T&,T&)
+#ifndef BOOST_NO_CXX11_RVALUE_REFERENCES
+template <typename T>
+struct add_reference_rvalue_layer<T&&>
+{
+    typedef T&& type;
+};
 #endif
 
-#endif
+template <typename T>
+struct add_reference_impl
+{
+    typedef typename add_reference_rvalue_layer<T>::type type;
+};
+
+BOOST_TT_AUX_TYPE_TRAIT_IMPL_PARTIAL_SPEC1_1(typename T,add_reference,T&,T&)
 
 // these full specialisations are always required:
 BOOST_TT_AUX_TYPE_TRAIT_IMPL_SPEC1(add_reference,void,void)

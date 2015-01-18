@@ -7,9 +7,9 @@
 //
 // See http://www.boost.org/libs/mpl for documentation.
 
-// $Source$
-// $Date: 2007-11-25 13:07:19 -0500 (Sun, 25 Nov 2007) $
-// $Revision: 41369 $
+// $Id$
+// $Date$
+// $Revision$
 
 // NO INCLUDE GUARDS, THE HEADER IS INTENDED FOR MULTIPLE INCLUSION!
 
@@ -77,7 +77,7 @@ struct AUX_WRAPPER_NAME
     // functions that return objects of both arithmetic ('int', 'long',
     // 'double', etc.) and wrapped integral types (for an example, see 
     // "mpl/example/power.cpp")
-    operator AUX_WRAPPER_VALUE_TYPE() const { return static_cast<AUX_WRAPPER_VALUE_TYPE>(this->value); } 
+    BOOST_CONSTEXPR operator AUX_WRAPPER_VALUE_TYPE() const { return static_cast<AUX_WRAPPER_VALUE_TYPE>(this->value); } 
 };
 
 #if !defined(BOOST_NO_INCLASS_MEMBER_INITIALIZATION)

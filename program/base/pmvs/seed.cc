@@ -73,11 +73,11 @@ void Cseed::run(void) {
   time_t tv;
   time(&tv);
   time_t curtime = tv;
-  vector<pthread_t> threads(m_fm.m_CPU);
+  vector<thrd_t> threads(m_fm.m_CPU);
   for (int i = 0; i < m_fm.m_CPU; ++i)
-    pthread_create(&threads[i], NULL, initialMatchThreadTmp, (void*)this);
+    thrd_create(&threads[i], &initialMatchThreadTmp, (void*)this);
   for (int i = 0; i < m_fm.m_CPU; ++i)
-    pthread_join(threads[i], NULL);
+    thrd_join(threads[i], NULL);
   //----------------------------------------------------------------------
   cerr << "done" << endl;
   time(&tv);
@@ -99,18 +99,18 @@ void Cseed::run(void) {
 }
 
 void Cseed::initialMatchThread(void) {
-  pthread_rwlock_wrlock(&m_fm.m_lock);
+  mtx_lock(&m_fm.m_lock);
   const int id = m_fm.m_count++;
-  pthread_rwlock_unlock(&m_fm.m_lock);
+  mtx_unlock(&m_fm.m_lock);
 
   while (1) {
     int index = -1;
-    pthread_rwlock_wrlock(&m_fm.m_lock);
+    mtx_lock(&m_fm.m_lock);
     if (!m_fm.m_jobs.empty()) {
       index = m_fm.m_jobs.front();
       m_fm.m_jobs.pop_front();
     }
-    pthread_rwlock_unlock(&m_fm.m_lock);
+    mtx_unlock(&m_fm.m_lock);
     if (index == -1)
       break;
 
@@ -118,9 +118,9 @@ void Cseed::initialMatchThread(void) {
  }
 }
 
-void* Cseed::initialMatchThreadTmp(void* arg) {
+int Cseed::initialMatchThreadTmp(void* arg) {
   ((Cseed*)arg)->initialMatchThread();
-  return NULL;
+  return 0;
 }
 
 void Cseed::clear(void) {

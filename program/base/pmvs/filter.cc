@@ -1,4 +1,4 @@
-#include <pthread.h>
+#include "tinycthread.h"
 #include <numeric>
 #include <ctime>
 #include <time.h>
@@ -46,11 +46,11 @@ void Cfilter::filterOutside(void) {
   cerr << "mainbody: " << flush;
   
   m_fm.m_count = 0;
-  vector<pthread_t> threads(m_fm.m_CPU);
+  vector<thrd_t> threads(m_fm.m_CPU);
   for (int i = 0; i < m_fm.m_CPU; ++i)
-    pthread_create(&threads[i], NULL, filterOutsideThreadTmp, (void*)this);
+    thrd_create(&threads[i], &filterOutsideThreadTmp, (void*)this);
   for (int i = 0; i < m_fm.m_CPU; ++i)
-    pthread_join(threads[i], NULL);
+    thrd_join(threads[i], NULL);
   cerr << endl;
 
   // delete patches with positive m_gains
@@ -99,7 +99,7 @@ float Cfilter::computeGain(const Patch::Cpatch& patch, const int lock) {
     
     float maxpressure = 0.0f;
     if (lock)
-      pthread_rwlock_rdlock(&m_fm.m_imageLocks[index]);
+      m_fm.m_imageLocks[index].rdlock();
     
     for (int j = 0; j < (int)m_fm.m_pos.m_pgrids[index][index2].size(); ++j) {
       if (!m_fm.isNeighbor(patch, *m_fm.m_pos.m_pgrids[index][index2][j],
@@ -108,7 +108,7 @@ float Cfilter::computeGain(const Patch::Cpatch& patch, const int lock) {
                           m_fm.m_nccThreshold);
     }
     if (lock)
-      pthread_rwlock_unlock(&m_fm.m_imageLocks[index]);
+      m_fm.m_imageLocks[index].unlock();
     
     gain -= maxpressure;
   }
@@ -126,7 +126,7 @@ float Cfilter::computeGain(const Patch::Cpatch& patch, const int lock) {
     float maxpressure = 0.0f;      
 
     if (lock)
-      pthread_rwlock_rdlock(&m_fm.m_imageLocks[index]);
+      m_fm.m_imageLocks[index].rdlock();
     
     for (int j = 0; j < (int)m_fm.m_pos.m_pgrids[index][index2].size(); ++j) {
       const float bdepth = m_fm.m_pss.computeDepth(index, m_fm.m_pos.m_pgrids[index][index2][j]->m_coord);
@@ -139,7 +139,7 @@ float Cfilter::computeGain(const Patch::Cpatch& patch, const int lock) {
       }
     }
     if (lock)
-      pthread_rwlock_unlock(&m_fm.m_imageLocks[index]);
+      m_fm.m_imageLocks[index].unlock();
     
     gain -= maxpressure;
   }
@@ -147,9 +147,9 @@ float Cfilter::computeGain(const Patch::Cpatch& patch, const int lock) {
 }
 
 void Cfilter::filterOutsideThread(void) {
-  pthread_rwlock_wrlock(&m_fm.m_lock);
+  mtx_lock(&m_fm.m_lock);
   const int id = m_fm.m_count++;
-  pthread_rwlock_unlock(&m_fm.m_lock);
+  mtx_unlock(&m_fm.m_lock);
 
   const int size = (int)m_fm.m_pos.m_ppatches.size();  
   const int itmp = (int)ceil(size / (float)m_fm.m_CPU);
@@ -207,9 +207,9 @@ void Cfilter::filterOutsideThread(void) {
   }
 }
 
-void* Cfilter::filterOutsideThreadTmp(void* arg) {
+int Cfilter::filterOutsideThreadTmp(void* arg) {
   ((Cfilter*)arg)->filterOutsideThread();
-  return NULL;
+  return 0;
 }
 
 void Cfilter::filterExact(void) {
@@ -229,11 +229,11 @@ void Cfilter::filterExact(void) {
   m_removeimages.resize(psize);  m_removegrids.resize(psize);
 
   m_fm.m_count = 0;
-  vector<pthread_t> threads0(m_fm.m_CPU);
+  vector<thrd_t> threads0(m_fm.m_CPU);
   for (int i = 0; i < m_fm.m_CPU; ++i)
-    pthread_create(&threads0[i], NULL, filterExactThreadTmp, (void*)this);  
+    thrd_create(&threads0[i], &filterExactThreadTmp, (void*)this);  
   for (int i = 0; i < m_fm.m_CPU; ++i)
-    pthread_join(threads0[i], NULL);
+    thrd_join(threads0[i], NULL);
   cerr << endl;
 
   //----------------------------------------------------------------------
@@ -305,9 +305,9 @@ void Cfilter::filterExactThread(void) {
   newgrids.resize(psize);   removegrids.resize(psize);
 
   while (1) {
-    pthread_rwlock_wrlock(&m_fm.m_lock);
+    mtx_lock(&m_fm.m_lock);
     const int image = m_fm.m_count++;
-    pthread_rwlock_unlock(&m_fm.m_lock);
+    mtx_unlock(&m_fm.m_lock);
 
     if (m_fm.m_tnum <= image)
       break;
@@ -352,7 +352,7 @@ void Cfilter::filterExactThread(void) {
     }
   }
 
-  pthread_rwlock_wrlock(&m_fm.m_lock);
+  mtx_lock(&m_fm.m_lock);
   for (int p = 0; p < psize; ++p) {
     m_newimages[p].insert(m_newimages[p].end(),
 			  newimages[p].begin(), newimages[p].end());
@@ -363,24 +363,24 @@ void Cfilter::filterExactThread(void) {
     m_removegrids[p].insert(m_removegrids[p].end(),
 			  removegrids[p].begin(), removegrids[p].end());
   }
-  pthread_rwlock_unlock(&m_fm.m_lock);
+  mtx_unlock(&m_fm.m_lock);
 }
 
-void* Cfilter::filterExactThreadTmp(void* arg) {
+int Cfilter::filterExactThreadTmp(void* arg) {
   ((Cfilter*)arg)->filterExactThread();
-  return NULL;
+  return 0;
 }
 
 void Cfilter::filterNeighborThread(void) {
   const int size = (int)m_fm.m_pos.m_ppatches.size();  
   while (1) {
     int jtmp = -1;
-    pthread_rwlock_wrlock(&m_fm.m_lock);
+    mtx_lock(&m_fm.m_lock);
     if (!m_fm.m_jobs.empty()) {
       jtmp = m_fm.m_jobs.front();
       m_fm.m_jobs.pop_front();
     }
-    pthread_rwlock_unlock(&m_fm.m_lock);
+    mtx_unlock(&m_fm.m_lock);
     if (jtmp == -1)
       break;
 
@@ -409,9 +409,9 @@ void Cfilter::filterNeighborThread(void) {
   }
 
   /*
-  pthread_rwlock_wrlock(&m_fm.m_lock);
+  mtx_lock(&m_fm.m_lock);
   const int id = m_fm.m_count++;
-  pthread_rwlock_unlock(&m_fm.m_lock);
+  mtx_unlock(&m_fm.m_lock);
 
   const int size = (int)m_fm.m_pos.m_ppatches.size();  
   const int itmp = (int)ceil(size / (float)m_fm.m_CPU);
@@ -507,9 +507,9 @@ int Cfilter::filterQuad(const Patch::Cpatch& patch,
     return 1;
 }
 
-void* Cfilter::filterNeighborThreadTmp(void* arg) {
+int Cfilter::filterNeighborThreadTmp(void* arg) {
   ((Cfilter*)arg)->filterNeighborThread();
-  return NULL;
+  return 0;
 }
   
 void Cfilter::filterNeighbor(const int times) {
@@ -537,11 +537,11 @@ void Cfilter::filterNeighbor(const int times) {
     for (int j = 0; j < jtmp; ++j)
       m_fm.m_jobs.push_back(j);
     
-    vector<pthread_t> threads(m_fm.m_CPU);
+    vector<thrd_t> threads(m_fm.m_CPU);
     for (int i = 0; i < m_fm.m_CPU; ++i)
-      pthread_create(&threads[i], NULL, filterNeighborThreadTmp, (void*)this);
+      thrd_create(&threads[i], &filterNeighborThreadTmp, (void*)this);
     for (int i = 0; i < m_fm.m_CPU; ++i)
-      pthread_join(threads[i], NULL);
+      thrd_join(threads[i], NULL);
     
     vector<Ppatch>::iterator bpatch = m_fm.m_pos.m_ppatches.begin();
     vector<Ppatch>::iterator epatch = m_fm.m_pos.m_ppatches.end();
@@ -726,23 +726,23 @@ void Cfilter::setDepthMaps(void) {
   }
   
   m_fm.m_count = 0;
-  vector<pthread_t> threads(m_fm.m_CPU);
+  vector<thrd_t> threads(m_fm.m_CPU);
   for (int i = 0; i < m_fm.m_CPU; ++i)
-    pthread_create(&threads[i], NULL, setDepthMapsThreadTmp, (void*)this);
+    thrd_create(&threads[i], &setDepthMapsThreadTmp, (void*)this);
   for (int i = 0; i < m_fm.m_CPU; ++i)
-    pthread_join(threads[i], NULL);
+    thrd_join(threads[i], NULL);
 }
 
-void* Cfilter::setDepthMapsThreadTmp(void* arg) {
+int Cfilter::setDepthMapsThreadTmp(void* arg) {
   ((Cfilter*)arg)->setDepthMapsThread();
-  return NULL;
+  return 0;
 }
 
 void Cfilter::setDepthMapsThread(void) {
   while (1) {
-    pthread_rwlock_wrlock(&m_fm.m_lock);
+    mtx_lock(&m_fm.m_lock);
     const int index = m_fm.m_count++;
-    pthread_rwlock_unlock(&m_fm.m_lock);
+    mtx_unlock(&m_fm.m_lock);
 
     if (m_fm.m_tnum <= index)
       break;
@@ -814,28 +814,28 @@ void Cfilter::setDepthMapsVGridsVPGridsAddPatchV(const int additive) {
   }
     
   m_fm.m_count = 0;
-  vector<pthread_t> threads0(m_fm.m_CPU);
+  vector<thrd_t> threads0(m_fm.m_CPU);
   for (int i = 0; i < m_fm.m_CPU; ++i)
-    pthread_create(&threads0[i], NULL, setVGridsVPGridsThreadTmp, (void*)this);  
+    thrd_create(&threads0[i], &setVGridsVPGridsThreadTmp, (void*)this);  
   for (int i = 0; i < m_fm.m_CPU; ++i)
-    pthread_join(threads0[i], NULL);
+    thrd_join(threads0[i], NULL);
   
   m_fm.m_count = 0;
-  vector<pthread_t> threads1(m_fm.m_CPU);
+  vector<thrd_t> threads1(m_fm.m_CPU);
   for (int i = 0; i < m_fm.m_CPU; ++i)
-    pthread_create(&threads1[i], NULL, addPatchVThreadTmp, (void*)this);
+    thrd_create(&threads1[i], &addPatchVThreadTmp, (void*)this);
   for (int i = 0; i < m_fm.m_CPU; ++i)
-    pthread_join(threads1[i], NULL);
+    thrd_join(threads1[i], NULL);
 }
 
-void* Cfilter::setVGridsVPGridsThreadTmp(void* arg) {
+int Cfilter::setVGridsVPGridsThreadTmp(void* arg) {
   ((Cfilter*)arg)->setVGridsVPGridsThread();
-  return NULL;
+  return 0;
 }
 
-void* Cfilter::addPatchVThreadTmp(void* arg) {
+int Cfilter::addPatchVThreadTmp(void* arg) {
   ((Cfilter*)arg)->addPatchVThread();
-  return NULL;
+  return 0;
 }
 
 void Cfilter::setVGridsVPGridsThread(void) {
@@ -844,9 +844,9 @@ void Cfilter::setVGridsVPGridsThread(void) {
   const int job = max(1, size / (noj - 1));
   
   while (1) {
-    pthread_rwlock_wrlock(&m_fm.m_lock);
+    mtx_lock(&m_fm.m_lock);
     const int id = m_fm.m_count++;
-    pthread_rwlock_unlock(&m_fm.m_lock);
+    mtx_unlock(&m_fm.m_lock);
 
     const int begin = id * job;
     const int end = min(size, (id + 1) * job);
@@ -864,9 +864,9 @@ void Cfilter::setVGridsVPGridsThread(void) {
 
 void Cfilter::addPatchVThread(void) {
   while (1) {
-    pthread_rwlock_wrlock(&m_fm.m_lock);
+    mtx_lock(&m_fm.m_lock);
     const int index = m_fm.m_count++;
-    pthread_rwlock_unlock(&m_fm.m_lock);
+    mtx_unlock(&m_fm.m_lock);
     
     if (m_fm.m_tnum <= index)
       break;

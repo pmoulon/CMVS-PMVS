@@ -10,9 +10,9 @@
 //
 // See http://www.boost.org/libs/mpl for documentation.
 
-// $Source$
-// $Date: 2004-09-07 05:06:10 -0400 (Tue, 07 Sep 2004) $
-// $Revision: 24948 $
+// $Id$
+// $Date$
+// $Revision$
 
 #include <boost/mpl/integral_c.hpp>
 #include <boost/mpl/aux_/msvc_eti_base.hpp>

@@ -4,66 +4,97 @@
 # Second draft 24 sept 2010
 # Third draft (linux) 12 oct 2010 
 # 28 july 2014 Make VisualStudio Win32/Win64 detection automatic
+# 15.01.2015 Added tinycthread, nlopt, CImg, removed BLAS, LAPACK, GSL, lmfit, winpthread (R. Hiestand)
 
 CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
 
 PROJECT(CMVS-PMVS2 C CXX)
 
-IF(WIN32)
-
-  SET(ADDITIONAL_WIN_INCLUDES 
-        ./thirdParty/miniBoost
-        ./thirdParty/pthread/include
-        ./thirdParty/jpeg)
-
-ENDIF(WIN32)
+# By default build in Release mode
+IF(NOT CMAKE_BUILD_TYPE AND NOT MSVC)
+  SET(CMAKE_BUILD_TYPE "Release")
+ENDIF(NOT CMAKE_BUILD_TYPE AND NOT MSVC)
 
 INCLUDE_DIRECTORIES(
-  ./program/base/image
-  ./program/base/numeric
-  ./program/base/pmvs
-
-  ./thirdParty/
-  ./thirdParty/gsl-1.13/include
-  # http://eris.liralab.it/iCub/downloads/packages/windows/msvc9/
-  ./thirdParty/graclus1.2/metisLib
-  ./thirdParty/lmfit-3.2/lib
-  ${ADDITIONAL_WIN_INCLUDES}
+	${CMAKE_SOURCE_DIR}/program/base/image
+	${CMAKE_SOURCE_DIR}/program/base/numeric
+	${CMAKE_SOURCE_DIR}/program/base/pmvs
+	${CMAKE_SOURCE_DIR}/thirdParty/
+	${CMAKE_SOURCE_DIR}/thirdParty/graclus1.2/metisLib
+	${CMAKE_SOURCE_DIR}/thirdParty/nlopt-2.4.2/api
+	${CMAKE_SOURCE_DIR}/thirdParty/cimg
+	${CMAKE_SOURCE_DIR}/thirdParty/tinycthread
 )
 
-IF(WIN32)
+# Threads
+FIND_PACKAGE(Threads REQUIRED)
+SET(PMVS_LIBRARIES ${PMVS_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT})
 
-  IF (${CMAKE_CL_64})
-    SET(WIN64_PTHREAD true)
-  ELSE (${CMAKE_CL_64})
-    SET(WIN64_PTHREAD false)
-  ENDIF (${CMAKE_CL_64})
+# Eigen
+SET( EIGEN3_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/thirdParty/Eigen )
+SET( CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${EIGEN3_INCLUDE_DIR}/cmake" )
+FIND_PACKAGE(Eigen3 3.0.0 REQUIRED)
+MESSAGE("Found Eigen ${EIGEN3_VERSION}")
+INCLUDE_DIRECTORIES( ${EIGEN3_INCLUDE_DIR} )
 
-  IF(WIN64_PTHREAD)
-    SET(PTHREAD_LIB ${CMAKE_SOURCE_DIR}/thirdParty/pthreadVC2.lib)
-  ELSE(WIN64_PTHREAD)
-    SET(PTHREAD_LIB ${CMAKE_SOURCE_DIR}/thirdParty/pthread.lib)
-  ENDIF(WIN64_PTHREAD)
-  SET(PRECOMPILED_LIBS ${PTHREAD_LIB})
+# Boost
+SET(Boost_USE_STATIC_LIBS        ON)
+SET(Boost_USE_MULTITHREADED      ON)
+SET(Boost_USE_STATIC_RUNTIME     OFF)
+FIND_PACKAGE(Boost)
+IF(Boost_FOUND)
+	message("Using system boost library: ${Boost_INCLUDE_DIRS}")
+	INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIRS})
+ELSE(Boost_FOUND)
+	message("No system boost library found, using internal version")
+	SET(PMVS_USE_INTERNAL_BOOST TRUE)
+	INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/thirdParty/miniBoost)
+ENDIF(Boost_FOUND)
 
-ELSE(WIN32)
 
-  FIND_LIBRARY(LAPACK_LIB NAMES lapack)
-  FIND_LIBRARY(GSL_LIB NAMES gsl)
-  FIND_LIBRARY(GSLCBLAS_LIB NAMES gslcblas)
-  FIND_PACKAGE(JPEG REQUIRED)
-  FIND_PACKAGE(BLAS REQUIRED)
-  FIND_PACKAGE(Threads REQUIRED)
-  FIND_PACKAGE(Boost REQUIRED)
-  SET(PRECOMPILED_LIBS
-    ${JPEG_LIBRARY}
-    ${LAPACK_LIB}
-    ${GSL_LIB}
-    ${GSLCBLAS_LIB}
-    ${BLAS_LIBRARIES}
-    ${CMAKE_THREAD_LIBS_INIT})
+# JPEG
+FIND_PACKAGE(JPEG)
+IF(JPEG_FOUND)
+	message("Using system JPEG library: ${JPEG_LIBRARIES}")
+	INCLUDE_DIRECTORIES(${JPEG_INCLUDE_DIR})
+	SET(PMVS_LIBRARIES ${PMVS_LIBRARIES} ${JPEG_LIBRARIES})
+ELSE(JPEG_FOUND)
+	message("No system JPEG library found, using internal version")
+	SET(PMVS_USE_INTERNAL_JPEG TRUE)
+	INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/thirdParty/jpeg)
+	INCLUDE_DIRECTORIES(${CMAKE_BINARY_DIR}/thirdParty/jpeg)	# For jconfig.h
+	SET(PMVS_LIBRARIES ${PMVS_LIBRARIES} jpeg)
+ENDIF(JPEG_FOUND)
 
-ENDIF (WIN32)
+
+# ZLIB
+#FIND_PACKAGE(ZLIB REQUIRED)
+#INCLUDE_DIRECTORIES(${ZLIB_INCLUDE_DIR})
+
+# PNG
+SET(PMVS_USE_PNG        OFF)
+IF(PMVS_USE_PNG)
+  FIND_PACKAGE(PNG)
+  IF(PNG_FOUND)
+	  message("PNG library found, enabling support: ${PNG_LIBRARIES}")
+	  ADD_DEFINITIONS(-DPMVS_HAVE_PNG)
+	  INCLUDE_DIRECTORIES(${PNG_INCLUDE_DIRS})
+	  SET(PMVS_LIBRARIES ${PMVS_LIBRARIES} ${PNG_LIBRARIES})
+  ENDIF(PNG_FOUND)
+ENDIF(PMVS_USE_PNG)
+
+# TIFF
+SET(PMVS_USE_TIFF        OFF)
+IF(PMVS_USE_TIFF)
+  FIND_PACKAGE(TIFF)
+  IF(TIFF_FOUND)
+	  message("TIFF library found, enabling support: ${TIFF_LIBRARIES}")
+	  ADD_DEFINITIONS(-DPMVS_HAVE_TIFF)
+	  INCLUDE_DIRECTORIES(${TIFF_INCLUDE_DIR})
+	  SET(PMVS_LIBRARIES ${PMVS_LIBRARIES} ${TIFF_LIBRARIES})
+  ENDIF(TIFF_FOUND)
+ENDIF(PMVS_USE_TIFF)
+
 
 ADD_SUBDIRECTORY(base)
 ADD_SUBDIRECTORY(main)

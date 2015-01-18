@@ -1,5 +1,0 @@
-* Check behavior of conjugate_fr in multimin -- the demo results look odd.
-
-* Should have made f and df return int instead of void.
-
-* Handle errors via GSL_NAN similar to min.h in min/

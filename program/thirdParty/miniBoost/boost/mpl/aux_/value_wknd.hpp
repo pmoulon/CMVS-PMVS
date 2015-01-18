@@ -10,9 +10,9 @@
 //
 // See http://www.boost.org/libs/mpl for documentation.
 
-// $Source$
-// $Date: 2004-12-20 12:52:43 -0500 (Mon, 20 Dec 2004) $
-// $Revision: 26558 $
+// $Id$
+// $Date$
+// $Revision$
 
 #include <boost/mpl/aux_/static_cast.hpp>
 #include <boost/mpl/aux_/config/integral.hpp>

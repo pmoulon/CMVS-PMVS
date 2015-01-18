@@ -1,8 +1,13 @@
+#define _USE_MATH_DEFINES
+#include <cmath>
+
 #include <algorithm>
 #include <numeric>
 #include <iterator>
 #include "expand.h"
 #include "findMatch.h"
+
+#include "time.h"
 
 using namespace PMVS3;
 using namespace std;
@@ -39,11 +44,11 @@ void Cexpand::run(void) {
   m_fm.m_pos.collectPatches(m_queue);
 
   cerr << "Expanding patches..." << flush;
-  vector<pthread_t> threads(m_fm.m_CPU);
+  vector<thrd_t> threads(m_fm.m_CPU);
   for (int c = 0; c < m_fm.m_CPU; ++c)
-    pthread_create(&threads[c], NULL, expandThreadTmp, (void*)this);
+    thrd_create(&threads[c], &expandThreadTmp, (void*)this);
   for (int c = 0; c < m_fm.m_CPU; ++c)
-    pthread_join(threads[c], NULL); 
+    thrd_join(threads[c], NULL); 
   
   cerr << endl
        << "---- EXPANSION: " << (time(NULL) - starttime) << " secs ----" << endl;
@@ -63,27 +68,27 @@ void Cexpand::run(void) {
        << 100 * (pass + fail1) / (float)trial << endl;
   
 }
-void* Cexpand::expandThreadTmp(void* arg) {
+int Cexpand::expandThreadTmp(void* arg) {
   ((Cexpand*)arg)->expandThread();
-  return NULL;
+  return 0;
 }
 
 void Cexpand::expandThread(void) {
-  pthread_rwlock_wrlock(&m_fm.m_lock);
+  mtx_lock(&m_fm.m_lock);
   const int id = m_fm.m_count++;
-  pthread_rwlock_unlock(&m_fm.m_lock);
+  mtx_unlock(&m_fm.m_lock);
 
   while (1) {
     Ppatch ppatch;
     int empty = 0;
-    pthread_rwlock_wrlock(&m_fm.m_lock);
+    mtx_lock(&m_fm.m_lock);
     if (m_queue.empty())
       empty = 1;
     else {
       ppatch = m_queue.top();
       m_queue.pop();
     }
-    pthread_rwlock_unlock(&m_fm.m_lock);
+    mtx_unlock(&m_fm.m_lock);
 
     if (empty)
       break;
@@ -256,9 +261,9 @@ int Cexpand::expandSub(const Ppatch& orgppatch, const int id,
   m_fm.m_pos.addPatch(ppatch);
 
   if (add) {
-    pthread_rwlock_wrlock(&m_fm.m_lock);      
+    mtx_lock(&m_fm.m_lock);      
     m_queue.push(ppatch);
-    pthread_rwlock_unlock(&m_fm.m_lock);  
+    mtx_unlock(&m_fm.m_lock);  
   }    
 
   return 0;
@@ -289,23 +294,23 @@ int Cexpand::checkCounts(Patch::Cpatch& patch) {
     const int index2 = iy * m_fm.m_pos.m_gwidths[index] + ix;
 
     int flag = 0;
-    pthread_rwlock_rdlock(&m_fm.m_imageLocks[index]);
+	m_fm.m_imageLocks[index].rdlock();
     if (!m_fm.m_pos.m_pgrids[index][index2].empty())
       flag = 1;
-    pthread_rwlock_unlock(&m_fm.m_imageLocks[index]);
+	m_fm.m_imageLocks[index].unlock();
     if (flag) {
       ++full;      ++begin;
       ++begin2;    continue;
     }
     
-    //pthread_rwlock_wrlock(&m_fm.m_countLocks[index]);
-    pthread_rwlock_rdlock(&m_fm.m_countLocks[index]);
+    //mtx_lock(&m_fm.m_countLocks[index]);
+	m_fm.m_countLocks[index].rdlock();
     if (m_fm.m_countThreshold1 <= m_fm.m_pos.m_counts[index][index2])
       ++full;
     else
       ++empty;
     //++m_fm.m_pos.m_counts[index][index2];
-    pthread_rwlock_unlock(&m_fm.m_countLocks[index]);
+	m_fm.m_countLocks[index].unlock();
     ++begin;    ++begin2;
   }
 
@@ -352,14 +357,14 @@ int Cexpand::updateCounts(const Cpatch& patch) {
       
       const int index2 = iy * m_fm.m_pos.m_gwidths[index] + ix;
       
-      pthread_rwlock_wrlock(&m_fm.m_countLocks[index]);
+	  m_fm.m_countLocks[index].wrlock();
       if (m_fm.m_countThreshold1 <= m_fm.m_pos.m_counts[index][index2])
         ++full;
       else
         ++empty;
       ++m_fm.m_pos.m_counts[index][index2];
       
-      pthread_rwlock_unlock(&m_fm.m_countLocks[index]);
+	  m_fm.m_countLocks[index].unlock();
       ++begin;    ++begin2;
     }
   }
@@ -389,13 +394,13 @@ int Cexpand::updateCounts(const Cpatch& patch) {
       
       const int index2 = iy * m_fm.m_pos.m_gwidths[index] + ix;
       
-      pthread_rwlock_wrlock(&m_fm.m_countLocks[index]);
+	  m_fm.m_countLocks[index].wrlock();;
       if (m_fm.m_countThreshold1 <= m_fm.m_pos.m_counts[index][index2])
         ++full;
       else
         ++empty;
       ++m_fm.m_pos.m_counts[index][index2];        
-      pthread_rwlock_unlock(&m_fm.m_countLocks[index]);
+	  m_fm.m_countLocks[index].unlock();
       ++begin;    ++begin2;
     }
   }

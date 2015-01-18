@@ -20,13 +20,11 @@ Date : 13 July 2011
 
 Windows => Use precompiled binary, or compile it with VS2008/2010 (Express or pro, Pro will allow you to enable Opemp in CMVS)
         => Use CMake GUI in order to generate the Visual Studio project file (in ./program you will find the main CMakeLists.txt).
-        => To compile windows 64 binary => edit the ./program/CMakeLists.txt and set WIN64_PTHREAD to true
 
 Linux => use makefile in program/main.
-Setup in makefile the library path to clapack directory if necessary (in order find clapack/clapack.h, clapack/f2c.h, and graclus at compile time)
 
  Or use CMake build system :
-=> Install the following libraries : jpeg gsl lapack boost boost-graph pthread
+=> Install the following libraries : jpeg boost boost-graph
  $ mkdir OutputLinux
  $ cd OutputLinux
  $ cmake . ..
@@ -51,3 +49,14 @@ What have been done on native Yasutaka Furukawa source code :
   - memoize pow(2,X)
   - Change GSL simplex to lmfit.
 
+- Replaced GSL simplex/lmfit with nlopt optimizer
+
+- Replaced image loading routines with CImg. Now PPMs are supported properly, with optional support for PNG and TIFF
+
+- Replaced BLAS/LAPACK with Eigen
+
+- Updated internal jpeg library and miniBoost
+
+- CMake-system now supports system boost, jpeg and other libraries if available. 
+
+- Replaced pthread with tinycthread to get rid of pthread.dll on Windows

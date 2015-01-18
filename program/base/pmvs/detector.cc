@@ -1,4 +1,5 @@
 #include <set>
+#include <algorithm>
 #include "point.h"
 #include "detector.h"
 

@@ -5,7 +5,7 @@
 
 class Cmylapack {
  public:
-
+/*
 
   // Solve Ax = 0.
   // Values contain singular values stored in an increasing order
@@ -16,12 +16,12 @@ class Cmylapack {
   static void hlls(const std::vector<std::vector<double> >& A,
                    std::vector<double>& vec,
                    std::vector<double>& values);
-  
+*/
   // Solve Ax = b
   static void lls(const std::vector<std::vector<float> >& A,
                   const std::vector<float>& b,
                   std::vector<float>& x);
-  
+/*
   static void lls(const std::vector<std::vector<double> >& A,
                   const std::vector<double>& b,
                   std::vector<double>& x);
@@ -40,7 +40,7 @@ class Cmylapack {
                   std::vector<std::vector<float> >& U,
                   std::vector<std::vector<float> >& VT,
                   std::vector<float>& S);
-  
+*/
 };
 
 #endif // NUMERIC_MYLAPACK_H

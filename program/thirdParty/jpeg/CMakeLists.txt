@@ -1,5 +1,16 @@
 PROJECT(jpeg)
 
+include ( CheckIncludeFile )
+check_include_file ( stddef.h HAVE_STDDEF_H )
+check_include_file ( stdlib.h HAVE_STDLIB_H )
+if ( WIN32 AND NOT CYGWIN )
+	#improve? see jconfig.*
+	set ( TWO_FILE_COMMANDLINE true )
+	# jconfig.h
+endif ( )
+configure_file ( jconfig.h.cmake jconfig.h )
+include_directories ( ${CMAKE_CURRENT_BINARY_DIR} )
+
 SET(LIBJPEG_SYSDEP jmemnobs.c)
 
 SET(LIBJPEG_COMMON jaricom.c jcomapi.c jutils.c jerror.c jmemmgr.c)

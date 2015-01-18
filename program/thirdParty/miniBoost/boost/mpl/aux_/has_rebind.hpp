@@ -10,9 +10,9 @@
 //
 // See http://www.boost.org/libs/mpl for documentation.
 
-// $Source$
-// $Date: 2005-08-25 12:27:28 -0400 (Thu, 25 Aug 2005) $
-// $Revision: 30670 $
+// $Id$
+// $Date$
+// $Revision$
 
 #include <boost/mpl/aux_/config/msvc.hpp>
 #include <boost/mpl/aux_/config/intel.hpp>
@@ -25,7 +25,7 @@
 #   include <boost/mpl/if.hpp>
 #   include <boost/mpl/bool.hpp>
 #   include <boost/mpl/aux_/msvc_is_class.hpp>
-#elif BOOST_WORKAROUND(__BORLANDC__, < 0x600)
+#elif BOOST_WORKAROUND(__BORLANDC__, BOOST_TESTED_AT(0x610))
 #   include <boost/mpl/if.hpp>
 #   include <boost/mpl/bool.hpp>
 #   include <boost/mpl/aux_/yes_no.hpp>
@@ -62,7 +62,7 @@ struct has_rebind
 template< typename T > struct has_rebind_tag {};
 no_tag operator|(has_rebind_tag<int>, void const volatile*);
 
-#   if !BOOST_WORKAROUND(__BORLANDC__, < 0x600)
+#   if !BOOST_WORKAROUND(__BORLANDC__, BOOST_TESTED_AT(0x610))
 template< typename T >
 struct has_rebind
 {

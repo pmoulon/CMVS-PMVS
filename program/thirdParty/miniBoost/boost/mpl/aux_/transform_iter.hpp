@@ -10,9 +10,9 @@
 //
 // See http://www.boost.org/libs/mpl for documentation.
 
-// $Source$
-// $Date: 2004-09-07 08:07:57 -0400 (Tue, 07 Sep 2004) $
-// $Revision: 24956 $
+// $Id$
+// $Date$
+// $Revision$
 
 #include <boost/mpl/apply.hpp>
 #include <boost/mpl/iterator_tags.hpp>

@@ -40,7 +40,7 @@ class Cexpand {
   // thread related
   //-----------------------------------------------------------------  
   void expandThread(void);
-  static void* expandThreadTmp(void* arg);
+  static int expandThreadTmp(void* arg);
 
   // Number of trials
   std::vector<int> m_ecounts;

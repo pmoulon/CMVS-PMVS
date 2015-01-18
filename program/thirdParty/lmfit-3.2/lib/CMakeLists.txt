@@ -1,7 +1,0 @@
-PROJECT(lmfit)
-
-FILE(GLOB LIB_LMFIT_H *.h )
-FILE(GLOB LIB_LMFIT_C *.c )
-
-ADD_LIBRARY(lmfit ${LIB_LMFIT_H} ${LIB_LMFIT_C} )
-

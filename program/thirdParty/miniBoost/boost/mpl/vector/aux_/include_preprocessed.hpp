@@ -9,9 +9,9 @@
 //
 // See http://www.boost.org/libs/mpl for documentation.
 
-// $Source$
-// $Date: 2006-11-08 20:21:03 -0500 (Wed, 08 Nov 2006) $
-// $Revision: 35937 $
+// $Id$
+// $Date$
+// $Revision$
 
 #include <boost/mpl/aux_/config/typeof.hpp>
 #include <boost/mpl/aux_/config/ctps.hpp>

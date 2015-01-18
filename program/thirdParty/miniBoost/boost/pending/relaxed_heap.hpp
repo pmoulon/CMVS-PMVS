@@ -10,7 +10,7 @@
 #define BOOST_RELAXED_HEAP_HEADER
 
 #include <functional>
-#include <boost/property_map.hpp>
+#include <boost/property_map/property_map.hpp>
 #include <boost/optional.hpp>
 #include <vector>
 #include <climits> // for CHAR_BIT
@@ -163,7 +163,7 @@ public:
   void remove(const value_type& x)
   {
     group* a = &index_to_group[get(id, x) / log_n];
-    assert(groups[get(id, x)] != 0);
+    assert(groups[get(id, x)]);
     a->value = x;
     a->kind = smallest_key;
     promote(a);

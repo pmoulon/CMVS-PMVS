@@ -9,7 +9,8 @@
 #include <queue>
 #include "patch.h"
 #include <boost/shared_ptr.hpp>
-#include <pthread.h>
+#include "tinycthread.h"
+#include "rwmutex.h"
 
 #include "../image/photoSetS.h"
 #include "patchOrganizerS.h"
@@ -126,10 +127,10 @@ class CfindMatch {
   // For threads related
   //----------------------------------------------------------------------
   // General lock
-  pthread_rwlock_t m_lock;
+  mtx_t m_lock;
   // For each image
-  std::vector<pthread_rwlock_t> m_imageLocks;
-  std::vector<pthread_rwlock_t> m_countLocks;
+  std::vector<RWMutex> m_imageLocks;
+  std::vector<RWMutex> m_countLocks;
   // count
   int m_count;
   // jobs

@@ -1,6 +1,0 @@
-* Reorganize siman interfaces to allow iterative use.
-
-* Maybe the routines can be made to work with pointers instead of structs
-  so that only pointer manipulation is done by the siman algorithm and
-  there is no need for malloc. A call would look something like 
-  siman(&start,&result, ...)

@@ -10,9 +10,9 @@
 //
 // See http://www.boost.org/libs/mpl for documentation.
 
-// $Source$
-// $Date: 2004-12-20 14:35:33 -0500 (Mon, 20 Dec 2004) $
-// $Revision: 26560 $
+// $Id$
+// $Date$
+// $Revision$
 
 #include <boost/mpl/at_fwd.hpp>
 #include <boost/mpl/vector/aux_/tag.hpp>

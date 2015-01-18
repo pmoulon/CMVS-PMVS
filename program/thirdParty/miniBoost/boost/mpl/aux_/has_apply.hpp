@@ -10,9 +10,9 @@
 //
 // See http://www.boost.org/libs/mpl for documentation.
 
-// $Source$
-// $Date: 2004-09-03 11:56:59 -0400 (Fri, 03 Sep 2004) $
-// $Revision: 24892 $
+// $Id$
+// $Date$
+// $Revision$
 
 #include <boost/mpl/has_xxx.hpp>
 #include <boost/mpl/aux_/config/has_apply.hpp>
