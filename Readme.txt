@@ -18,7 +18,19 @@ Date : 13 July 2011
 -- Compilation  --
 --------------------
 
-- See https://github.com/pmoulon/CMVS-PMVS/BUILD.md
+Windows => Use precompiled binary, or compile it with VS2008/2010 (Express or pro, Pro will allow you to enable Opemp in CMVS)
+        => Use CMake GUI in order to generate the Visual Studio project file (in ./program you will find the main CMakeLists.txt).
+
+Linux => use makefile in program/main.
+
+ Or use CMake build system :
+=> Install the following libraries : jpeg boost boost-graph
+ $ mkdir OutputLinux
+ $ cd OutputLinux
+ $ cmake . ..
+ $ make
+ => That's all. Openmp is not activated yet. Add openmp in the cmvs link option and define the _OPENMP cxx flags
+
 
 --------------------
 ----  Notes :   ----

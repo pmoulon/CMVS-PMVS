@@ -1,8 +1,11 @@
 This is a modified version of CMVS/PMVS.
 
+<<<<<<< HEAD
 Building:
  - See https://github.com/pmoulon/CMVS-PMVS/BUILD.md
 
+=======
+>>>>>>> parent of 7e95bad... Add specific building instructions
 Main modification:
  - cross platform compilation Linux, Windows => CMake build system generator.
  - added bug fix from Nghia Ho.
