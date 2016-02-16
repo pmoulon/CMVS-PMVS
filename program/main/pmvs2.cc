@@ -8,7 +8,7 @@ using namespace std;
 
 int main(int argc, char* argv[]) {
   if (argc < 3) {
-    cerr << "Usage: " << argv[0] << " prefix option_file [Optional export]" << endl
+    cout << "Usage: " << argv[0] << " prefix option_file [Optional export]" << endl
          << endl
          << "--------------------------------------------------" << endl
          << "level       1    csize    2" << endl
