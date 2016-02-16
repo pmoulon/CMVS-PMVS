@@ -4,7 +4,7 @@ Windows => Use precompiled binary, or compile it with VS2008/2010 (Express or pr
 
 # Linux compilations (Ubuntu used as example)
 ```
-#Prepare and empty machine for building:
+#Prepare an empty machine for building:
 sudo apt-get update -qq && sudo apt-get install -qq
 sudo apt-get -y install git jpeg boost boost-graph
 git clone https://github.com/pmoulon/CMVS-PMVS
