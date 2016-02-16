@@ -166,7 +166,7 @@ void Charris::run(const std::vector<unsigned char>& image,
 		  const int gspeedup, const float sigma,
 		  std::multiset<Cpoint> & result) {
 
-  cerr << "Harris running ..." << flush;
+  cout << "Harris running ..." << flush;
   m_width = width;       m_height = height;
   m_sigmaD = sigma;      m_sigmaI = sigma;
   init(image, mask, edge);
@@ -219,5 +219,5 @@ void Charris::run(const std::vector<unsigned char>& image,
       }
     }
 
-  cerr << (int)result.size() << " harris done" << endl;
+  cout << (int)result.size() << " harris done" << endl;
 }
