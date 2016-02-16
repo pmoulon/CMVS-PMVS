@@ -40,7 +40,7 @@ void Cbundle::prep(const std::string prefix, const int imageThreshold,
                    const float coverageThreshold,
                    const int pnumThreshold, const int CPU) {
   if (pnumThreshold != 0) {
-    cout << "Should use pnumThreshold = 0" << endl;
+    cerr << "Should use pnumThreshold = 0" << endl;
     exit (1);
   }
   
