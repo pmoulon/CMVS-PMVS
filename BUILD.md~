@@ -12,4 +12,6 @@ mkdir CMVS-PMVS_build && cd CMVS-PMVS_build
 cmake ../CMVS-PMVS/program
 make
 sudo make install
+
+ => Openmp is not activated yet. Add openmp in the cmvs link option and define the _OPENMP cxx flags
 ```
