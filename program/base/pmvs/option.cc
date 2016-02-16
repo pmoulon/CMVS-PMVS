@@ -117,28 +117,28 @@ void Soption::init(const std::string prefix, const std::string option) {
   if (m_useBound)
     initBindexes(sbimages);
 
-  cerr << "--------------------------------------------------" << endl  
+  cout << "--------------------------------------------------" << endl  
        << "--- Summary of specified options ---" << endl;
-  cerr << "# of timages: " << (int)m_timages.size();
+  cout << "# of timages: " << (int)m_timages.size();
   if (m_tflag == -1)
-    cerr << " (range specification)" << endl;
+    cout << " (range specification)" << endl;
   else
-    cerr << " (enumeration)" << endl;
-  cerr << "# of oimages: " << (int)m_oimages.size();
+    cout << " (enumeration)" << endl;
+  cout << "# of oimages: " << (int)m_oimages.size();
   if (m_oflag == -1)
-    cerr << " (range specification)" << endl;
+    cout << " (range specification)" << endl;
   else if (0 <= m_oflag)
-    cerr << " (enumeration)" << endl;
+    cout << " (enumeration)" << endl;
   else if (m_oflag == -2)
-    cerr << " (vis.dat is used)" << endl;
+    cout << " (vis.dat is used)" << endl;
   else if (m_oflag == -3)
-    cerr << " (not used)" << endl;
+    cout << " (not used)" << endl;
 
-  cerr << "level: " << m_level << "  csize: " << m_csize << endl
+  cout << "level: " << m_level << "  csize: " << m_csize << endl
        << "threshold: " << m_threshold << "  wsize: " << m_wsize << endl
        << "minImageNum: " << m_minImageNum << "  CPU: " << m_CPU << endl
        << "useVisData: " << m_useVisData << "  sequence: " << m_sequence << endl;
-  cerr << "--------------------------------------------------" << endl;
+  cout << "--------------------------------------------------" << endl;
 }
 
 void Soption::initOimages(void) {
