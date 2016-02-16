@@ -43,24 +43,24 @@ void Cexpand::run(void) {
   // set queue
   m_fm.m_pos.collectPatches(m_queue);
 
-  cerr << "Expanding patches..." << flush;
+  cout << "Expanding patches..." << flush;
   vector<thrd_t> threads(m_fm.m_CPU);
   for (int c = 0; c < m_fm.m_CPU; ++c)
     thrd_create(&threads[c], &expandThreadTmp, (void*)this);
   for (int c = 0; c < m_fm.m_CPU; ++c)
     thrd_join(threads[c], NULL); 
   
-  cerr << endl
+  cout << endl
        << "---- EXPANSION: " << (time(NULL) - starttime) << " secs ----" << endl;
 
   const int trial = accumulate(m_ecounts.begin(), m_ecounts.end(), 0);
   const int fail0 = accumulate(m_fcounts0.begin(), m_fcounts0.end(), 0);
   const int fail1 = accumulate(m_fcounts1.begin(), m_fcounts1.end(), 0);
   const int pass = accumulate(m_pcounts.begin(), m_pcounts.end(), 0);
-  cerr << "Total pass fail0 fail1 refinepatch: "
+  cout << "Total pass fail0 fail1 refinepatch: "
        << trial << ' ' << pass << ' '
        << fail0 << ' ' << fail1 << ' ' << pass + fail1 << endl;
-  cerr << "Total pass fail0 fail1 refinepatch: "
+  cout << "Total pass fail0 fail1 refinepatch: "
        << 100 * trial / (float)trial << ' '
        << 100 * pass / (float)trial << ' '
        << 100 * fail0 / (float)trial << ' '

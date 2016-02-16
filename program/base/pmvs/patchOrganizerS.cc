@@ -132,7 +132,7 @@ void CpatchOrganizerS::readPatches(void) {
 
     string header;    int pnum;
     ifstr >> header >> pnum;
-    cerr << image << ' ' << pnum << " patches" << endl;
+    cout << image << ' ' << pnum << " patches" << endl;
     for (int p = 0; p < pnum; ++p) {
       Ppatch ppatch(new Cpatch());
       ifstr >> *ppatch;
@@ -171,7 +171,7 @@ void CpatchOrganizerS::readPatches(void) {
     
     string header;    int pnum;
     ifstr >> header >> pnum;
-    cerr << image << ' ' << pnum << " patches" << endl;
+    cout << image << ' ' << pnum << " patches" << endl;
     
     for (int p = 0; p < pnum; ++p) {
       Ppatch ppatch(new Cpatch());

@@ -284,7 +284,7 @@ void Soption::initBindexes(const std::string sbimages) {
     exit (1);
   }
   
-  cerr << "Reading bimages" << endl;
+  cout << "Reading bimages" << endl;
   int itmp;
   ifstr >> itmp;
   for (int i = 0; i < itmp; ++i) {
