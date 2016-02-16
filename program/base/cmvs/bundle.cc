@@ -907,7 +907,7 @@ void Cbundle::setCluster(const int p) {
     }
     // If none of the visibles images are
     if (find == 0) {
-      cout << "Impossible in setscoresclustersthread" << endl
+      cerr << "Impossible in setscoresclustersthread" << endl
            << (int)m_visibles[p].size() << endl
            << (int)m_sfms2[p].m_satisfied << endl;
       exit (1);
