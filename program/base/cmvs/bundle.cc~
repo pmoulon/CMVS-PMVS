@@ -515,7 +515,7 @@ void Cbundle::divideImages(const std::vector<int>& lhs,
     }
     
     if (cand1.empty() || cand2.empty()) {
-      cout << "Error. Normalized cuts produced an empty cluster: "
+      cerr << "Error. Normalized cuts produced an empty cluster: "
            << (int)part.size() << " -> "
            << (int)cand1.size() << ' '
            << (int)cand2.size() << endl;
