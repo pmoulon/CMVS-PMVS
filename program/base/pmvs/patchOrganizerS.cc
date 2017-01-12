@@ -708,6 +708,7 @@ void CpatchOrganizerS::writePLY(const std::vector<Ppatch>& patches,
        << "property uchar diffuse_red" << '\n'
        << "property uchar diffuse_green" << '\n'
        << "property uchar diffuse_blue" << '\n'
+       << "property float quality" << '\n'
        << "end_header" << '\n';
 
   vector<Ppatch>::const_iterator bpatch = patches.begin();
@@ -775,7 +776,8 @@ void CpatchOrganizerS::writePLY(const std::vector<Ppatch>& patches,
           << (*bpatch)->m_normal[0] << ' '
           << (*bpatch)->m_normal[1] << ' '
           << (*bpatch)->m_normal[2] << ' '
-          << color[0] << ' ' << color[1] << ' ' << color[2] << '\n';
+          << color[0] << ' ' << color[1] << ' ' << color[2] << ' '
+          << (*bpatch)->m_ncc << '\n';
       ++bpatch;
   }
   ofstr.close();  
