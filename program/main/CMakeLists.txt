@@ -7,3 +7,7 @@ ADD_EXECUTABLE(genOption genOption.cc)
 
 ADD_EXECUTABLE(cmvs cmvs.cc)
 TARGET_LINK_LIBRARIES(cmvs cmvs_lib image_lib graclus_lib ${PMVS_LIBRARIES} tinycthread)
+
+INSTALL(TARGETS genOption DESTINATION bin/)
+INSTALL(TARGETS cmvs DESTINATION bin/)
+INSTALL(TARGETS pmvs2 DESTINATION bin/)
