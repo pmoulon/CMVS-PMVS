@@ -1,5 +1,8 @@
 This is a modified version of CMVS/PMVS.
 
+Building:
+ - See https://github.com/pmoulon/CMVS-PMVS/BUILD.md
+
 Main modification:
  - cross platform compilation Linux, Windows => CMake build system generator.
  - added bug fix from Nghia Ho.
