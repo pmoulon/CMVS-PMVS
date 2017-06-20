@@ -262,8 +262,8 @@ void Cbundle::sRemoveImages(void) {
     vvi.push_back(Vec2i(res, c));
   }
   sort(vvi.begin(), vvi.end(), Svec2cmp<int>());
-  
-  const int tenth = max(1, m_cnum / 10);
+
+  const int tenth = std::max(1, m_cnum / 10);
   for (int i = 0; i < (int)vvi.size(); ++i) {
     if (i % tenth == 0)
       cerr << '*' << flush;
@@ -575,7 +575,7 @@ void Cbundle::readBundle(const std::string file) {
   m_coords.clear();  m_visibles.clear();
   m_colors.clear();
   m_pnum = 0;
-  const int tenth = max(1, pnum / 10);
+  const int tenth = std::max(1, pnum / 10);
   for (int p = 0; p < pnum; ++p) {
     if (p % tenth == 0)
       cerr << '*' << flush;
@@ -663,7 +663,7 @@ void Cbundle::findPNeighbors(sfcnn<const float*, 3, float>& tree,
 }
 
 void Cbundle::mergeSfMPThread(void) {
-  const int tenth = (int)m_coords.size() / 10;
+  const int tenth = std::max(1, (int)m_coords.size() / 10);
   while (1) {
     int pid = -1;
     mtx_lock(&m_lock);
