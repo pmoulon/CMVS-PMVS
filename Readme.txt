@@ -21,7 +21,7 @@ Date : 13 July 2011
 Windows => Use precompiled binary, or compile it with VS2008/2010 (Express or pro, Pro will allow you to enable Opemp in CMVS)
         => Use CMake GUI in order to generate the Visual Studio project file (in ./program you will find the main CMakeLists.txt).
 
-Linux => use makefile in program/main.
+Linux => use makefile in program.
 
  Or use CMake build system :
 => Install the following libraries : jpeg boost boost-graph
