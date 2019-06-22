@@ -668,6 +668,7 @@ bool Coptim::refinePatchBFGS(Cpatch& patch, const int id,
     }
   
     double minf;
+    nlopt::srand(1);
     nlopt::result result = opt.optimize(x, minf);
 
     p[0] = x[0];
