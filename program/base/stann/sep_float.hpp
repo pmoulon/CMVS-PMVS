@@ -193,9 +193,9 @@ private:
     exp   = x.exp;
     val   = x.val;
   }
-  sep_float_sig<FLT> sig;
-  int                exp;
-  FLT                val;
+  sep_float_sig<FLT> sig; // = { .d = 0 }; // needs to be initialized in constructor because it's a union
+  int                exp; // = 0;
+  FLT                val; // = 0;
 };
 
 
