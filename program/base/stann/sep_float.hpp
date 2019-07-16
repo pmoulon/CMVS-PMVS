@@ -29,28 +29,6 @@
 */
 using namespace std;
 
-/*
-template< class T=sep_float<double> >
-class numeric_limits
-{
-public:
-  static const bool is_specialized = true;
-  static double max() throw() {return numeric_limits<double>::max();}
-  static double min() throw() {return -numeric_limits<double>::max();}
-
-};
-
-template< class T=sep_float<long double> >
-class numeric_limits
-{
-public:
-  static const bool is_specialized = true;
-  static long double max() throw() {return numeric_limits<long double>::max();}
-  static long double min() throw() {return -numeric_limits<long double>::max();}
-
-};*/
-
-
 //! Seperated float significand
 /*! 
   This union stores a seperated float significand.
@@ -221,5 +199,28 @@ private:
 };
 
 
+template<> class std::numeric_limits < sep_float<float> >
+{
+public:
+  static const bool is_specialized = true;
+  static float max() throw() {return numeric_limits<float>::max();}
+  static float min() throw() {return -numeric_limits<float>::max();}
+};
+
+template<> class std::numeric_limits < sep_float<double> >
+{
+public:
+  static const bool is_specialized = true;
+  static double max() throw() {return numeric_limits<double>::max();}
+  static double min() throw() {return -numeric_limits<double>::max();}
+};
+
+template<> class std::numeric_limits < sep_float<long double> >
+{
+public:
+  static const bool is_specialized = true;
+  static long double max() throw() {return numeric_limits<long double>::max();}
+  static long double min() throw() {return -numeric_limits<long double>::max();}
+};
 
 #endif

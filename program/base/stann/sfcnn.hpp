@@ -98,7 +98,10 @@ private:
 
 
   float eps;
-  typename Point::__NumType max, min;
+  // Note that `numeric_limits` only works on types that have it specialized;
+  // we check that this is the case down in the `sfcnn_work()` constructor.
+  typename Point::__NumType max = numeric_limits<typename Point::__NumType>::max();
+  typename Point::__NumType min = numeric_limits<typename Point::__NumType>::min();
 
   void compute_bounding_box(Point q, Point &q1, Point &q2, double r);
   void sfcnn_work_init(int num_threads);
@@ -113,16 +116,27 @@ private:
 template<typename Point>
 sfcnn_work<Point>::sfcnn_work()
 {
+  // `numeric_limits` only works as expected on types that have template
+  // specializations for it.
+  // Otherwise, functions like `numeric_limits<T>::max()` will fail silently,
+  // returning `T()` instead; see:
+  //     https://stackoverflow.com/questions/9201865/why-is-c-numeric-limitsenum-typemax-0/9201963#9201963
+  // That would result in wrong values being used.
+  // Thus we check here whether it's specialized for the types we use it for
+  // (class members above), and fail loudly at runtime if not.
+  // This check could be done at compile time, but only on very new compilers.
+  if (!std::numeric_limits<typename Point::__NumType>::is_specialized) {
+    throw std::logic_error(
+      "BUG: is_specialized is false for type (mangled): "
+      + std::string(typeid(typename Point::__NumType).name())
+    );
+  }
 }
 
 template<typename Point>
 void sfcnn_work<Point>::sfcnn_work_init(int num_threads)
 {
-  //max = numeric_limits<Point::__NumType::flt_type>::max();
-  //min = -numeric_limits<Point::__NumType::flt_type>::max();
-  max = numeric_limits<typename Point::__NumType>::max();
-  min = numeric_limits<typename Point::__NumType>::min();
-  pair_iter<typename vector<Point>::iterator, 
+  pair_iter<typename vector<Point>::iterator,
     typename vector<long unsigned int>::iterator> a(points.begin(), pointers.begin()),
     b(points.end(), pointers.end());
   sort(a,b,lt);
