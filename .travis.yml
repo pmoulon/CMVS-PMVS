@@ -1,0 +1,66 @@
+#
+# http://travis-ci.org configuration file for CMVS-PMVS
+#
+
+dist: trusty
+sudo: false
+
+language: cpp
+
+matrix:
+  include:
+    - os: linux
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - g++-7
+      env:
+        - MATRIX_EVAL="CC=gcc-7 && CXX=g++-7"
+
+    - os: linux
+      addons:
+        apt:
+          sources:
+            - llvm-toolchain-trusty-5.0
+          packages:
+            - clang-5.0
+      env:
+        - MATRIX_EVAL="CC=clang-5.0 && CXX=clang++-5.0"
+
+    # works on macOS 10.14
+    - os: osx
+      osx_image: xcode10.2
+
+addons:
+  apt:
+    sources:
+      - ubuntu-toolchain-r-test
+    packages:
+      - cmake
+
+before_install:
+    - eval "${MATRIX_EVAL}"
+
+env:
+  global:
+    - PMVS_SOURCE=${TRAVIS_BUILD_DIR}/program
+    - PMVS_BUILD=${TRAVIS_BUILD_DIR}/build
+
+before_script:
+  # Display cmake version
+  - cmake --version
+  # Create build folder
+  - rm -rf $PMVS_BUILD
+  - mkdir $PMVS_BUILD
+  - cd $PMVS_BUILD
+  # Classic release build
+  - >
+    cmake \
+      -DCMAKE_BUILD_TYPE=release \
+      . $PMVS_SOURCE
+
+script:
+# limit GCC builds to a reduced number of thread for the virtual machine
+  - time make all -j 2
