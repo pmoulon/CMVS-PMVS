@@ -17,7 +17,7 @@
 #define REVIVER_POINT_HPP
 
 /*! \file dpoint.hpp
-     \brief Optimized point class file for fixed small dimensional points. 
+     \brief Optimized point class file for fixed small dimensional points.
 */
 
 #include "assert.hpp"
@@ -29,7 +29,7 @@
 namespace reviver {
 // \cond DPOINT
 /*
- Forward Declaration of the main Point Class Eucledian d-dimensional point. 
+ Forward Declaration of the main Point Class Eucledian d-dimensional point.
  The distance is L_2
 */
 template<typename NumType, unsigned D>
@@ -64,7 +64,7 @@ template <typename NumType, unsigned D> struct origin<NumType, D, 0>
 ///////////////////////////////////////////////////////
 template< typename NumType, unsigned D, unsigned I > struct Distance
 {
-   static inline double eval( const dpoint<NumType,D>& p, 
+   static inline double eval( const dpoint<NumType,D>& p,
                               const dpoint<NumType,D>& q )
    {
      double sum = ( (double) p[I] - (double) q[I] );
@@ -77,7 +77,7 @@ template< typename NumType, unsigned D, unsigned I > struct Distance
 // Partial Template Specialization
 template <typename NumType, unsigned D> struct Distance<NumType, D, 0>
 {
-   static inline double eval( const dpoint<NumType,D>& p, 
+   static inline double eval( const dpoint<NumType,D>& p,
                                const dpoint<NumType,D>& q )
    {
      double sum = ((double) p[0] - (double) q[0]);
@@ -90,7 +90,7 @@ template <typename NumType, unsigned D> struct Distance<NumType, D, 0>
 ///////////////////////////////////////////////////////
 template< typename NumType, unsigned D, unsigned I > struct DotProd
 {
-   static inline NumType eval( const dpoint<NumType,D>& p, 
+   static inline NumType eval( const dpoint<NumType,D>& p,
                                const dpoint<NumType,D>& q )
    {
 	  NumType sum = ( p[I] * q[I] );
@@ -102,7 +102,7 @@ template< typename NumType, unsigned D, unsigned I > struct DotProd
 // Partial Template Specialization
 template <typename NumType, unsigned D> struct DotProd<NumType, D, 0>
 {
-   static inline NumType eval( const dpoint<NumType,D>& p, 
+   static inline NumType eval( const dpoint<NumType,D>& p,
                                const dpoint<NumType,D>& q )
    {
 	  return (p[0] * q[0]);
@@ -115,7 +115,7 @@ template <typename NumType, unsigned D> struct DotProd<NumType, D, 0>
 ///////////////////////////////////////////////////////
 template< typename NumType, unsigned D, unsigned I > struct IsEqual
 {
-   static inline bool eval( const dpoint<NumType,D>& p, 
+   static inline bool eval( const dpoint<NumType,D>& p,
                             const dpoint<NumType,D>& q )
    {
 	  if( p[I]  != q[I] ) return false;
@@ -127,7 +127,7 @@ template< typename NumType, unsigned D, unsigned I > struct IsEqual
 // Partial Template Specialization
 template <typename NumType, unsigned D> struct IsEqual<NumType, D, 0>
 {
-   static inline NumType eval( const dpoint<NumType,D>& p, 
+   static inline NumType eval( const dpoint<NumType,D>& p,
                                const dpoint<NumType,D>& q )
    {
 	   return (p[0] == q[0])?1:0;
@@ -166,8 +166,8 @@ template <typename NumType, unsigned D> struct Equate<NumType, D, 0>
 ///////////////////////////////////////////////////////
 template< typename NumType, unsigned D, unsigned I > struct Add
 {
-   static inline void eval( dpoint<NumType,D>& result, 
-                            const dpoint<NumType,D>& p, 
+   static inline void eval( dpoint<NumType,D>& result,
+                            const dpoint<NumType,D>& p,
                             const dpoint<NumType,D>& q )
    {
 	  result[I] = p[I]  + q[I];
@@ -179,8 +179,8 @@ template< typename NumType, unsigned D, unsigned I > struct Add
 // Partial Template Specialization
 template <typename NumType, unsigned D> struct Add<NumType, D, 0>
 {
-   static inline void eval( dpoint<NumType,D>& result, 
-                            const dpoint<NumType,D>& p, 
+   static inline void eval( dpoint<NumType,D>& result,
+                            const dpoint<NumType,D>& p,
                             const dpoint<NumType,D>& q )
    {
 	   result[0] = p[0] + q[0];
@@ -195,8 +195,8 @@ template <typename NumType, unsigned D> struct Add<NumType, D, 0>
 // and addition
 template< typename NumType, unsigned D, unsigned I > struct Subtract
 {
-   static inline void eval( dpoint<NumType,D>& result, 
-                            const dpoint<NumType,D>& p, 
+   static inline void eval( dpoint<NumType,D>& result,
+                            const dpoint<NumType,D>& p,
                             const dpoint<NumType,D>& q )
    {
 	  result[I] = p[I]  - q[I];
@@ -208,8 +208,8 @@ template< typename NumType, unsigned D, unsigned I > struct Subtract
 // Partial Template Specialization
 template <typename NumType, unsigned D> struct Subtract<NumType, D, 0>
 {
-   static inline void eval( dpoint<NumType,D>& result, 
-                            const dpoint<NumType,D>& p, 
+   static inline void eval( dpoint<NumType,D>& result,
+                            const dpoint<NumType,D>& p,
                             const dpoint<NumType,D>& q )
    {
 	   result[0] = p[0] - q[0];
@@ -223,7 +223,7 @@ template <typename NumType, unsigned D> struct Subtract<NumType, D, 0>
 // and addition
 template< typename NumType, unsigned D, unsigned I > struct Multiply
 {
-   static inline void eval( dpoint<NumType,D>& result, 
+   static inline void eval( dpoint<NumType,D>& result,
                             const dpoint<NumType,D>& p, NumType k)
    {
 	  result[I] = p[I] * k;
@@ -235,7 +235,7 @@ template< typename NumType, unsigned D, unsigned I > struct Multiply
 // Partial Template Specialization
 template <typename NumType, unsigned D> struct Multiply<NumType, D, 0>
 {
-   static inline void eval( dpoint<NumType,D>& result, 
+   static inline void eval( dpoint<NumType,D>& result,
                             const dpoint<NumType,D>& p, NumType k )
    {
 	   result[0] = p[0] * k;
@@ -267,9 +267,9 @@ public:
 	/*! Initialize all coordinates to zero. */
 	inline void move2origin(){ origin<NumType, D, D-1>::eval(*this); };
 
-	dpoint(){ 
-		Assert( (D >= 1), "Dimension < 1 not allowed" ); 
-		// move2origin(); 
+	dpoint(){
+		Assert( (D >= 1), "Dimension < 1 not allowed" );
+		// move2origin();
 	};
 
 	// 1 D Point
@@ -279,16 +279,16 @@ public:
 	dpoint(NumType x0,NumType x1){ x[0] = x0;  x[1] = x1; };
 
 	// 3 D Point
-	dpoint(NumType x0,NumType x1,NumType x2){  
-               x[0] = x0;  x[1] = x1; x[2] = x2; 
+	dpoint(NumType x0,NumType x1,NumType x2){
+               x[0] = x0;  x[1] = x1; x[2] = x2;
         };
 
 	// Array Initialization
 	dpoint(NumType ax[]){ for(int i =0; i < D; ++i) x[i] = ax[i]; };
 
 	// Initialization from another point : Copy Constructor
-	dpoint(const dpoint<NumType,D>& p){  
-		Equate<NumType,D,D-1>::eval((*this),p);	
+	dpoint(const dpoint<NumType,D>& p){
+		Equate<NumType,D,D-1>::eval((*this),p);
 	};
 
 	// Destructor
@@ -297,7 +297,7 @@ public:
 	/*! Returns the dimension */
 	inline int      dim() const { return D; };
 
-	/*! Returns the squared distance to a point 
+	/*! Returns the squared distance to a point
 	\param q Point to compute the distance to */
 	inline double  sqr_dist(const dpoint<NumType,D> q) const ;
 
@@ -309,7 +309,7 @@ public:
 	\param q Point to compute dot product with */
 	inline NumType  dotprod (const dpoint<NumType,D> q) const ;
 	inline NumType  sqr_length(void)  const;
-	/*! Normalize the length of a vector defined by the given point to 1, 
+	/*! Normalize the length of a vector defined by the given point to 1,
             and sets current point to the result */
 	inline void     normalize (void);
 
@@ -324,22 +324,22 @@ public:
 
 	/*! Compute the difference between two points */
 	template<typename NT, unsigned __DIM>
-	friend dpoint<NT,__DIM>   operator- (const dpoint<NT,__DIM>& p, 
+	friend dpoint<NT,__DIM>   operator- (const dpoint<NT,__DIM>& p,
                                              const dpoint<NT,__DIM>& q);
 
 	/*! Compute the sum of two points */
 	template<typename NT, unsigned __DIM>
-	friend dpoint<NT,__DIM>   operator+ (const dpoint<NT,__DIM>& p, 
+	friend dpoint<NT,__DIM>   operator+ (const dpoint<NT,__DIM>& p,
              				     const dpoint<NT,__DIM>& q);
 
 	/*! Return true if the coordinates of two points are equal */
 	template<typename NT, unsigned __DIM>
-	friend bool   operator== (const dpoint<NT,__DIM>& p, 
+	friend bool   operator== (const dpoint<NT,__DIM>& p,
 			          const dpoint<NT,__DIM>& q);
 
 	/*! Return true if the coordinates of two points are not equal */
 	template<typename NT, unsigned __DIM>
-	friend bool   operator!= (const dpoint<NT,__DIM>& p, 
+	friend bool   operator!= (const dpoint<NT,__DIM>& p,
  				  const dpoint<NT,__DIM>& q);
 
 
@@ -381,7 +381,7 @@ template<typename NT, unsigned __DIM>
 dpoint<NT,__DIM>
 operator+ (const dpoint<NT,__DIM>& p, const dpoint<NT,__DIM>& q){
 	dpoint<NT,__DIM> result;
-	Add<NT,__DIM,__DIM-1>::eval(result,p,q);	
+	Add<NT,__DIM,__DIM-1>::eval(result,p,q);
 	return result;
 }
 
@@ -389,27 +389,27 @@ template<typename NT, unsigned __DIM>
 dpoint<NT,__DIM>
 operator- (const dpoint<NT,__DIM>& p, const dpoint<NT,__DIM>& q){
 	dpoint<NT,__DIM> result;
-	Subtract<NT,__DIM,__DIM-1>::eval(result,p,q);	
+	Subtract<NT,__DIM,__DIM-1>::eval(result,p,q);
 	return result;
 }
 
 template<typename NT, unsigned __DIM>
 bool
 operator== (const dpoint<NT,__DIM>& p, const dpoint<NT,__DIM>& q){
-	return IsEqual<NT,__DIM,__DIM-1>::eval(p,q);	
+	return IsEqual<NT,__DIM,__DIM-1>::eval(p,q);
 }
 
 template<typename NT, unsigned __DIM>
 bool
 operator!= (const dpoint<NT,__DIM>& p, const dpoint<NT,__DIM>& q){
-	return !(IsEqual<NT,__DIM,__DIM-1>::eval(p,q));	
+	return !(IsEqual<NT,__DIM,__DIM-1>::eval(p,q));
 }
 
 template<typename NT, unsigned __DIM>
 dpoint<NT,__DIM>
 operator* (const dpoint<NT,__DIM>& p, const NT k){
 	dpoint<NT,__DIM> result;
-	Multiply<NT,__DIM,__DIM-1>::eval(result,p,k);	
+	Multiply<NT,__DIM,__DIM-1>::eval(result,p,k);
 	return result;
 }
 
@@ -418,7 +418,7 @@ dpoint<NT,__DIM>
 operator/ (const dpoint<NT,__DIM>& p, const NT k){
 	Assert( (k != 0), "Hell division by zero man...\n");
 	dpoint<NT,__DIM> result;
-	Multiply<NT,__DIM,__DIM-1>::eval(result,p,((double)1.0)/k);	
+	Multiply<NT,__DIM,__DIM-1>::eval(result,p,((double)1.0)/k);
 	return result;
 }
 
@@ -427,7 +427,7 @@ dpoint<NumType,D>&
 dpoint<NumType,D>::operator=(const dpoint<NumType,D> &q)
 {
   Assert((this != &q), "Error p = p");
-  Equate<NumType,D,D-1>::eval(*this,q);	
+  Equate<NumType,D,D-1>::eval(*this,q);
   return *this;
 }
 
@@ -445,28 +445,28 @@ dpoint<NumType,D>::operator[](int i)
 template<typename NumType, unsigned D>
 double
 dpoint<NumType,D>::sqr_dist (const dpoint<NumType,D> q) const {
-	return Distance<NumType,D,D-1>::eval(*this,q);	
+	return Distance<NumType,D,D-1>::eval(*this,q);
 }
 
 template<typename NumType, unsigned D>
-NumType 
+NumType
 dpoint<NumType,D>::distance (const dpoint<NumType,D> q) const {
 	return sqrt(
 		static_cast<double>(Distance<NumType,D,D-1>::eval(*this,q))
-	);	
+	);
 }
 
 
 template<typename NumType, unsigned D>
-NumType 
+NumType
 dpoint<NumType,D>::dotprod (const dpoint<NumType,D> q) const {
-	return DotProd<NumType,D,D-1>::eval(*this,q);	
+	return DotProd<NumType,D,D-1>::eval(*this,q);
 }
 
 template<typename NumType, unsigned D>
-NumType 
+NumType
 dpoint<NumType,D>::sqr_length (void) const {
-	return DotProd<NumType,D,D-1>::eval(*this,*this);	
+	return DotProd<NumType,D,D-1>::eval(*this,*this);
 }
 
 template < class NumType, unsigned D >
@@ -478,7 +478,7 @@ operator<<(std::ostream& os,const dpoint<NumType,D> &p)
 	 for (int i=0; i<(int)D-1; ++i)
 		os << p[i] << ", ";
 	return os << p[D-1] << "))";
-    
+
 }
 
 template < class NumType, unsigned D >
@@ -488,15 +488,14 @@ operator>>(std::istream& is,dpoint<NumType,D> &p)
 	 for (int i=0; i<D; ++i)
 		 if(!(is >> p[i])){
 			 if(!is.eof()){
-			   char errorpoint = is.getloc();
-			   std::cerr << "Error Reading Point:" 
-				     << errorpoint << std::endl;
+				streampos errorpoint = is.tellg();
+				std::cerr << "Error Reading Point:" << errorpoint << std::endl;
 				exit(1);
 			 }
 		 }
-		 
+
 	return is;
-    
+
 }
 
 /*
