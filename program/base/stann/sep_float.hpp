@@ -20,19 +20,19 @@
 #include <cmath>
 #include <iostream>
 
-/*! 
+/*!
   \file sep_float.hpp
-  \brief This class stores a float, double or long double as a 
-  significand exponent pair.  It allows basic arithmetic operations as 
-  well as computing the most significant differing bit (used for z-order 
+  \brief This class stores a float, double or long double as a
+  significand exponent pair.  It allows basic arithmetic operations as
+  well as computing the most significant differing bit (used for z-order
   calculations)
 */
 using namespace std;
 
 //! Seperated float significand
-/*! 
+/*!
   This union stores a seperated float significand.
-  It allows access to the significand as a floating 
+  It allows access to the significand as a floating
   point type or as an unsigned long integer
 */
 template<typename T>
@@ -45,9 +45,9 @@ union sep_float_sig
 };
 
 //! XOR function
-/*! 
+/*!
   This templated function computes a bitwise XOR of two
-  sep_float_sig unions, based on the size of the underlying 
+  sep_float_sig unions, based on the size of the underlying
   floating point data type.
   \param a First value to be XORed
   \param b Second value to be XORed
@@ -83,7 +83,7 @@ class sep_float
     return os;
   }
   /*! msdb function
-    \brief This function computes the most significant differing 
+    \brief This function computes the most significant differing
     bit of two seperated floating point numbers.  The return value is
     the exponent of the highest order bit that differs between the two numbers.
     Note: The msdb of the two floating point numbers is NOT computed based
@@ -110,7 +110,7 @@ class sep_float
     else
       return y.exp;
   }
-  
+
   template <typename T>
   friend sep_float<FLT>& operator+=(sep_float<FLT> &y, T &x)
   {
@@ -130,7 +130,7 @@ public:
   {
     sep_set_val(x);
   }
-  
+
   sep_float(const sep_float<FLT> &x)
   {
     sep_float_copy(x);
@@ -198,29 +198,31 @@ private:
   FLT                val; // = 0;
 };
 
-
-template<> class std::numeric_limits < sep_float<float> >
+namespace std
 {
-public:
-  static const bool is_specialized = true;
-  static float max() throw() {return numeric_limits<float>::max();}
-  static float min() throw() {return -numeric_limits<float>::max();}
-};
+  template<> class numeric_limits < sep_float<float> >
+  {
+  public:
+    static const bool is_specialized = true;
+    static float max() throw() {return numeric_limits<float>::max();}
+    static float min() throw() {return -numeric_limits<float>::max();}
+  };
 
-template<> class std::numeric_limits < sep_float<double> >
-{
-public:
-  static const bool is_specialized = true;
-  static double max() throw() {return numeric_limits<double>::max();}
-  static double min() throw() {return -numeric_limits<double>::max();}
-};
+  template<> class numeric_limits < sep_float<double> >
+  {
+  public:
+    static const bool is_specialized = true;
+    static double max() throw() {return numeric_limits<double>::max();}
+    static double min() throw() {return -numeric_limits<double>::max();}
+  };
 
-template<> class std::numeric_limits < sep_float<long double> >
-{
-public:
-  static const bool is_specialized = true;
-  static long double max() throw() {return numeric_limits<long double>::max();}
-  static long double min() throw() {return -numeric_limits<long double>::max();}
-};
+  template<> class numeric_limits < sep_float<long double> >
+  {
+  public:
+    static const bool is_specialized = true;
+    static long double max() throw() {return numeric_limits<long double>::max();}
+    static long double min() throw() {return -numeric_limits<long double>::max();}
+  };
+}
 
 #endif
