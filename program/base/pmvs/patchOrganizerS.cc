@@ -1,6 +1,8 @@
 #define _USE_MATH_DEFINES
 #include <cmath>
 
+#include <iomanip>
+#include <limits>
 #include <string>
 #include "patchOrganizerS.h"
 #include "findMatch.h"
@@ -91,6 +93,11 @@ void CpatchOrganizerS::writePatches2(const std::string prefix, bool bExportPLY, 
     sprintf(buffer, "%s.patch", prefix.c_str());
     ofstream ofstr;
     ofstr.open(buffer);
+
+    // Set output to full precision to be able to fully round-trip
+    // the text representation with what we have in memory.
+    ofstr << std::setprecision(std::numeric_limits<double>::max_digits10);
+
     ofstr << "PATCHES" << endl
           << (int)m_ppatches.size() << endl;
     for (int p = 0; p < (int)m_ppatches.size(); ++p) {
@@ -696,6 +703,11 @@ void CpatchOrganizerS::writePLY(const std::vector<Ppatch>& patches,
                                 const std::string filename) {
   ofstream ofstr;
   ofstr.open(filename.c_str());
+
+  // Set output to full precision to be able to fully round-trip
+  // the text representation with what we have in memory.
+  ofstr << std::setprecision(std::numeric_limits<double>::max_digits10);
+
   ofstr << "ply" << '\n'
        << "format ascii 1.0" << '\n'
        << "element vertex " << (int)patches.size() << '\n'
@@ -708,6 +720,7 @@ void CpatchOrganizerS::writePLY(const std::vector<Ppatch>& patches,
        << "property uchar diffuse_red" << '\n'
        << "property uchar diffuse_green" << '\n'
        << "property uchar diffuse_blue" << '\n'
+       << "property float quality" << '\n'
        << "end_header" << '\n';
 
   vector<Ppatch>::const_iterator bpatch = patches.begin();
@@ -775,7 +788,8 @@ void CpatchOrganizerS::writePLY(const std::vector<Ppatch>& patches,
           << (*bpatch)->m_normal[0] << ' '
           << (*bpatch)->m_normal[1] << ' '
           << (*bpatch)->m_normal[2] << ' '
-          << color[0] << ' ' << color[1] << ' ' << color[2] << '\n';
+          << color[0] << ' ' << color[1] << ' ' << color[2] << ' '
+          << (*bpatch)->m_ncc << '\n';
       ++bpatch;
   }
   ofstr.close();  
@@ -786,6 +800,11 @@ void CpatchOrganizerS::writePLY(const std::vector<Ppatch>& patches,
                                 const std::vector<Vec3i>& colors) {
   ofstream ofstr;
   ofstr.open(filename.c_str());
+
+  // Set output to full precision to be able to fully round-trip
+  // the text representation with what we have in memory.
+  ofstr << std::setprecision(std::numeric_limits<double>::max_digits10);
+
   ofstr << "ply" << '\n'
        << "format ascii 1.0" << '\n'
        << "element vertex " << (int)patches.size() << '\n'

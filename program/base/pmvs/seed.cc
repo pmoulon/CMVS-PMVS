@@ -2,6 +2,7 @@
 #include <numeric>
 #include <ctime>
 #include <time.h>
+#include <random>
 #include "seed.h"
 #include "findMatch.h"
 
@@ -39,6 +40,9 @@ void Cseed::readPoints(const std::vector<std::vector<Cpoint> >& points) {
   }
 }
 
+// Arbitrary seed for deterministic pseudorandomness.
+static const unsigned int RANDOM_SEED = 42;
+
 void Cseed::run(void) {
   m_fm.m_count = 0;
   m_fm.m_jobs.clear();
@@ -55,7 +59,8 @@ void Cseed::run(void) {
   for (int i = 0; i < m_fm.m_tnum; ++i)
     vitmp.push_back(i);
 
-  random_shuffle(vitmp.begin(), vitmp.end());
+  std::mt19937 gen(RANDOM_SEED);
+  shuffle(vitmp.begin(), vitmp.end(), gen);
   m_fm.m_jobs.insert(m_fm.m_jobs.end(), vitmp.begin(), vitmp.end());
 
   cerr << "adding seeds " << endl;
