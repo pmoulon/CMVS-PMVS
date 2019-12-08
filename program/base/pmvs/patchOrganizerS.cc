@@ -249,7 +249,7 @@ void CpatchOrganizerS::collectPatches(std::priority_queue<Patch::Ppatch,
 void CpatchOrganizerS::collectPatches(const int index,
                                      std::priority_queue<Patch::Ppatch, std::vector<Patch::Ppatch>,
                                       P_compare>& pqpatches) {
-  std::lock_guard<std::mutex> const lock(m_fm.m_imageLocks[index]);
+  const std::lock_guard<std::mutex> lock(m_fm.m_imageLocks[index]);
   for (int i = 0; i < (int)m_pgrids[index].size(); ++i) {
     vector<Ppatch>::iterator begin = m_pgrids[index][i].begin();
     vector<Ppatch>::iterator end = m_pgrids[index][i].end();
@@ -267,7 +267,7 @@ void CpatchOrganizerS::collectPatches(const int index,
 // Should be used only for writing
 void CpatchOrganizerS::collectNonFixPatches(const int index,
                                       std::vector<Patch::Ppatch>& ppatches) {
-  std::lock_guard<std::mutex> const lock(m_fm.m_imageLocks[index]);
+  const std::lock_guard<std::mutex> lock(m_fm.m_imageLocks[index]);
   for (int i = 0; i < (int)m_pgrids[index].size(); ++i) {
     vector<Ppatch>::iterator begin = m_pgrids[index][i].begin();
     vector<Ppatch>::iterator end = m_pgrids[index][i].end();
@@ -316,7 +316,7 @@ void CpatchOrganizerS::addPatch(Patch::Ppatch& ppatch) {
     
     const int index2 = (*bgrid)[1] * m_gwidths[index] + (*bgrid)[0];
     {
-        std::lock_guard<std::mutex> const lock(m_fm.m_imageLocks[index]);
+        const std::lock_guard<std::mutex> lock(m_fm.m_imageLocks[index]);
         m_pgrids[index][index2].push_back(ppatch);
     }
     ++bimage;
@@ -335,7 +335,7 @@ void CpatchOrganizerS::addPatch(Patch::Ppatch& ppatch) {
     const int index = *bimage;
     const int index2 = (*bgrid)[1] * m_gwidths[index] + (*bgrid)[0];
     {
-        std::lock_guard<std::mutex> const lock(m_fm.m_imageLocks[index]);
+        const std::lock_guard<std::mutex> lock(m_fm.m_imageLocks[index]);
         m_vpgrids[index][index2].push_back(ppatch);
     }
     ++bimage;
@@ -357,7 +357,7 @@ void CpatchOrganizerS::updateDepthMaps(Ppatch& ppatch) {
     const float depth = m_fm.m_pss.m_photos[image].m_oaxis * ppatch->m_coord;
 
     {
-        std::lock_guard<std::mutex> const lock(m_fm.m_imageLocks[image]);
+        const std::lock_guard<std::mutex> lock(m_fm.m_imageLocks[image]);
     for (int j = 0; j < 2; ++j) {
       for (int i = 0; i < 2; ++i) {
 	if (xs[i] < 0 || m_gwidths[image] <= xs[i] ||

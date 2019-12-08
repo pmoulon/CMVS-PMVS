@@ -295,7 +295,7 @@ int Cexpand::checkCounts(Patch::Cpatch& patch) {
 
     int flag = 0;
     {
-        std::lock_guard<std::mutex> const lock(m_fm.m_imageLocks[index]);
+        const std::lock_guard<std::mutex> lock(m_fm.m_imageLocks[index]);
         if (!m_fm.m_pos.m_pgrids[index][index2].empty())
             flag = 1;
     }
@@ -305,7 +305,7 @@ int Cexpand::checkCounts(Patch::Cpatch& patch) {
     }
     
     //mtx_lock(&m_fm.m_countLocks[index]);
-    std::lock_guard<std::mutex> const lock(m_fm.m_countLocks[index]);
+    const std::lock_guard<std::mutex> lock(m_fm.m_countLocks[index]);
     if (m_fm.m_countThreshold1 <= m_fm.m_pos.m_counts[index][index2])
       ++full;
     else
@@ -357,7 +357,7 @@ int Cexpand::updateCounts(const Cpatch& patch) {
       
       const int index2 = iy * m_fm.m_pos.m_gwidths[index] + ix;
       
-      std::lock_guard<std::mutex> const lock(m_fm.m_countLocks[index]);
+      const std::lock_guard<std::mutex> lock(m_fm.m_countLocks[index]);
       if (m_fm.m_countThreshold1 <= m_fm.m_pos.m_counts[index][index2])
         ++full;
       else
@@ -393,7 +393,7 @@ int Cexpand::updateCounts(const Cpatch& patch) {
       
       const int index2 = iy * m_fm.m_pos.m_gwidths[index] + ix;
       
-      std::lock_guard<std::mutex> const lock(m_fm.m_countLocks[index]);
+      const std::lock_guard<std::mutex> lock(m_fm.m_countLocks[index]);
       if (m_fm.m_countThreshold1 <= m_fm.m_pos.m_counts[index][index2])
         ++full;
       else
