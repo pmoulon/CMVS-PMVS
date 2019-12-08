@@ -1,6 +1,7 @@
 #include "tinycthread.h"
 #include <numeric>
 #include <ctime>
+#include <optional>
 #include <time.h>
 #include "../numeric/mylapack.h"
 #include "findMatch.h"
@@ -98,8 +99,10 @@ float Cfilter::computeGain(const Patch::Cpatch& patch, const int lock) {
     const int index2 = iy * m_fm.m_pos.m_gwidths[index] + ix;
     
     float maxpressure = 0.0f;
+    {
+    std::optional<std::lock_guard<std::mutex>> guard;
     if (lock)
-      m_fm.m_imageLocks[index].rdlock();
+        guard.emplace(m_fm.m_imageLocks[index]);
     
     for (int j = 0; j < (int)m_fm.m_pos.m_pgrids[index][index2].size(); ++j) {
       if (!m_fm.isNeighbor(patch, *m_fm.m_pos.m_pgrids[index][index2][j],
@@ -107,9 +110,8 @@ float Cfilter::computeGain(const Patch::Cpatch& patch, const int lock) {
         maxpressure = max(maxpressure, m_fm.m_pos.m_pgrids[index][index2][j]->m_ncc -
                           m_fm.m_nccThreshold);
     }
-    if (lock)
-      m_fm.m_imageLocks[index].unlock();
-    
+    }
+
     gain -= maxpressure;
   }
   
@@ -125,8 +127,10 @@ float Cfilter::computeGain(const Patch::Cpatch& patch, const int lock) {
     const int index2 = iy * m_fm.m_pos.m_gwidths[index] + ix;
     float maxpressure = 0.0f;      
 
+    {
+    std::optional<std::lock_guard<std::mutex>> guard;
     if (lock)
-      m_fm.m_imageLocks[index].rdlock();
+        guard.emplace(m_fm.m_imageLocks[index]);
     
     for (int j = 0; j < (int)m_fm.m_pos.m_pgrids[index][index2].size(); ++j) {
       const float bdepth = m_fm.m_pss.computeDepth(index, m_fm.m_pos.m_pgrids[index][index2][j]->m_coord);
@@ -138,8 +142,7 @@ float Cfilter::computeGain(const Patch::Cpatch& patch, const int lock) {
                           m_fm.m_nccThreshold);
       }
     }
-    if (lock)
-      m_fm.m_imageLocks[index].unlock();
+    }
     
     gain -= maxpressure;
   }

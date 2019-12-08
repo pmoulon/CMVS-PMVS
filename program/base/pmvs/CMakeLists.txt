@@ -26,3 +26,7 @@ point.cc
 seed.h
 seed.cc
 )
+
+set_target_properties(pmvs_lib PROPERTIES
+    CXX_STANDARD 17
+    CXX_EXTENSIONS OFF)

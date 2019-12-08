@@ -6,6 +6,7 @@
 #include <string>
 #include "patchOrganizerS.h"
 #include "findMatch.h"
+#include <mutex>
 
 using namespace PMVS3;
 using namespace Patch;
@@ -248,7 +249,7 @@ void CpatchOrganizerS::collectPatches(std::priority_queue<Patch::Ppatch,
 void CpatchOrganizerS::collectPatches(const int index,
                                      std::priority_queue<Patch::Ppatch, std::vector<Patch::Ppatch>,
                                       P_compare>& pqpatches) {
-  m_fm.m_imageLocks[index].wrlock();
+  std::lock_guard<std::mutex> const lock(m_fm.m_imageLocks[index]);
   for (int i = 0; i < (int)m_pgrids[index].size(); ++i) {
     vector<Ppatch>::iterator begin = m_pgrids[index][i].begin();
     vector<Ppatch>::iterator end = m_pgrids[index][i].end();
@@ -261,13 +262,12 @@ void CpatchOrganizerS::collectPatches(const int index,
       ++begin;
     }
   }
-  m_fm.m_imageLocks[index].unlock();
 }
 
 // Should be used only for writing
 void CpatchOrganizerS::collectNonFixPatches(const int index,
                                       std::vector<Patch::Ppatch>& ppatches) {
-  m_fm.m_imageLocks[index].wrlock();;
+  std::lock_guard<std::mutex> const lock(m_fm.m_imageLocks[index]);
   for (int i = 0; i < (int)m_pgrids[index].size(); ++i) {
     vector<Ppatch>::iterator begin = m_pgrids[index][i].begin();
     vector<Ppatch>::iterator end = m_pgrids[index][i].end();
@@ -279,7 +279,6 @@ void CpatchOrganizerS::collectNonFixPatches(const int index,
       ++begin;
     }
   }
-  m_fm.m_imageLocks[index].unlock();
 }
 
 void CpatchOrganizerS::clearFlags(void) {
@@ -316,9 +315,10 @@ void CpatchOrganizerS::addPatch(Patch::Ppatch& ppatch) {
     }
     
     const int index2 = (*bgrid)[1] * m_gwidths[index] + (*bgrid)[0];
-    m_fm.m_imageLocks[index].wrlock();
-    m_pgrids[index][index2].push_back(ppatch);
-	m_fm.m_imageLocks[index].unlock();
+    {
+        std::lock_guard<std::mutex> const lock(m_fm.m_imageLocks[index]);
+        m_pgrids[index][index2].push_back(ppatch);
+    }
     ++bimage;
     ++bgrid;
   }
@@ -334,9 +334,10 @@ void CpatchOrganizerS::addPatch(Patch::Ppatch& ppatch) {
   while (bimage != eimage) {
     const int index = *bimage;
     const int index2 = (*bgrid)[1] * m_gwidths[index] + (*bgrid)[0];
-	m_fm.m_imageLocks[index].wrlock();
-    m_vpgrids[index][index2].push_back(ppatch);
-	m_fm.m_imageLocks[index].unlock();
+    {
+        std::lock_guard<std::mutex> const lock(m_fm.m_imageLocks[index]);
+        m_vpgrids[index][index2].push_back(ppatch);
+    }
     ++bimage;
     ++bgrid;
   }
@@ -355,7 +356,8 @@ void CpatchOrganizerS::updateDepthMaps(Ppatch& ppatch) {
     
     const float depth = m_fm.m_pss.m_photos[image].m_oaxis * ppatch->m_coord;
 
-	m_fm.m_imageLocks[image].wrlock();
+    {
+        std::lock_guard<std::mutex> const lock(m_fm.m_imageLocks[image]);
     for (int j = 0; j < 2; ++j) {
       for (int i = 0; i < 2; ++i) {
 	if (xs[i] < 0 || m_gwidths[image] <= xs[i] ||
@@ -374,7 +376,7 @@ void CpatchOrganizerS::updateDepthMaps(Ppatch& ppatch) {
 	}
       }
     }
-    m_fm.m_imageLocks[image].unlock();
+    }
   }
 }
 
@@ -513,16 +515,17 @@ int CpatchOrganizerS::isVisible(const Cpatch& patch, const int image,
   Ppatch dppatch = m_MAXDEPTH;
   const int index = iy * gwidth + ix;
   
+  {
+  std::optional<std::lock_guard<std::mutex>> guard;
   if (lock)
-    m_fm.m_imageLocks[image].rdlock();
+      guard.emplace(m_fm.m_imageLocks[image]);
 
   if (m_dpgrids[image][index] == m_MAXDEPTH)
     ans = 1;
   else
     dppatch = m_dpgrids[image][index];
-  
-  if (lock)
-    m_fm.m_imageLocks[image].unlock();
+
+   }
 
   if (ans == 1)
     return 1;
@@ -571,8 +574,11 @@ void CpatchOrganizerS::findNeighbors(const Patch::Cpatch& patch,
     const int image = *bimage;
     const int& ix = (*bgrid)[0];
     const int& iy = (*bgrid)[1];
+
+    {
+    std::optional<std::lock_guard<std::mutex>> guard;
     if (lock)
-      m_fm.m_imageLocks[image].rdlock();
+        guard.emplace(m_fm.m_imageLocks[image]);
     for (int j = -margin; j <= margin; ++j) {
       const int ytmp = iy + j;
       if (ytmp < 0 || m_fm.m_pos.m_gheights[image] <= ytmp)
@@ -604,8 +610,7 @@ void CpatchOrganizerS::findNeighbors(const Patch::Cpatch& patch,
         }
       }
     }
-    if (lock)
-      m_fm.m_imageLocks[image].unlock();
+    }
 
     ++bimage;
     ++bgrid;
@@ -620,8 +625,10 @@ void CpatchOrganizerS::findNeighbors(const Patch::Cpatch& patch,
       const int image = *bimage;
       const int& ix = (*bgrid)[0];
       const int& iy = (*bgrid)[1];
+      {
+      std::optional<std::lock_guard<std::mutex>> guard;
       if (lock)
-        m_fm.m_imageLocks[image].rdlock();
+          guard.emplace(m_fm.m_imageLocks[image]);
       for (int j = -margin; j <= margin; ++j) {
         const int ytmp = iy + j;
         if (ytmp < 0 || m_fm.m_pos.m_gheights[image] <= ytmp)
@@ -653,9 +660,8 @@ void CpatchOrganizerS::findNeighbors(const Patch::Cpatch& patch,
           }
         }
       }
-      if (lock)
-        m_fm.m_imageLocks[image].unlock();
-      
+    }
+
       ++bimage;
       ++bgrid;
     }

@@ -6,6 +6,7 @@
 #include <string>
 #include <iostream>
 #include <fstream>
+#include <mutex>
 #include <queue>
 #include "patch.h"
 #include <boost/shared_ptr.hpp>
@@ -129,8 +130,8 @@ class CfindMatch {
   // General lock
   mtx_t m_lock;
   // For each image
-  std::vector<RWMutex> m_imageLocks;
-  std::vector<RWMutex> m_countLocks;
+  std::vector<std::mutex> m_imageLocks;
+  std::vector<std::mutex> m_countLocks;
   // count
   int m_count;
   // jobs
