@@ -317,8 +317,8 @@ void CpatchOrganizerS::addPatch(Patch::Ppatch& ppatch) {
     
     const int index2 = (*bgrid)[1] * m_gwidths[index] + (*bgrid)[0];
     {
-        const std::lock_guard<std::mutex> lock(m_fm.m_imageLocks[index]);
-        m_pgrids[index][index2].push_back(ppatch);
+      const std::lock_guard<std::mutex> lock(m_fm.m_imageLocks[index]);
+      m_pgrids[index][index2].push_back(ppatch);
     }
     ++bimage;
     ++bgrid;
@@ -336,8 +336,8 @@ void CpatchOrganizerS::addPatch(Patch::Ppatch& ppatch) {
     const int index = *bimage;
     const int index2 = (*bgrid)[1] * m_gwidths[index] + (*bgrid)[0];
     {
-        const std::lock_guard<std::mutex> lock(m_fm.m_imageLocks[index]);
-        m_vpgrids[index][index2].push_back(ppatch);
+      const std::lock_guard<std::mutex> lock(m_fm.m_imageLocks[index]);
+      m_vpgrids[index][index2].push_back(ppatch);
     }
     ++bimage;
     ++bgrid;
@@ -358,25 +358,25 @@ void CpatchOrganizerS::updateDepthMaps(Ppatch& ppatch) {
     const float depth = m_fm.m_pss.m_photos[image].m_oaxis * ppatch->m_coord;
 
     {
-        const std::lock_guard<std::mutex> lock(m_fm.m_imageLocks[image]);
-    for (int j = 0; j < 2; ++j) {
-      for (int i = 0; i < 2; ++i) {
-	if (xs[i] < 0 || m_gwidths[image] <= xs[i] ||
-            ys[j] < 0 || m_gheights[image] <= ys[j])
-	  continue;
+      const std::lock_guard<std::mutex> lock(m_fm.m_imageLocks[image]);
+      for (int j = 0; j < 2; ++j) {
+        for (int i = 0; i < 2; ++i) {
+          if (xs[i] < 0 || m_gwidths[image] <= xs[i] ||
+              ys[j] < 0 || m_gheights[image] <= ys[j])
+            continue;
 
-        const int index = ys[j] * m_gwidths[image] + xs[i];
-	if (m_dpgrids[image][index] == m_MAXDEPTH)
-	  m_dpgrids[image][index] = ppatch;
-	else {
-	  const float dtmp = m_fm.m_pss.m_photos[image].m_oaxis *
-	    m_dpgrids[image][index]->m_coord;
-	  
-	  if (depth < dtmp)
-	    m_dpgrids[image][index] = ppatch;
-	}
+          const int index = ys[j] * m_gwidths[image] + xs[i];
+          if (m_dpgrids[image][index] == m_MAXDEPTH)
+            m_dpgrids[image][index] = ppatch;
+          else {
+            const float dtmp = m_fm.m_pss.m_photos[image].m_oaxis *
+              m_dpgrids[image][index]->m_coord;
+
+            if (depth < dtmp)
+              m_dpgrids[image][index] = ppatch;
+          }
+        }
       }
-    }
     }
   }
 }

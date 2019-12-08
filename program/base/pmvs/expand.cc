@@ -295,9 +295,9 @@ int Cexpand::checkCounts(Patch::Cpatch& patch) {
 
     int flag = 0;
     {
-        const std::lock_guard<std::mutex> lock(m_fm.m_imageLocks[index]);
-        if (!m_fm.m_pos.m_pgrids[index][index2].empty())
-            flag = 1;
+      const std::lock_guard<std::mutex> lock(m_fm.m_imageLocks[index]);
+      if (!m_fm.m_pos.m_pgrids[index][index2].empty())
+        flag = 1;
     }
     if (flag) {
       ++full;      ++begin;
