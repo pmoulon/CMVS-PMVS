@@ -516,9 +516,9 @@ int CpatchOrganizerS::isVisible(const Cpatch& patch, const int image,
   const int index = iy * gwidth + ix;
   
   {
-  std::optional<std::lock_guard<std::mutex>> guard;
+  std::unique_ptr<std::lock_guard<std::mutex>> guard;
   if (lock)
-      guard.emplace(m_fm.m_imageLocks[image]);
+      guard = std::make_unique<std::lock_guard<std::mutex>>(m_fm.m_imageLocks[image]);
 
   if (m_dpgrids[image][index] == m_MAXDEPTH)
     ans = 1;
@@ -576,9 +576,9 @@ void CpatchOrganizerS::findNeighbors(const Patch::Cpatch& patch,
     const int& iy = (*bgrid)[1];
 
     {
-    std::optional<std::lock_guard<std::mutex>> guard;
+    std::unique_ptr<std::lock_guard<std::mutex>> guard;
     if (lock)
-        guard.emplace(m_fm.m_imageLocks[image]);
+        guard = std::make_unique<std::lock_guard<std::mutex>>(m_fm.m_imageLocks[image]);
     for (int j = -margin; j <= margin; ++j) {
       const int ytmp = iy + j;
       if (ytmp < 0 || m_fm.m_pos.m_gheights[image] <= ytmp)
@@ -626,9 +626,9 @@ void CpatchOrganizerS::findNeighbors(const Patch::Cpatch& patch,
       const int& ix = (*bgrid)[0];
       const int& iy = (*bgrid)[1];
       {
-      std::optional<std::lock_guard<std::mutex>> guard;
+      std::unique_ptr<std::lock_guard<std::mutex>> guard;
       if (lock)
-          guard.emplace(m_fm.m_imageLocks[image]);
+          guard = std::make_unique<std::lock_guard<std::mutex>>(m_fm.m_imageLocks[image]);
       for (int j = -margin; j <= margin; ++j) {
         const int ytmp = iy + j;
         if (ytmp < 0 || m_fm.m_pos.m_gheights[image] <= ytmp)
