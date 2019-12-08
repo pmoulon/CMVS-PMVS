@@ -1,6 +1,7 @@
 #define _USE_MATH_DEFINES
 #include <cmath>
 
+#include <deque>
 #include <iomanip>
 #include <limits>
 #include <string>
@@ -516,16 +517,15 @@ int CpatchOrganizerS::isVisible(const Cpatch& patch, const int image,
   const int index = iy * gwidth + ix;
   
   {
-  std::unique_ptr<std::lock_guard<std::mutex>> guard;
-  if (lock)
-      guard = std::make_unique<std::lock_guard<std::mutex>>(m_fm.m_imageLocks[image]);
+    std::deque<std::lock_guard<std::mutex>> guard;
+    if (lock)
+      guard.emplace_back(m_fm.m_imageLocks[image]);
 
-  if (m_dpgrids[image][index] == m_MAXDEPTH)
-    ans = 1;
-  else
-    dppatch = m_dpgrids[image][index];
-
-   }
+    if (m_dpgrids[image][index] == m_MAXDEPTH)
+      ans = 1;
+    else
+      dppatch = m_dpgrids[image][index];
+  }
 
   if (ans == 1)
     return 1;
@@ -576,40 +576,40 @@ void CpatchOrganizerS::findNeighbors(const Patch::Cpatch& patch,
     const int& iy = (*bgrid)[1];
 
     {
-    std::unique_ptr<std::lock_guard<std::mutex>> guard;
-    if (lock)
-        guard = std::make_unique<std::lock_guard<std::mutex>>(m_fm.m_imageLocks[image]);
-    for (int j = -margin; j <= margin; ++j) {
-      const int ytmp = iy + j;
-      if (ytmp < 0 || m_fm.m_pos.m_gheights[image] <= ytmp)
-        continue;
-      for (int i = -margin; i <= margin; ++i) {
-        const int xtmp = ix + i;
-        if (xtmp < 0 || m_fm.m_pos.m_gwidths[image] <= xtmp)
+      std::deque<std::lock_guard<std::mutex>> guard;
+      if (lock)
+        guard.emplace_back(m_fm.m_imageLocks[image]);
+      for (int j = -margin; j <= margin; ++j) {
+        const int ytmp = iy + j;
+        if (ytmp < 0 || m_fm.m_pos.m_gheights[image] <= ytmp)
           continue;
-        const int index = ytmp * m_fm.m_pos.m_gwidths[image] + xtmp;
-        vector<Ppatch>::const_iterator bpatch =
-          m_fm.m_pos.m_pgrids[image][index].begin();
-        vector<Ppatch>::const_iterator epatch =
-          m_fm.m_pos.m_pgrids[image][index].end();
-        while (bpatch != epatch) {
-          if (m_fm.isNeighborRadius(patch, **bpatch, unit,
-                                          m_fm.m_neighborThreshold * scale,
-                                          radius))
-            neighbors.push_back(*bpatch);
-          ++bpatch;
-        }
-        bpatch = m_fm.m_pos.m_vpgrids[image][index].begin();
-        epatch = m_fm.m_pos.m_vpgrids[image][index].end();
-        while (bpatch != epatch) {
-          if (m_fm.isNeighborRadius(patch, **bpatch, unit,
-                                    m_fm.m_neighborThreshold * scale,
-                                    radius))
-            neighbors.push_back(*bpatch);
-          ++bpatch;
+        for (int i = -margin; i <= margin; ++i) {
+          const int xtmp = ix + i;
+          if (xtmp < 0 || m_fm.m_pos.m_gwidths[image] <= xtmp)
+            continue;
+          const int index = ytmp * m_fm.m_pos.m_gwidths[image] + xtmp;
+          vector<Ppatch>::const_iterator bpatch =
+            m_fm.m_pos.m_pgrids[image][index].begin();
+          vector<Ppatch>::const_iterator epatch =
+            m_fm.m_pos.m_pgrids[image][index].end();
+          while (bpatch != epatch) {
+            if (m_fm.isNeighborRadius(patch, **bpatch, unit,
+                                            m_fm.m_neighborThreshold * scale,
+                                            radius))
+              neighbors.push_back(*bpatch);
+            ++bpatch;
+          }
+          bpatch = m_fm.m_pos.m_vpgrids[image][index].begin();
+          epatch = m_fm.m_pos.m_vpgrids[image][index].end();
+          while (bpatch != epatch) {
+            if (m_fm.isNeighborRadius(patch, **bpatch, unit,
+                                      m_fm.m_neighborThreshold * scale,
+                                      radius))
+              neighbors.push_back(*bpatch);
+            ++bpatch;
+          }
         }
       }
-    }
     }
 
     ++bimage;
@@ -626,41 +626,41 @@ void CpatchOrganizerS::findNeighbors(const Patch::Cpatch& patch,
       const int& ix = (*bgrid)[0];
       const int& iy = (*bgrid)[1];
       {
-      std::unique_ptr<std::lock_guard<std::mutex>> guard;
-      if (lock)
-          guard = std::make_unique<std::lock_guard<std::mutex>>(m_fm.m_imageLocks[image]);
-      for (int j = -margin; j <= margin; ++j) {
-        const int ytmp = iy + j;
-        if (ytmp < 0 || m_fm.m_pos.m_gheights[image] <= ytmp)
-          continue;
-        for (int i = -margin; i <= margin; ++i) {
-          const int xtmp = ix + i;
-          if (xtmp < 0 || m_fm.m_pos.m_gwidths[image] <= xtmp)
+        std::deque<std::lock_guard<std::mutex>> guard;
+        if (lock)
+          guard.emplace_back(m_fm.m_imageLocks[image]);
+        for (int j = -margin; j <= margin; ++j) {
+          const int ytmp = iy + j;
+          if (ytmp < 0 || m_fm.m_pos.m_gheights[image] <= ytmp)
             continue;
-          const int index = ytmp * m_fm.m_pos.m_gwidths[image] + xtmp;
-          vector<Ppatch>::const_iterator bpatch =
-            m_fm.m_pos.m_pgrids[image][index].begin();
-          vector<Ppatch>::const_iterator epatch =
-            m_fm.m_pos.m_pgrids[image][index].end();
-          while (bpatch != epatch) {
-            if (m_fm.isNeighborRadius(patch, **bpatch, unit,
-                                      m_fm.m_neighborThreshold * scale,
-                                      radius))
-              neighbors.push_back(*bpatch);
-            ++bpatch;
-          }
-          bpatch = m_fm.m_pos.m_vpgrids[image][index].begin();
-          epatch = m_fm.m_pos.m_vpgrids[image][index].end();
-          while (bpatch != epatch) {
-            if (m_fm.isNeighborRadius(patch, **bpatch, unit,
-                                      m_fm.m_neighborThreshold * scale,
-                                      radius))
-              neighbors.push_back(*bpatch);
-            ++bpatch;
+          for (int i = -margin; i <= margin; ++i) {
+            const int xtmp = ix + i;
+            if (xtmp < 0 || m_fm.m_pos.m_gwidths[image] <= xtmp)
+              continue;
+            const int index = ytmp * m_fm.m_pos.m_gwidths[image] + xtmp;
+            vector<Ppatch>::const_iterator bpatch =
+              m_fm.m_pos.m_pgrids[image][index].begin();
+            vector<Ppatch>::const_iterator epatch =
+              m_fm.m_pos.m_pgrids[image][index].end();
+            while (bpatch != epatch) {
+              if (m_fm.isNeighborRadius(patch, **bpatch, unit,
+                                        m_fm.m_neighborThreshold * scale,
+                                        radius))
+                neighbors.push_back(*bpatch);
+              ++bpatch;
+            }
+            bpatch = m_fm.m_pos.m_vpgrids[image][index].begin();
+            epatch = m_fm.m_pos.m_vpgrids[image][index].end();
+            while (bpatch != epatch) {
+              if (m_fm.isNeighborRadius(patch, **bpatch, unit,
+                                        m_fm.m_neighborThreshold * scale,
+                                        radius))
+                neighbors.push_back(*bpatch);
+              ++bpatch;
+            }
           }
         }
       }
-    }
 
       ++bimage;
       ++bgrid;

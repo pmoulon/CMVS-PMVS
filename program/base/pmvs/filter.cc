@@ -1,4 +1,5 @@
 #include "tinycthread.h"
+#include <deque>
 #include <numeric>
 #include <ctime>
 #include <time.h>
@@ -98,17 +99,18 @@ float Cfilter::computeGain(const Patch::Cpatch& patch, const int lock) {
     const int index2 = iy * m_fm.m_pos.m_gwidths[index] + ix;
     
     float maxpressure = 0.0f;
+
     {
-    std::unique_ptr<std::lock_guard<std::mutex>> guard;
-    if (lock)
-        guard = std::make_unique<std::lock_guard<std::mutex>>(m_fm.m_imageLocks[index]);
-    
-    for (int j = 0; j < (int)m_fm.m_pos.m_pgrids[index][index2].size(); ++j) {
-      if (!m_fm.isNeighbor(patch, *m_fm.m_pos.m_pgrids[index][index2][j],
-                           m_fm.m_neighborThreshold1))
-        maxpressure = max(maxpressure, m_fm.m_pos.m_pgrids[index][index2][j]->m_ncc -
-                          m_fm.m_nccThreshold);
-    }
+      std::deque<std::lock_guard<std::mutex>> guard;
+      if (lock)
+        guard.emplace_back(m_fm.m_imageLocks[index]);
+
+      for (int j = 0; j < (int)m_fm.m_pos.m_pgrids[index][index2].size(); ++j) {
+        if (!m_fm.isNeighbor(patch, *m_fm.m_pos.m_pgrids[index][index2][j],
+                             m_fm.m_neighborThreshold1))
+          maxpressure = max(maxpressure, m_fm.m_pos.m_pgrids[index][index2][j]->m_ncc -
+                            m_fm.m_nccThreshold);
+      }
     }
 
     gain -= maxpressure;
@@ -127,20 +129,20 @@ float Cfilter::computeGain(const Patch::Cpatch& patch, const int lock) {
     float maxpressure = 0.0f;      
 
     {
-        std::unique_ptr<std::lock_guard<std::mutex>> guard;
-        if (lock)
-            guard = std::make_unique<std::lock_guard<std::mutex>>(m_fm.m_imageLocks[index]);
+      std::deque<std::lock_guard<std::mutex>> guard;
+      if (lock)
+        guard.emplace_back(m_fm.m_imageLocks[index]);
     
-    for (int j = 0; j < (int)m_fm.m_pos.m_pgrids[index][index2].size(); ++j) {
-      const float bdepth = m_fm.m_pss.computeDepth(index, m_fm.m_pos.m_pgrids[index][index2][j]->m_coord);
-      if (pdepth < bdepth &&
-          !m_fm.isNeighbor(patch, *m_fm.m_pos.m_pgrids[index][index2][j],
-                           m_fm.m_neighborThreshold1)) {
-        maxpressure = max(maxpressure,
-                          m_fm.m_pos.m_pgrids[index][index2][j]->m_ncc -
-                          m_fm.m_nccThreshold);
+      for (int j = 0; j < (int)m_fm.m_pos.m_pgrids[index][index2].size(); ++j) {
+        const float bdepth = m_fm.m_pss.computeDepth(index, m_fm.m_pos.m_pgrids[index][index2][j]->m_coord);
+        if (pdepth < bdepth &&
+            !m_fm.isNeighbor(patch, *m_fm.m_pos.m_pgrids[index][index2][j],
+                             m_fm.m_neighborThreshold1)) {
+          maxpressure = max(maxpressure,
+                            m_fm.m_pos.m_pgrids[index][index2][j]->m_ncc -
+                            m_fm.m_nccThreshold);
+        }
       }
-    }
     }
     
     gain -= maxpressure;
