@@ -18,11 +18,6 @@ CfindMatch::CfindMatch(void)
 
 CfindMatch::~CfindMatch() {
   mtx_destroy(&m_lock);
-
-  for (int image = 0; image < (int)m_imageLocks.size(); ++image)
-    m_imageLocks[image].destroy();
-  for (int image = 0; image < (int)m_countLocks.size(); ++image)
-    m_countLocks[image].destroy();
 }
 
 void CfindMatch::updateThreshold(void) {
@@ -69,12 +64,9 @@ void CfindMatch::init(const Soption& option) {
   
   //----------------------------------------------------------------------
   mtx_init(&m_lock, mtx_plain | mtx_recursive);
-  m_imageLocks.resize(m_num);
-  m_countLocks.resize(m_num);
-  for (int image = 0; image < m_num; ++image) {
-    m_imageLocks[image].init();
-    m_countLocks[image].init();
-  }
+  m_imageLocks = std::vector<std::mutex>(static_cast<size_t>(m_num));
+  m_countLocks = std::vector<std::mutex>(static_cast<size_t>(m_num));
+
   // We set m_level + 3, to use multi-resolutional texture grabbing
   m_pss.init(m_images, m_prefix, m_level + 3, m_wsize, 1);
 
