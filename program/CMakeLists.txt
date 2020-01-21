@@ -32,6 +32,9 @@ INCLUDE_DIRECTORIES(
 FIND_PACKAGE(Threads REQUIRED)
 SET(PMVS_LIBRARIES ${PMVS_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT})
 
+# OPTIONS
+OPTION(CIMG_USE_OPENMP "Enable OpenMP parallelization in cimg" ON)
+
 # Eigen
 SET( EIGEN3_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/thirdParty/Eigen )
 SET( CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${EIGEN3_INCLUDE_DIR}/cmake" )
@@ -97,6 +100,30 @@ IF(PMVS_USE_TIFF)
   ENDIF(TIFF_FOUND)
 ENDIF(PMVS_USE_TIFF)
 
+# OpenMP
+# ==============================================================================
+# OpenMP detection
+# ==============================================================================
+IF(CIMG_USE_OPENMP)
+  FIND_PACKAGE(OpenMP)
+  IF(OPENMP_FOUND)
+    SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
+    OPTION(CIMG_USE_OPENMP "Use OpenMP for parallelization in cimg" ON)
+    ADD_DEFINITIONS(-DCIMG_USE_OPENMP)
+    IF (NOT MSVC)
+      IF ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+        # for those using the clang with OpenMP support
+        LIST(APPEND OPENMVG_LIBRARY_DEPENDENCIES iomp)
+      ELSE()
+        LIST(APPEND OPENMVG_LIBRARY_DEPENDENCIES gomp)
+      ENDIF()
+    ENDIF(NOT MSVC)
+  ENDIF(OPENMP_FOUND)
+ELSE(CIMG_USE_OPENMP)
+    OPTION(OpenMVG_USE_OPENMP "Use OpenMP for parallelization in cimg" OFF)
+    UPDATE_CACHE_VARIABLE(CIMG_USE_OPENMP OFF)
+    REMOVE_DEFINITIONS(-DCIMG_USE_OPENMP)
+ENDIF(CIMG_USE_OPENMP)
 
 ADD_SUBDIRECTORY(base)
 ADD_SUBDIRECTORY(main)

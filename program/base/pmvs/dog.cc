@@ -119,7 +119,7 @@ void Cdog::run(const std::vector<unsigned char>& image,
 	       const float firstScale,   // 1.4f
 	       const float lastScale,    // 4.0f
 	       std::multiset<Cpoint> & result) {
-  cerr << "DoG running..." << flush;
+  cout << "DoG running..." << flush;
   m_width = width;
   m_height = height;
   
@@ -221,7 +221,7 @@ void Cdog::run(const std::vector<unsigned char>& image,
       }
     }
   
-  cerr << (int)result.size() << " dog done" << endl;  
+  cout << (int)result.size() << " dog done" << endl;  
 }
 
 void Cdog::setRes(const float sigma,

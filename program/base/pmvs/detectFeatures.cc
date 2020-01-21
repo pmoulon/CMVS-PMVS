@@ -39,7 +39,7 @@ void CdetectFeatures::run(const CphotoSetS& pss, const int num,
   for (int i = 0; i < m_CPU; ++i)
     thrd_join(threads[i], NULL);
   //----------------------------------------------------------------------
-  cerr << "done" << endl;
+  cout << "done" << endl;
 }
 
 int CdetectFeatures::runThreadTmp(void* arg) {
@@ -61,7 +61,7 @@ void CdetectFeatures::runThread(void) {
       break;
     
     const int image = m_ppss->m_images[index];
-    cerr << image << ' ' << flush;
+    cout << image << ' ' << flush;
 
     //?????????????  May need file lock, because targetting images
     //should not overlap among multiple processors.    

@@ -9,7 +9,7 @@ using namespace std;
 
 int main(int argc, char* argv[]) {
   if (argc < 2) {
-    cerr << "Usage: " << argv[0]
+    cout << "Usage: " << argv[0]
          << " prefix level[=1] csize[=2] threshold[=0.7] wsize[=7]"
          << " minImageNum[=3] CPU[=8]" << endl
          << endl

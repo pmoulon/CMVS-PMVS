@@ -37,14 +37,14 @@ void Cfilter::filterOutside(void) {
   time_t tv;
   time(&tv); 
   time_t curtime = tv;
-  cerr << "FilterOutside" << endl;
+  cout << "FilterOutside" << endl;
   //??? notice (1) here to avoid removing m_fix=1
   m_fm.m_pos.collectPatches(1);
 
   const int psize = (int)m_fm.m_pos.m_ppatches.size();  
   m_gains.resize(psize);
   
-  cerr << "mainbody: " << flush;
+  cout << "mainbody: " << flush;
   
   m_fm.m_count = 0;
   vector<thrd_t> threads(m_fm.m_CPU);
@@ -52,7 +52,7 @@ void Cfilter::filterOutside(void) {
     thrd_create(&threads[i], &filterOutsideThreadTmp, (void*)this);
   for (int i = 0; i < m_fm.m_CPU; ++i)
     thrd_join(threads[i], NULL);
-  cerr << endl;
+  cout << endl;
 
   // delete patches with positive m_gains
   int count = 0;
@@ -77,10 +77,10 @@ void Cfilter::filterOutside(void) {
   ave /= denom;
   ave2 /= denom;
   ave2 = sqrt(max(0.0, ave2 - ave * ave));
-  cerr << "Gain (ave/var): " << ave << ' ' << ave2 << endl;
+  cout << "Gain (ave/var): " << ave << ' ' << ave2 << endl;
   
   time(&tv);
-  cerr << (int)m_fm.m_pos.m_ppatches.size() << " -> "
+  cout << (int)m_fm.m_pos.m_ppatches.size() << " -> "
        << (int)m_fm.m_pos.m_ppatches.size() - count << " ("
        << 100 * ((int)m_fm.m_pos.m_ppatches.size() - count) / (float)m_fm.m_pos.m_ppatches.size()
        << "%)\t" << (tv - curtime) / CLOCKS_PER_SEC << " secs" << endl;
@@ -220,7 +220,7 @@ void Cfilter::filterExact(void) {
   time_t tv;
   time(&tv); 
   time_t curtime = tv;
-  cerr << "Filter Exact: " << flush;
+  cout << "Filter Exact: " << flush;
 
   //??? cannot use (1) because we use patch.m_id to set newimages,....
   m_fm.m_pos.collectPatches();
@@ -238,7 +238,7 @@ void Cfilter::filterExact(void) {
     thrd_create(&threads0[i], &filterExactThreadTmp, (void*)this);  
   for (int i = 0; i < m_fm.m_CPU; ++i)
     thrd_join(threads0[i], NULL);
-  cerr << endl;
+  cout << endl;
 
   //----------------------------------------------------------------------
   for (int p = 0; p < psize; ++p) {
@@ -295,7 +295,7 @@ void Cfilter::filterExact(void) {
     }
   }
   time(&tv); 
-  cerr << (int)m_fm.m_pos.m_ppatches.size() << " -> "
+  cout << (int)m_fm.m_pos.m_ppatches.size() << " -> "
        << (int)m_fm.m_pos.m_ppatches.size() - count << " ("
        << 100 * ((int)m_fm.m_pos.m_ppatches.size() - count) / (float)m_fm.m_pos.m_ppatches.size()
        << "%)\t" << (tv - curtime) / CLOCKS_PER_SEC << " secs" << endl;
@@ -316,7 +316,7 @@ void Cfilter::filterExactThread(void) {
     if (m_fm.m_tnum <= image)
       break;
     
-    cerr << '*' << flush;
+    cout << '*' << flush;
     
     const int& w = m_fm.m_pos.m_gwidths[image];
     const int& h = m_fm.m_pos.m_gheights[image];
@@ -520,7 +520,7 @@ void Cfilter::filterNeighbor(const int times) {
   time_t tv;
   time(&tv); 
   time_t curtime = tv;
-  cerr << "FilterNeighbor:\t" << flush;
+  cout << "FilterNeighbor:\t" << flush;
 
   //??? notice (1) to avoid removing m_fix=1
   m_fm.m_pos.collectPatches(1);
@@ -562,7 +562,7 @@ void Cfilter::filterNeighbor(const int times) {
     }
   }
   time(&tv);
-  cerr << (int)m_fm.m_pos.m_ppatches.size() << " -> "
+  cout << (int)m_fm.m_pos.m_ppatches.size() << " -> "
        << (int)m_fm.m_pos.m_ppatches.size() - count << " ("
        << 100 * ((int)m_fm.m_pos.m_ppatches.size() - count) / (float)m_fm.m_pos.m_ppatches.size()
        << "%)\t" << (tv - curtime) / CLOCKS_PER_SEC << " secs" << endl;
@@ -575,7 +575,7 @@ void Cfilter::filterSmallGroups(void) {
   time_t tv;
   time(&tv); 
   time_t curtime = tv;
-  cerr << "FilterGroups:\t" << flush;
+  cout << "FilterGroups:\t" << flush;
   m_fm.m_pos.collectPatches();
   if (m_fm.m_pos.m_ppatches.empty())
     return;
@@ -623,7 +623,7 @@ void Cfilter::filterSmallGroups(void) {
   }
   
   const int threshold = max(20, psize / 10000);
-  cerr << threshold << endl;
+  cout << threshold << endl;
   
   bite = size.begin();
   eite = size.end();
@@ -655,7 +655,7 @@ void Cfilter::filterSmallGroups(void) {
     ++bpatch;
   }
   time(&tv);
-  cerr << (int)m_fm.m_pos.m_ppatches.size() << " -> "
+  cout << (int)m_fm.m_pos.m_ppatches.size() << " -> "
        << (int)m_fm.m_pos.m_ppatches.size() - count << " ("
        << 100 * ((int)m_fm.m_pos.m_ppatches.size() - count) / (float)m_fm.m_pos.m_ppatches.size()
        << "%)\t" << (tv - curtime)/CLOCKS_PER_SEC << " secs" << endl;

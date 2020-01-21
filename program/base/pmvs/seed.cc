@@ -63,7 +63,7 @@ void Cseed::run(void) {
   shuffle(vitmp.begin(), vitmp.end(), gen);
   m_fm.m_jobs.insert(m_fm.m_jobs.end(), vitmp.begin(), vitmp.end());
 
-  cerr << "adding seeds " << endl;
+  cout << "adding seeds " << endl;
   
   m_fm.m_pos.clearCounts();
 
@@ -84,18 +84,18 @@ void Cseed::run(void) {
   for (int i = 0; i < m_fm.m_CPU; ++i)
     thrd_join(threads[i], NULL);
   //----------------------------------------------------------------------
-  cerr << "done" << endl;
+  cout << "done" << endl;
   time(&tv);
-  cerr << "---- Initial: " << (tv - curtime)/CLOCKS_PER_SEC << " secs ----" << endl;
+  cout << "---- Initial: " << (tv - curtime)/CLOCKS_PER_SEC << " secs ----" << endl;
 
   const int trial = accumulate(m_scounts.begin(), m_scounts.end(), 0);
   const int fail0 = accumulate(m_fcounts0.begin(), m_fcounts0.end(), 0);
   const int fail1 = accumulate(m_fcounts1.begin(), m_fcounts1.end(), 0);
   const int pass = accumulate(m_pcounts.begin(), m_pcounts.end(), 0);
-  cerr << "Total pass fail0 fail1 refinepatch: "
+  cout << "Total pass fail0 fail1 refinepatch: "
        << trial << ' ' << pass << ' '
        << fail0 << ' ' << fail1 << ' ' << pass + fail1 << endl;
-  cerr << "Total pass fail0 fail1 refinepatch: "
+  cout << "Total pass fail0 fail1 refinepatch: "
        << 100 * trial / (float)trial << ' '
        << 100 * pass / (float)trial << ' '
        << 100 * fail0 / (float)trial << ' '
@@ -203,7 +203,7 @@ void Cseed::initialMatch(const int index, const int id) {
       }
     }
   }
-  cerr << '(' << index << ',' << totalcount << ')' << flush;
+  cout << '(' << index << ',' << totalcount << ')' << flush;
 }
 
 void Cseed::collectCells(const int index0, const int index1,

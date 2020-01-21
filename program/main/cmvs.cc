@@ -8,7 +8,7 @@ using namespace std;
 
 int main(int argc, char* argv[]) {
   if (argc < 2) {
-    cerr << "Usage: " << argv[0] << " prefix maximage[=100] CPU[=4]" << endl
+    cout << "Usage: " << argv[0] << " prefix maximage[=100] CPU[=4]" << endl
          << endl
          << "You should choose maximage based on the amount of memory in your machine." << endl
          << "CPU should be the number of (virtual) CPUs or cores in your machine." << endl

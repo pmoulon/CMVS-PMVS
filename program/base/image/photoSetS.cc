@@ -25,7 +25,7 @@ void CphotoSetS::init(const std::vector<int>& images, const std::string prefix,
   m_prefix = prefix;
   m_maxLevel = max(1, maxLevel);
   m_photos.resize(m_num);
-  cerr << "Reading images: " << flush;
+  cout << "Reading images: " << flush;
   for (int index = 0; index < m_num; ++index) {
     const int image = m_images[index];
 
@@ -56,7 +56,7 @@ void CphotoSetS::init(const std::vector<int>& images, const std::string prefix,
         m_photos[index].alloc();
       else
         m_photos[index].alloc(1);
-      cerr << '*' << flush;
+      cout << '*' << flush;
     }
     // try 4 digits
     else {
@@ -73,7 +73,7 @@ void CphotoSetS::init(const std::vector<int>& images, const std::string prefix,
         m_photos[index].alloc();
       else
         m_photos[index].alloc(1);
-      cerr << '*' << flush;
+      cout << '*' << flush;
     }
 
     /*
@@ -91,10 +91,10 @@ void CphotoSetS::init(const std::vector<int>& images, const std::string prefix,
       m_photos[index].alloc();
     else
       m_photos[index].alloc(1);
-    cerr << '*' << flush;
+    cout << '*' << flush;
     */
   }
-  cerr << endl;
+  cout << endl;
   const int margin = size / 2;
   m_size = 2 * margin + 1;
 }

@@ -217,7 +217,7 @@ void CfindMatch::run(void) {
     ++m_depth;
   }
   time(&tv);
-  cerr << "---- Total: " << (tv - curtime)/CLOCKS_PER_SEC << " secs ----" << endl;
+  cout << "---- Total: " << (tv - curtime)/CLOCKS_PER_SEC << " secs ----" << endl;
 }
 
 void CfindMatch::write(const std::string prefix, bool bExportPLY, bool bExportPatch, bool bExportPSet) {
