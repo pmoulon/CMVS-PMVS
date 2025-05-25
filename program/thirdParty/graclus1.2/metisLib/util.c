@@ -98,10 +98,10 @@ void extractfilename(char *path, char *name)
 void errexit(char *f_str,...)
 {
   va_list argp;
-  char out1[256], out2[256];
+  char out1[256], out2[263]; // out2 is bigger to fit the "Error! " below
 
   va_start(argp, f_str);
-  vsprintf(out1, f_str, argp);
+  vsnprintf(out1, sizeof(out1), f_str, argp);
   va_end(argp);
 
   sprintf(out2, "Error! %s", out1);
