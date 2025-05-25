@@ -136,7 +136,7 @@
 #define THREADLOCAL
 
 /* Define to 1 if you can safely include both <sys/time.h> and <time.h>. */
-#undef TIME_WITH_SYS_TIME
+#cmakedefine TIME_WITH_SYS_TIME
 
 /* Version number of package */
 #undef VERSION

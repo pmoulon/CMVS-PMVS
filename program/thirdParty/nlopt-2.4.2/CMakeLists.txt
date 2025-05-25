@@ -38,6 +38,14 @@ CHECK_INCLUDE_FILES( sys/types.h HAVE_SYS_TYPES_H)
 CHECK_INCLUDE_FILES( sys/types.h HAVE_SYS_TYPES_H)
 CHECK_INCLUDE_FILES( sys/types.h HAVE_SYS_TYPES_H)
 
+# This is cherry-picked from a newer nlopt CMakeLists:
+#     https://github.com/stevengj/nlopt/blame/38899e6e1c4b188e50ef40016224bffb2835a1fc/CMakeLists.txt#L87-L91
+check_include_file (time.h HAVE_TIME_H)
+check_include_file (sys/time.h HAVE_SYS_TIME_H)
+if (HAVE_TIME_H AND HAVE_SYS_TIME_H)
+  set (TIME_WITH_SYS_TIME TRUE)
+endif ()
+
 CHECK_FUNCTION_EXISTS( isinf HAVE_ISINF)
 CHECK_FUNCTION_EXISTS( isinf HAVE_ISNAN)
 CHECK_FUNCTION_EXISTS( gettimeofday HAVE_GETTIMEOFDAY)
